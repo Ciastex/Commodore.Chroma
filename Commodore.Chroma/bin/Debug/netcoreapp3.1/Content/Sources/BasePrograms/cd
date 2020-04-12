@@ -1,0 +1,12 @@
+// cd.xec
+// 
+// does management really want me to explain this
+// fucking program... just change the goddamn 
+// directory, fuckwits.
+
+if (!#args) do
+    sys.println("usage: cd <path>")
+else
+    fs.cd(args[0])
+end
+    

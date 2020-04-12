@@ -1,0 +1,38 @@
+if (!#args) do
+  local path = fs.cwd()
+else
+  local path = args[0]
+end
+
+local files = fs.files(path)
+local dirs = fs.dirs(path)
+
+// @ operator is used to convert whatever it sees
+// to a string type. doesn't work for tables though
+sys.println("DIRECTORY LISTING FOR " + @path)
+
+if (#dirs) do
+  // for-loop will execute at least once, regardless
+  // of the limiter length, hence the above check
+  each (i, dir) : dirs do
+    // dirs should be printed in blue, hence control character 0xFF0B
+    // then reset to default using control code 0xFF40
+    //
+    // if you're an intern, ask Jenny about the color code XEC.
+    // if she's busy, then you can find it by dialing into the lab
+    // number (347)255-0341, internal code 18-347
+    //
+    // i can't believe that Jones can recite all the 64 colors 
+    // from memory...
+    sys.println(str.chr(0xFF0B) + dir + str.chr(0xFF40))
+  end
+end
+
+if (#files) do
+  each (i, file) : files do
+    sys.println(file)
+  end
+end
+
+sys.print(str.chr(0xFF40))
+// remember that all filesystem calls work in current host context

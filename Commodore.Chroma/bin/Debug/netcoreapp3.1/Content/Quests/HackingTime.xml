@@ -1,0 +1,48 @@
+<Quest Title="It's Hacking Time" Description="Where did Hackerman go?">
+    <Requirements>
+      <!-- HasMemoryBanks Count=3 -->
+      <!-- HasModuleLoaded Name="hackingtools" -->
+    </Requirements>
+    
+    <Devices>
+      <Device Path="HackingTime/HackermansIBM.xml" />
+      <Device Path="HackingTime/HackermansModem.xml" />
+      <Device Path="HackingTime/GridRelay.xml" />
+      <Device Path="HackingTime/CoreTerminal.xml" />
+    </Devices>
+    
+    <QuestSteps>
+      <Step Order="1">
+        <Description>
+          Hackerman&apos;s computer lacks proper hardware configuration.
+          Figure out the correct configuration and put it in the proper path.
+        </Description>
+        
+        <Goals>
+          <FileExists On="HT_HackermansIBM"
+                      VfsPath="/cfg/hw.conf"
+                      ContentsOf="HackingTime/hw.conf" />
+        </Goals>
+        
+        <OnCompletion>
+          <BlinkingMesageBox Content="VALID CONFIG DETECED" />
+        </OnCompletion>
+      </Step>
+      
+      <Step Order="2">
+      
+      </Step>
+      
+      <Step Order="3">
+      
+      </Step>
+      
+      <Step Order="4">
+      
+      </Step>
+      
+      <Step Order="5">
+      
+      </Step>
+    </QuestSteps>
+</Quest>

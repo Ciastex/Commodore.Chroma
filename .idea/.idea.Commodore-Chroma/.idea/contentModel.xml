@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Commodore-Chroma.440952860.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="Commodore-Chroma.sln" t="IncludeFlat" />
+      <e p="Commodore.Chroma" t="IncludeRecursive">
+        <e p="Commodore.Chroma.csproj" t="IncludeRecursive" />
+        <e p="CommodoreMain.cs" t="Include" />
+        <e p="Content" t="Include">
+          <e p="Banners" t="Include" />
+          <e p="Chatlogs" t="Include">
+            <e p="chatlog_085913_22031994.txt" t="Include" />
+          </e>
+          <e p="Devices" t="Include" />
+          <e p="Fonts" t="Include">
+            <e p="c64style.ttf" t="Include" />
+          </e>
+          <e p="GenerationStuff" t="Include">
+            <e p="usernames.txt" t="Include" />
+          </e>
+          <e p="People" t="Include" />
+          <e p="QuestGoals" t="Include">
+            <e p="HackingTime" t="Include">
+              <e p="hw.conf" t="Include" />
+            </e>
+          </e>
+          <e p="Quests" t="Include">
+            <e p="HackingTime.xml" t="Include" />
+          </e>
+          <e p="Scripts" t="Include" />
+          <e p="Shaders" t="Include">
+            <e p="CrtScreen.glsl" t="Include" />
+          </e>
+          <e p="Shellsites" t="Include" />
+          <e p="Sources" t="Include">
+            <e p="BasePrograms" t="Include">
+              <e p="cat" t="Include" />
+              <e p="cd" t="Include" />
+              <e p="cp" t="Include" />
+              <e p="crawl" t="Include" />
+              <e p="help" t="Include" />
+              <e p="ls" t="Include" />
+              <e p="rm" t="Include" />
+            </e>
+            <e p="Libraries" t="Include">
+              <e p="sysaddr.lib" t="Include" />
+            </e>
+            <e p="Templates" t="Include">
+              <e p="program.template.cplx" t="Include" />
+            </e>
+          </e>
+          <e p="Text" t="Include">
+            <e p="Boot" t="Include">
+              <e p="RegularBoot.xml" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="GameLogic" t="Include">
+          <e p="Core" t="Include">
+            <e p="BootSequence" t="Include">
+              <e p="BootSequencePlayer.cs" t="Include" />
+              <e p="SequenceLine.cs" t="Include" />
+            </e>
+            <e p="CodeExecutionLayer.cs" t="Include" />
+            <e p="Exceptions" t="Include">
+              <e p="KernelException.cs" t="Include" />
+              <e p="UserScriptTerminationException.cs" t="Include" />
+            </e>
+            <e p="Hardware" t="Include">
+              <e p="Memory.cs" t="Include" />
+            </e>
+            <e p="IO" t="Include">
+              <e p="Mappings" t="Include">
+                <e p="ColorMappings.cs" t="Include" />
+                <e p="PetsciiControlCodes.cs" t="Include" />
+              </e>
+              <e p="Storage" t="Include">
+                <e p="Directory.cs" t="Include" />
+                <e p="Exceptions" t="Include">
+                  <e p="DirectoryNotFoundException.cs" t="Include" />
+                  <e p="FileNotFoundException.cs" t="Include" />
+                  <e p="InvalidPathException.cs" t="Include" />
+                </e>
+                <e p="File.cs" t="Include" />
+                <e p="FileAttributes.cs" t="Include" />
+                <e p="FileSystemContext.cs" t="Include" />
+                <e p="FileSystemObject.cs" t="Include" />
+                <e p="Path.cs" t="Include" />
+                <e p="SpecialFileNames.cs" t="Include" />
+              </e>
+              <e p="Terminal.cs" t="Include" />
+            </e>
+            <e p="Kernel.cs" t="Include" />
+            <e p="SystemConstants.cs" t="Include" />
+            <e p="SystemMemoryAddresses.cs" t="Include" />
+          </e>
+          <e p="Display" t="Include">
+            <e p="Cursor.cs" t="Include" />
+            <e p="Data" t="Include">
+              <e p="Character.cs" t="Include" />
+              <e p="ColoredSegment.cs" t="Include" />
+            </e>
+            <e p="DisplayMode.cs" t="Include" />
+            <e p="VGA.cs" t="Include" />
+          </e>
+          <e p="Executive" t="Include">
+            <e p="CodeEditor" t="Include">
+              <e p="Bindings" t="Include">
+                <e p="FileSystem.cs" t="Include" />
+                <e p="KeyBindings.cs" t="Include" />
+                <e p="Modification.cs" t="Include" />
+                <e p="Navigation.cs" t="Include" />
+                <e p="StatusControl.cs" t="Include" />
+              </e>
+              <e p="ColorizedSegment.cs" t="Include" />
+              <e p="Editor.CursorManipulation.cs" t="Include" />
+              <e p="Editor.SpecialCharacters.cs" t="Include" />
+              <e p="Editor.cs" t="Include" />
+              <e p="EditorBuffer.cs" t="Include" />
+              <e p="EditorColors.cs" t="Include" />
+              <e p="EditorOptions.cs" t="Include" />
+              <e p="Events" t="Include">
+                <e p="FileSavedEventArgs.cs" t="Include" />
+              </e>
+              <e p="Hotkey.cs" t="Include" />
+              <e p="ModeLine.cs" t="Include" />
+              <e p="TextColorizer.cs" t="Include" />
+              <e p="TextRenderer.cs" t="Include" />
+              <e p="TypingMode.cs" t="Include" />
+              <e p="Window.cs" t="Include" />
+            </e>
+            <e p="ComplexRuntime" t="Include">
+              <e p="FsLibrary.cs" t="Include" />
+              <e p="MemLibrary.cs" t="Include" />
+              <e p="NetLibrary.cs" t="Include" />
+              <e p="SysLibrary.cs" t="Include" />
+              <e p="VgaLibrary.cs" t="Include" />
+            </e>
+            <e p="InterpreterExtensions.cs" t="Include" />
+          </e>
+          <e p="Generation" t="Include">
+            <e p="UsernameGenerator.cs" t="Include" />
+          </e>
+          <e p="Interaction" t="Include">
+            <e p="Shell" t="Include">
+              <e p="TermShell.cs" t="Include" />
+            </e>
+            <e p="TextInterface.cs" t="Include" />
+          </e>
+          <e p="Persistence" t="Include">
+            <e p="UserProfile.cs" t="Include" />
+          </e>
+          <e p="Sound" t="Include">
+            <e p="Generators.cs" t="Include" />
+            <e p="Synthesizer.cs" t="Include" />
+            <e p="Utilities.cs" t="Include" />
+            <e p="Voice.cs" t="Include" />
+            <e p="VoiceState.cs" t="Include" />
+          </e>
+          <e p="World" t="Include">
+            <e p="Device.cs" t="Include" />
+            <e p="IP.cs" t="Include" />
+            <e p="Network.cs" t="Include" />
+            <e p="NetworkCursor.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="Commodore.Chroma.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Commodore.EVIL" t="IncludeRecursive">
+        <e p="AST" t="Include">
+          <e p="Base" t="Include">
+            <e p="AstNode.cs" t="Include" />
+          </e>
+          <e p="Enums" t="Include">
+            <e p="BinaryOperationType.cs" t="Include" />
+            <e p="CompoundAssignmentType.cs" t="Include" />
+            <e p="UnaryOperationType.cs" t="Include" />
+            <e p="UndefineType.cs" t="Include" />
+          </e>
+          <e p="Nodes" t="Include">
+            <e p="AssignmentNode.cs" t="Include" />
+            <e p="BinaryOperationNode.cs" t="Include" />
+            <e p="BreakNode.cs" t="Include" />
+            <e p="CompoundAssignmentNode.cs" t="Include" />
+            <e p="ConditionNode.cs" t="Include" />
+            <e p="EachLoopNode.cs" t="Include" />
+            <e p="ExitNode.cs" t="Include" />
+            <e p="ForLoopNode.cs" t="Include" />
+            <e p="FunctionCallNode.cs" t="Include" />
+            <e p="FunctionDefinitionNode.cs" t="Include" />
+            <e p="MemoryCellNode.cs" t="Include" />
+            <e p="MemorySetNode.cs" t="Include" />
+            <e p="NumberNode.cs" t="Include" />
+            <e p="PostDecrementationNode.cs" t="Include" />
+            <e p="PostIncrementationNode.cs" t="Include" />
+            <e p="ReturnNode.cs" t="Include" />
+            <e p="RootNode.cs" t="Include" />
+            <e p="SkipNode.cs" t="Include" />
+            <e p="StringNode.cs" t="Include" />
+            <e p="TableAssignmentNode.cs" t="Include" />
+            <e p="TableIndexingNode.cs" t="Include" />
+            <e p="TableNode.cs" t="Include" />
+            <e p="UnaryOperationNode.cs" t="Include" />
+            <e p="UndefNode.cs" t="Include" />
+            <e p="VariableNode.cs" t="Include" />
+            <e p="WhileLoopNode.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Abstraction" t="Include">
+          <e p="Base" t="Include">
+            <e p="IFunction.cs" t="Include" />
+          </e>
+          <e p="ClrFunctionArguments.cs" t="Include" />
+          <e p="DynValue.cs" t="Include" />
+          <e p="DynValueType.cs" t="Include" />
+          <e p="FunctionType.cs" t="Include" />
+          <e p="ScriptFunction.cs" t="Include" />
+          <e p="Table.cs" t="Include" />
+        </e>
+        <e p="AstVisitor.cs" t="Include" />
+        <e p="Commodore.EVIL.csproj" t="IncludeRecursive" />
+        <e p="Diagnostics" t="Include">
+          <e p="CallStackItem.cs" t="Include" />
+          <e p="LoopStackItem.cs" t="Include" />
+        </e>
+        <e p="Environment.cs" t="Include" />
+        <e p="Exceptions" t="Include">
+          <e p="ClrFunctionException.cs" t="Include" />
+          <e p="DynValueConversionException.cs" t="Include" />
+          <e p="ExitStatementException.cs" t="Include" />
+          <e p="InvalidDynValueTypeException.cs" t="Include" />
+          <e p="ParserException.cs" t="Include" />
+          <e p="RuntimeException.cs" t="Include" />
+          <e p="ScannerException.cs" t="Include" />
+          <e p="ScriptTerminationException.cs" t="Include" />
+        </e>
+        <e p="Execution" t="Include">
+          <e p="Interpreter.AssignmentLogic.cs" t="Include" />
+          <e p="Interpreter.BinaryOperationLogic.cs" t="Include" />
+          <e p="Interpreter.BreakNode.cs" t="Include" />
+          <e p="Interpreter.CompoundAssignmentLogic.cs" t="Include" />
+          <e p="Interpreter.ConditionLogic.cs" t="Include" />
+          <e p="Interpreter.EachLoopLogic.cs" t="Include" />
+          <e p="Interpreter.ExitLogic.cs" t="Include" />
+          <e p="Interpreter.ForLoopLogic.cs" t="Include" />
+          <e p="Interpreter.FunctionCallLogic.cs" t="Include" />
+          <e p="Interpreter.MemoryGetLogic.cs" t="Include" />
+          <e p="Interpreter.MemorySetLogic.cs" t="Include" />
+          <e p="Interpreter.PostDecrementationLogic.cs" t="Include" />
+          <e p="Interpreter.PostIncrementationLogic.cs" t="Include" />
+          <e p="Interpreter.ReturnLogic.cs" t="Include" />
+          <e p="Interpreter.ScriptFunctionDefinitionLogic.cs" t="Include" />
+          <e p="Interpreter.SkipLogic.cs" t="Include" />
+          <e p="Interpreter.TableAssignmentLogic.cs" t="Include" />
+          <e p="Interpreter.TableIndexingLogic.cs" t="Include" />
+          <e p="Interpreter.UnaryOperationLogic.cs" t="Include" />
+          <e p="Interpreter.UndefinitionLogic.cs" t="Include" />
+          <e p="Interpreter.ValueLogic.cs" t="Include" />
+          <e p="Interpreter.VariableLogic.cs" t="Include" />
+          <e p="Interpreter.WhileLoopLogic.cs" t="Include" />
+          <e p="Interpreter.cs" t="Include" />
+        </e>
+        <e p="IMemory.cs" t="Include" />
+        <e p="Lexical" t="Include">
+          <e p="Scanner.cs" t="Include" />
+          <e p="ScannerState.cs" t="Include" />
+          <e p="Token.cs" t="Include" />
+          <e p="TokenType.cs" t="Include" />
+        </e>
+        <e p="Parsing" t="Include">
+          <e p="Parser.Assignment.cs" t="Include" />
+          <e p="Parser.Break.cs" t="Include" />
+          <e p="Parser.CompoundAssignment.cs" t="Include" />
+          <e p="Parser.EachLoop.cs" t="Include" />
+          <e p="Parser.Exit.cs" t="Include" />
+          <e p="Parser.Expression.cs" t="Include" />
+          <e p="Parser.Factor.cs" t="Include" />
+          <e p="Parser.ForLoop.cs" t="Include" />
+          <e p="Parser.FunctionCall.cs" t="Include" />
+          <e p="Parser.FunctionDefinition.cs" t="Include" />
+          <e p="Parser.IfCondition.cs" t="Include" />
+          <e p="Parser.MemoryGet.cs" t="Include" />
+          <e p="Parser.MemorySet.cs" t="Include" />
+          <e p="Parser.PostDecrementation.cs" t="Include" />
+          <e p="Parser.PostIncrementation.cs" t="Include" />
+          <e p="Parser.Return.cs" t="Include" />
+          <e p="Parser.Skip.cs" t="Include" />
+          <e p="Parser.Statement.cs" t="Include" />
+          <e p="Parser.TableAssignment.cs" t="Include" />
+          <e p="Parser.TableIndexing.cs" t="Include" />
+          <e p="Parser.Term.cs" t="Include" />
+          <e p="Parser.UndefineSymbol.cs" t="Include" />
+          <e p="Parser.Variable.cs" t="Include" />
+          <e p="Parser.WhileLoop.cs" t="Include" />
+          <e p="Parser.cs" t="Include" />
+        </e>
+        <e p="RuntimeLibrary" t="Include">
+          <e p="Base" t="Include">
+            <e p="ClrPackage.cs" t="Include" />
+          </e>
+          <e p="CoreLibrary.cs" t="Include" />
+          <e p="MathLibrary.cs" t="Include" />
+          <e p="StringLibrary.cs" t="Include" />
+          <e p="TableLibrary.cs" t="Include" />
+          <e p="TimeLibrary.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Commodore.EVIL.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Commodore.Engine" t="IncludeRecursive">
+        <e p="Commodore.Engine.csproj" t="IncludeRecursive" />
+        <e p="CrashHandler.cs" t="Include" />
+        <e p="DebugLog.cs" t="Include" />
+        <e p="EngineBasedGame.cs" t="Include" />
+        <e p="EngineObject.cs" t="Include" />
+        <e p="Exceptions" t="Include">
+          <e p="JsonSettingsException.cs" t="Include" />
+        </e>
+        <e p="FrameworkExtensions" t="Include">
+          <e p="ColorExtensions.cs" t="Include" />
+          <e p="StringExtensions.cs" t="Include" />
+          <e p="XDocumentExtensions.cs" t="Include" />
+        </e>
+        <e p="G.cs" t="Include" />
+        <e p="Generators" t="Include">
+          <e p="MersenneTwister.cs" t="Include" />
+          <e p="SimplexNoise.cs" t="Include" />
+          <e p="StringGenerator.cs" t="Include" />
+        </e>
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="Graphics" t="Include">
+          <e p="FullscreenMode.cs" t="Include" />
+        </e>
+        <e p="Interop" t="Include">
+          <e p="Kernel32.cs" t="Include" />
+        </e>
+        <e p="Managers" t="Include">
+          <e p="DebugManager.cs" t="Include" />
+          <e p="SettingsManager.cs" t="Include" />
+        </e>
+        <e p="Margins.cs" t="Include" />
+        <e p="Math.cs" t="Include" />
+        <e p="Persistence" t="Include">
+          <e p="AppData" t="Include">
+            <e p="RoamingStorage.cs" t="Include" />
+          </e>
+          <e p="JsonConfig" t="Include">
+            <e p="JsonSettings.cs" t="Include" />
+            <e p="Section.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Thickness.cs" t="Include" />
+        <e p="Time.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.1" t="Include">
+              <e p="Commodore.Engine.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

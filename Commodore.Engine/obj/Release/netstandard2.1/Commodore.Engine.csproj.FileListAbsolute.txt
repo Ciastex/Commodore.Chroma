@@ -1,0 +1,11 @@
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/bin/Release/netstandard2.1/Commodore.Engine.deps.json
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/bin/Release/netstandard2.1/Commodore.Engine.dll
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/bin/Release/netstandard2.1/Commodore.Engine.pdb
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/bin/Release/netstandard2.1/Iris.dll
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/bin/Release/netstandard2.1/Iris.pdb
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.csprojAssemblyReference.cache
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.AssemblyInfoInputs.cache
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.AssemblyInfo.cs
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.csproj.CopyComplete
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.dll
+/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/Release/netstandard2.1/Commodore.Engine.pdb

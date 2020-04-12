@@ -1,0 +1,22 @@
+// cp.xec
+// copies one thing to another
+// 
+// notice the 'args' argument is not present anywhere? netex_os does its
+// magic and adds it to environment whenever you execute it, and removes
+// after execution is finished
+
+if (#args != 2) do
+    
+ret 0 end
+
+local status = fs.cp(args[0], args[1])
+
+// not using parentheses for if-statements
+// is dangerous but for simple stuff
+// it should work
+// NOTE TO CPLX LAB 03: FIX IF CONDITION HANDLING YOU TWATS
+
+if status do
+    sys.println("cp: i/o error")
+    ret status // forward status from fs.cp kernel function
+end
