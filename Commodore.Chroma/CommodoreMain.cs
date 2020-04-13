@@ -23,6 +23,7 @@ namespace Commodore
 
         protected override void EngineLoad()
         {
+            Graphics.LimitFramerate = false;
             base.EngineLoad();
 
             try
