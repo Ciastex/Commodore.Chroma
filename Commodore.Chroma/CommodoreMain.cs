@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Threading;
@@ -12,6 +13,7 @@ using Commodore.Engine.Graphics;
 using Commodore.GameLogic.Core;
 using Commodore.GameLogic.Generation;
 using Commodore.GameLogic.Persistence;
+using Color = Chroma.Graphics.Color;
 
 namespace Commodore
 {
@@ -23,7 +25,7 @@ namespace Commodore
 
         protected override void EngineLoad()
         {
-            Graphics.LimitFramerate = false;
+            GraphicsManager.LimitFramerate = false;
             base.EngineLoad();
 
             try
@@ -44,7 +46,7 @@ namespace Commodore
             Window.QuitRequested += WindowOnQuitRequested;
         }
 
-        private void WindowOnQuitRequested(object? sender, CancelEventArgs e)
+        private void WindowOnQuitRequested(object sender, CancelEventArgs e)
         {
             while (UserProfile.Instance.Saving)
                 Thread.Sleep(1);
@@ -72,7 +74,7 @@ namespace Commodore
 
         protected override void Update(float deltaTime)
         {
-            Window.Properties.Title = Window.FPS.ToString();
+            Window.Title = Window.FPS.ToString();
             Kernel.Instance.Update(deltaTime);
         }
 
@@ -89,16 +91,16 @@ namespace Commodore
                 _shader.Activate();
                 _shader.SetUniform("screenSize",
                     new Vector2(
-                        Window.Properties.Width,
-                        Window.Properties.Height
+                        Window.Size.Width,
+                        Window.Size.Height
                     )
                 );
                 _shader.SetUniform("scanlineDensity", 2f);
                 _shader.SetUniform("blurDistance", .375f);
             }
 
-            context.DrawTexture(_frameBuffer.Texture, Vector2.Zero, Vector2.One, Vector2.Zero, 0);
-            context.DeactivateShader();
+            context.DrawTexture(_frameBuffer, Vector2.Zero, Vector2.One, Vector2.Zero, 0);
+            Shader.Deactivate();
         }
 
         protected override void EngineKeyPressed(KeyEventArgs e)
@@ -115,9 +117,12 @@ namespace Commodore
         {
             DebugLog.Info("Applying graphics settings...", nameof(CommodoreMain));
 
-            Graphics.VSyncEnabled = G.SettingsManager.GraphicsSettings.GetItem<bool>("EnableVerticalSync");
-            Window.Properties.Height = G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenHeight");
-            Window.Properties.Width = G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenWidth");
+            Graphics.VerticalSyncMode = G.SettingsManager.GraphicsSettings.GetItem<bool>("EnableVerticalSync") ? VerticalSyncMode.Retrace : VerticalSyncMode.None;
+            
+            Window.Size = new Size(
+                G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenWidth"),
+                G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenHeight")
+            );
 
             if (G.SettingsManager.GraphicsSettings.GetItem<bool>("FullscreenEnabled"))
             {
@@ -125,7 +130,7 @@ namespace Commodore
                 {
                     case FullscreenMode.Exclusive:
                     case FullscreenMode.BorderlessWindow:
-                        Window.GoFullscreen();
+                        Window.GoFullscreen(true);
                         break;
 
                     default: throw new Exception("Invalid fullscreen display mode.");
@@ -143,10 +148,7 @@ namespace Commodore
         private void CreateFrameBuffer()
         {
             DebugLog.Info("Creating framebuffer for main pixel shader...", nameof(CommodoreMain));
-            _frameBuffer = new RenderTarget(
-                (ushort)Window.Properties.Width, 
-                (ushort)Window.Properties.Height
-            );
+            _frameBuffer = new RenderTarget(Window.Size);
         }
     }
 }

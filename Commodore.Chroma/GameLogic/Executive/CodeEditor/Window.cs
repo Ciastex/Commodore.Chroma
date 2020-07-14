@@ -30,8 +30,8 @@ namespace Commodore.GameLogic.Executive.CodeEditor
 
         public void Reset()
         {
-            TotalColumns = (int)(G.Window.Properties.Width / Editor.TextRenderer.HorizontalGranularity) - Margins.Left - Margins.Right;
-            TotalRows = (int)(G.Window.Properties.Height / Editor.TextRenderer.VerticalGranularity) - Margins.Top - Margins.Bottom;
+            TotalColumns = G.Window.Size.Width / Editor.TextRenderer.HorizontalGranularity - Margins.Left - Margins.Right;
+            TotalRows = G.Window.Size.Height / Editor.TextRenderer.VerticalGranularity - Margins.Top - Margins.Bottom;
 
             Top = 0;
             Bottom = TotalRows;

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using Chroma.Graphics;
 using Chroma.Graphics.TextRendering;
 using Commodore.Engine;
 using Commodore.GameLogic.Core;
 using Commodore.GameLogic.Display.Data;
+using Color = Chroma.Graphics.Color;
 
 namespace Commodore.GameLogic.Display
 {
@@ -129,7 +131,7 @@ namespace Commodore.GameLogic.Display
             InitializeDisplayBuffer();
         }
 
-        public Vector2 MeasureString(string str) => Font.Measure(str);
+        public Size MeasureString(string str) => Font.Measure(str);
 
         public void PutCharAt(char character, int x, int y) =>
             PutCharAt(character, ActiveForegroundColor, ActiveBackgroundColor, x, y);
@@ -242,8 +244,7 @@ namespace Commodore.GameLogic.Display
             renderContext.Rectangle(
                 ShapeMode.Fill,
                 Vector2.Zero,
-                G.Window.Properties.Width,
-                G.Window.Properties.Height,
+                G.Window.Size,
                 ActiveMarginColor
             );
 
@@ -253,8 +254,8 @@ namespace Commodore.GameLogic.Display
                     Margin * Cursor.Granularity,
                     Margin * Cursor.Granularity
                 ),
-                G.Window.Properties.Width - (Margin * 2 * Cursor.Granularity),
-                G.Window.Properties.Height - (Margin * 2 * Cursor.Granularity),
+                G.Window.Size.Width - (Margin * 2 * Cursor.Granularity),
+                G.Window.Size.Height - (Margin * 2 * Cursor.Granularity),
                 ActiveBackgroundColor
             );
         }
@@ -266,8 +267,8 @@ namespace Commodore.GameLogic.Display
                 CursorX = 0;
                 CursorY = 0;
 
-                TotalColumns = G.Window.Properties.Width / Cursor.Granularity - ((Margin + Padding) * 2);
-                TotalRows = G.Window.Properties.Height / Cursor.Granularity - ((Margin + Padding) * 2);
+                TotalColumns = G.Window.Size.Width / Cursor.Granularity - ((Margin + Padding) * 2);
+                TotalRows = G.Window.Size.Height / Cursor.Granularity - ((Margin + Padding) * 2);
 
                 CharacterBuffer = new char[TotalColumns * TotalRows];
                 ForegroundColorBuffer = new Color[TotalColumns * TotalRows];
@@ -297,8 +298,8 @@ namespace Commodore.GameLogic.Display
             Margin = 1;
             Padding = 1;
 
-            TotalColumns = (int)(G.Window.Properties.Width / Cursor.Granularity) - ((Margin + Padding) * 2);
-            TotalRows = (int)(G.Window.Properties.Height / Cursor.Granularity) - ((Margin + Padding) * 2);
+            TotalColumns = G.Window.Size.Width / Cursor.Granularity - (Margin + Padding) * 2;
+            TotalRows = G.Window.Size.Height / Cursor.Granularity - (Margin + Padding) * 2;
 
             RecalculateDimensions();
 
@@ -333,12 +334,19 @@ namespace Commodore.GameLogic.Display
 
                 var str = new string(CharacterBuffer[start..end]);
 
-                context.DrawString(
-                    Font,
-                    str,
-                    new Vector2(dx, ((Margin + Padding) * Cursor.Granularity) + y * Font.Size),
-                    (c, i, p, g) => new GlyphTransformData(p) { Color = ForegroundColorBuffer[y * TotalColumns + i] }
-                );
+                try
+                {
+                    context.DrawString(
+                        Font,
+                        str,
+                        new Vector2(dx, ((Margin + Padding) * Cursor.Granularity) + y * Font.Size),
+                        (c, i, p, g) => new GlyphTransformData(p) {Color = ForegroundColorBuffer[y * TotalColumns + i]}
+                    );
+                }
+                catch
+                {
+                    
+                }
             }
 
             //foreach (var segment in coloredSegments)

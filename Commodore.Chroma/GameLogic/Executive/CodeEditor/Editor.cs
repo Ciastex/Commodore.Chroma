@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Chroma.Graphics.TextRendering;
+using Cursor = Commodore.GameLogic.Display.Cursor;
 
 namespace Commodore.GameLogic.Executive.CodeEditor
 {
@@ -147,8 +148,8 @@ namespace Commodore.GameLogic.Executive.CodeEditor
             context.Rectangle(
                 ShapeMode.Fill,
                 new Vector2(0, 0), 
-                G.Window.Properties.Width, 
-                G.Window.Properties.Height, 
+                G.Window.Size.Width, 
+                G.Window.Size.Height, 
                 EditorColors.EditorBackground
             );
         }
@@ -222,7 +223,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
                 {
                     var petscii = dict[keyCode];
 
-                    if(Font.HasGlyph(petscii))
+                    if(Font.CanRenderGlyph(petscii))
                         PrintableCharacter(petscii);
                 }
             }
@@ -253,7 +254,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
             if (Options.TypingMode != TypingMode.Regular)
                 return;
 
-            if (Font.HasGlyph(character))
+            if (Font.CanRenderGlyph(character))
                 PrintableCharacter(character);
         }
 

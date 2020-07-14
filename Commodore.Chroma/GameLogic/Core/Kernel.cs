@@ -28,8 +28,16 @@ namespace Commodore.GameLogic.Core
 
         static Kernel()
         {
-            Font = G.ContentManager.Load<TrueTypeFont>("Fonts/c64style.ttf", 16);
-            //Font.CharacterSpacing = 1f;
+            Font = G.ContentManager.Load<TrueTypeFont>(
+                "Fonts/c64style.ttf", 
+                16,
+                "`1234567890-=qwertyuiop[]asdfghjkl;'\\zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"|ZXCVBNM<>?" +
+                "\ue05e\ue06a\ue076\ue05f\ue06b\ue077\ue060\ue06c\ue078\ue061\ue06d\ue079\ue062\ue06e\ue07a\ue063" +
+                "\ue06f\ue07b\ue064\ue070\ue07c\ue065\ue071\ue07d\ue066\ue072\ue07e\ue067\ue073\ue07f\ue068\ue074" +
+                "\ue069\ue075\ue2a0\ue0ac\ue0b8\ue0a1\ue0ad\ue0b9\ue0a2\ue0ae\ue0ba\ue0a3\ue0af\ue0bb\ue0a4\ue0b0" +
+                "\ue0bc\ue0a5\ue0b1\ue0bd\ue0a6\ue0b2\ue0be\ue0a7\ue0b3\ue0bf\ue0a8\ue0b4\ue05c\ue0a9\ue0b5\ue0aa" +
+                "\ue0b6\ue0ab\ue0b7 "
+            );
         }
         private Kernel() { }
 
