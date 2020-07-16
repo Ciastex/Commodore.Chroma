@@ -234,13 +234,13 @@ namespace Commodore.GameLogic.Display
             }
         }
 
-        protected virtual void InitializeDisplayBuffer()
+        protected void InitializeDisplayBuffer()
         {
             Cursor = new Cursor();
             RecalculateDimensions();
         }
 
-        protected virtual void DrawBackdrop(RenderContext renderContext)
+        protected void DrawBackdrop(RenderContext renderContext)
         {
             renderContext.Rectangle(
                 ShapeMode.Fill,
@@ -348,30 +348,6 @@ namespace Commodore.GameLogic.Display
                 {
                 }
             }
-
-            //foreach (var segment in coloredSegments)
-            //{
-            //    // context.BlendUsing(BlendingMode.Add);
-            //    context.Rectangle(
-            //        ShapeMode.Fill,
-            //        new Vector2(
-            //            dx,
-            //            (i + Margin + Padding) * Cursor.Granularity
-            //        ),
-            //        segment.Value.Length * Cursor.Granularity,
-            //        16,
-            //        segment.Background
-            //    );
-            //    // context.BlendUsing(BlendingMode.Default);
-
-            //    context.DrawString(
-            //        Font,
-            //        segment.Value,
-            //        new Vector2(dx, (i + Margin + Padding) * Cursor.Granularity),
-            //        (c, i, p, g) => new GlyphTransformData(p) {Color = segment.Foreground});
-
-            //    dx += segment.Width;
-            //}
         }
     }
 }

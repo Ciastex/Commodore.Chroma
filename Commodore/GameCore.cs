@@ -20,16 +20,18 @@ namespace Commodore
 {
     public class CommodoreMain : Game
     {
+        private bool _kernelStarted;
+        private bool _shaderEnabled = true;
+        
         private PixelShader _shader;
         private RenderTarget _frameBuffer;
-        private bool _kernelStarted = false;
-        private bool _shaderEnabled = true;
 
         public CommodoreMain() : base(false)
         {
             G.ContentProvider = Content;
             G.Window = Window;
             G.GraphicsSettings = Graphics;
+            G.AudioManager = Audio;
 
             G.SettingsManager = new SettingsManager();
             

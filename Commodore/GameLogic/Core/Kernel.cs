@@ -1,6 +1,15 @@
 ﻿#if !DEBUG
     using Commodore.GameLogic.Core.BootSequence;
 #endif
+using System;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Chroma.Audio;
+using Chroma.Graphics;
+using Chroma.Graphics.TextRendering;
+using Chroma.Input;
+using ChromaSynth;
 using Commodore.Framework;
 using Commodore.GameLogic.Core.Hardware;
 using Commodore.GameLogic.Core.IO;
@@ -11,14 +20,6 @@ using Commodore.GameLogic.Executive.CodeEditor.Events;
 using Commodore.GameLogic.Interaction;
 using Commodore.GameLogic.Interaction.Shell;
 using Commodore.GameLogic.Persistence;
-using Chroma.Graphics;
-using Chroma.Input;
-using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Chroma.Graphics.TextRendering;
-using File = Commodore.GameLogic.Core.IO.Storage.File;
 
 namespace Commodore.GameLogic.Core
 {
@@ -29,7 +30,7 @@ namespace Commodore.GameLogic.Core
         static Kernel()
         {
             Font = G.ContentProvider.Load<TrueTypeFont>(
-                "Fonts/c64style.ttf", 
+                "Fonts/c64style.ttf",
                 16,
                 "`1234567890-=qwertyuiop[]asdfghjkl;'\\zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}ASDFGHJKL:\"|ZXCVBNM<>?" +
                 "\ue05e\ue06a\ue076\ue05f\ue06b\ue077\ue060\ue06c\ue078\ue061\ue06d\ue079\ue062\ue06e\ue07a\ue063" +
@@ -39,7 +40,10 @@ namespace Commodore.GameLogic.Core
                 "\ue0b6\ue0ab\ue0b7 "
             );
         }
-        private Kernel() { }
+
+        private Kernel()
+        {
+        }
 
         private static Kernel _instance;
         public static Kernel Instance => _instance ??= new Lazy<Kernel>(() => new Kernel()).Value;
@@ -55,9 +59,6 @@ namespace Commodore.GameLogic.Core
         public VGA Vga;
         public Terminal Terminal;
 
-        // REWRITE ARTIFACT
-        //public Synthesizer Synthesizer;
-
         public CodeExecutionLayer CodeExecutionLayer;
 
         public Editor CodeEditor;
@@ -67,6 +68,21 @@ namespace Commodore.GameLogic.Core
         public FileSystemContext LocalFileSystemContext { get; private set; }
 
         public event EventHandler ColdBootComplete;
+
+        private Waveform[] _waveformGenerators;
+
+        private ushort GetVoiceFrequency(int noteIndex)
+        {
+            var addr =
+                SystemMemoryAddresses.Voice1Frequency + (noteIndex * 3);
+            return (ushort)Memory.Peek16(SystemConstants.SystemMemoryPlane, addr);
+        }
+
+        private byte GetNoteGenerator(int noteIndex)
+        {
+            return Memory.Peek8(SystemConstants.SystemMemoryPlane,
+                SystemMemoryAddresses.Voice1Frequency + (noteIndex * 3) + 2);
+        }
 
         private void Reboot(bool coldBoot)
         {
@@ -80,7 +96,10 @@ namespace Commodore.GameLogic.Core
                 if (UserProfile.Instance != null && !UserProfile.Instance.Saving)
                     UserProfile.Instance.SaveToFile();
             }
-            else UserProfile.Load();
+            else
+            {
+                UserProfile.Load();
+            }
 
             RebootTokenSource?.Cancel();
 
@@ -90,11 +109,31 @@ namespace Commodore.GameLogic.Core
 
             InitializeSystemMemory();
             InitializeVgaAdapter();
+
             InitializeIoInterfaces();
+
+            if (coldBoot)
+            {
+                G.AudioManager.HookPostMixProcessor(new AudioSource.PostMixWaveformProcessor<float>(
+                    (chunk, bytes) =>
+                    {
+                        for (var voiceIndex = 0; voiceIndex < 8; voiceIndex++)
+                        {
+                            var osc = GetNoteGenerator(voiceIndex);
+
+                            if (osc > 0 && osc < _waveformGenerators.Length)
+                            {
+                                var gen = _waveformGenerators[osc];
+                                gen.Frequency = GetVoiceFrequency(voiceIndex);
+                                gen.GenerateChunk(ref chunk);
+                            }
+                        }
+                    }
+                ));
+            }
+
             InitializeCodeEditor();
             InitializeTermShell();
-            // REWRITE ARTIFACT
-            // InitializeRxCpu();
             InitializeCodeExecutionLayer();
 
             LocalFileSystemContext = new FileSystemContext(UserProfile.Instance.RootDirectory);
@@ -143,14 +182,20 @@ namespace Commodore.GameLogic.Core
             Vga.Update(deltaTime);
 
             Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.ShiftPressState, Keyboard.IsKeyDown(
-                KeyCode.LeftShift) || Keyboard.IsKeyDown(KeyCode.RightShift));
-            
+                                                                                                      KeyCode
+                                                                                                          .LeftShift) ||
+                                                                                                  Keyboard.IsKeyDown(
+                                                                                                      KeyCode
+                                                                                                          .RightShift));
+
             Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CtrlPressState, Keyboard.IsKeyDown(
-                KeyCode.LeftControl) || Keyboard.IsKeyDown(KeyCode.RightControl));
+                                                                                                     KeyCode
+                                                                                                         .LeftControl) ||
+                                                                                                 Keyboard.IsKeyDown(
+                                                                                                     KeyCode
+                                                                                                         .RightControl));
 
             Terminal.Update(deltaTime);
-            // REWRITE ARTIFACT
-            // Synthesizer.Update(deltaTime);
         }
 
         private void InitializeSystemMemory()
@@ -175,9 +220,12 @@ namespace Commodore.GameLogic.Core
             Memory.Poke(SystemMemoryAddresses.CurrentMarginSize, (byte)0);
             Memory.Poke(SystemMemoryAddresses.CurrentPaddingSize, (byte)1);
             Memory.Poke(SystemMemoryAddresses.UpdateOffsetParametersFlag, (byte)1);
-            Memory.Poke(SystemMemoryAddresses.CurrentMarginColor, unchecked((int)0xFF00FF00));     // ABGR because i'm retarded
-            Memory.Poke(SystemMemoryAddresses.CurrentForegroundColor, unchecked((int)Color.Gray.PackedValue)); // ABGR because i'm retarded
-            Memory.Poke(SystemMemoryAddresses.CurrentBackgroundColor, unchecked((int)0xFF000000)); // ABGR because i'm retarded
+            Memory.Poke(SystemMemoryAddresses.CurrentMarginColor,
+                unchecked((int)0xFF00FF00)); // ABGR because i'm retarded
+            Memory.Poke(SystemMemoryAddresses.CurrentForegroundColor,
+                unchecked((int)Color.Gray.PackedValue)); // ABGR because i'm retarded
+            Memory.Poke(SystemMemoryAddresses.CurrentBackgroundColor,
+                unchecked((int)0xFF000000)); // ABGR because i'm retarded
             Memory.Poke(SystemMemoryAddresses.CursorPositionX, 0);
             Memory.Poke(SystemMemoryAddresses.CursorPositionY, 0);
             Memory.Poke(SystemMemoryAddresses.CtrlPressState, (byte)0);
@@ -228,29 +276,24 @@ namespace Commodore.GameLogic.Core
                 Terminal.ResetInputHistory();
             }
 
-            /* REWRITE ARTIFACT */
-            /*
-            if (Synthesizer == null)
+            if (_waveformGenerators == null)
             {
-                Synthesizer = new Synthesizer();
-            }*/
+                _waveformGenerators = new Waveform[]
+                {
+                    null,
+                    new PulseWave(G.AudioManager, 44100),
+                    new SawtoothWave(G.AudioManager, 44100),
+                    new SineWave(G.AudioManager, 44100),
+                    new SquareWave(G.AudioManager, 44100),
+                    new TriangleWave(G.AudioManager, 44100),
+                };
+            }
         }
 
         private void InitializeCodeExecutionLayer()
         {
             CodeExecutionLayer = new CodeExecutionLayer();
         }
-
-        /* REWRITE ARTIFACT */
-        /*
-        private void InitializeRxCpu()
-        {
-            Processor = new Processor();
-
-            Processor.SetMemoryArea(Memory.Array);
-            Processor.SetProgramInfo(0x600, 0);
-        }
-        */
 
         private void InitializeCodeEditor()
         {
@@ -310,7 +353,9 @@ namespace Commodore.GameLogic.Core
 
                         customPromptSuccess = true;
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
 
                 if (!customPromptSuccess)
@@ -332,12 +377,14 @@ namespace Commodore.GameLogic.Core
         {
             if (!CodeEditor.IsVisible)
             {
-                if ((byte)keyCode == Memory.Peek8(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.BreakKeyScancode))
+                if ((byte)keyCode == Memory.Peek8(SystemConstants.SystemMemoryPlane,
+                    SystemMemoryAddresses.BreakKeyScancode))
                 {
                     if (CodeExecutionLayer.IsExecuting)
                         CodeExecutionLayer.Interpreter.BreakExecution = true;
 
-                    if (Memory.PeekBool(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
+                    if (Memory.PeekBool(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.ShiftPressState) &&
+                        !IsRebooting)
                         Reboot(false);
                 }
 
