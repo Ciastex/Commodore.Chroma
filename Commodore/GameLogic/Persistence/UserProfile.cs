@@ -76,9 +76,7 @@ namespace Commodore.GameLogic.Persistence
                     bf.Serialize(stream, this);
                 }
             }
-            catch (Exception e)
-            {
-            }
+            catch {}
             finally
             {
                 Saving = false;

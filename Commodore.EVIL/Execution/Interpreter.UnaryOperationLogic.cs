@@ -38,7 +38,7 @@ namespace Commodore.EVIL.Execution
                 {
                     if (unaryOperationNode.Operand is VariableNode variable)
                         return new DynValue(variable.Name);
-
+                    
                     throw new RuntimeException("Attempt to get a name of a non-variable symbol.", unaryOperationNode.Line);
                 }
 
