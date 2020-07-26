@@ -85,10 +85,6 @@ namespace Commodore.EVIL.Execution
                 {
                     retVal = clrFunction(this, parameters);
                 }
-                catch
-                {
-                    throw;
-                }
                 finally
                 {
                     CallStack.Pop();

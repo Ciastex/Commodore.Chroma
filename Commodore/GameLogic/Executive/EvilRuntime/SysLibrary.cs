@@ -46,8 +46,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             return new DynValue(
                 Kernel.Instance.Terminal.Read(
-                    prompt,
-                    Kernel.Instance.RebootTokenSource.Token
+                    prompt
                 ).GetAwaiter().GetResult()
             );
         }
@@ -65,8 +64,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             return new DynValue(
                 Kernel.Instance.Terminal.ReadLine(
-                    prompt,
-                    Kernel.Instance.RebootTokenSource.Token
+                    prompt
                 ).GetAwaiter().GetResult()
             );
         }

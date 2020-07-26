@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Chroma.ContentManagement;
 using Commodore.Framework.Extensions;
+using Commodore.GameLogic.Core.IO;
 
 namespace Commodore.GameLogic.Core.BootSequence
 {
@@ -34,9 +35,7 @@ namespace Commodore.GameLogic.Core.BootSequence
                 }
 
                 if (!line.NoNewLine)
-                {
                     Kernel.Instance.Terminal.Write("\n");
-                }
 
                 await Task.Delay(line.LineDelay);
             }
@@ -63,31 +62,31 @@ namespace Commodore.GameLogic.Core.BootSequence
                 var str = Encoding.UTF8.GetString(ContentManager.Read($"Text/Boot/{bootSequenceFileName}.xml"));
                 var xDocument = XDocument.Parse(str);
 
-                var bootSequenceElements = xDocument.Root.Elements("Line");
-                var scrollUpElement = xDocument.Root.Element("ScrollUp");
+                var bootSequenceElements = xDocument!.Root!.Elements("Line");
+                var scrollUpElement = xDocument!.Root!.Element("ScrollUp");
 
-                foreach (var element in bootSequenceElements)
+                foreach (var element in bootSequenceElements!)
                 {
                     var line = new SequenceLine();
 
                     if (element.HasAttribute("Delay"))
                     {
-                        line.LineDelay = int.Parse(element.Attribute("Delay").Value);
+                        line.LineDelay = int.Parse(element.Attribute("Delay")!.Value);
                     }
 
                     if (element.HasAttribute("CharDelay"))
                     {
-                        line.CharDelay = int.Parse(element.Attribute("CharDelay").Value);
+                        line.CharDelay = int.Parse(element.Attribute("CharDelay")!.Value);
                     }
 
                     if (element.HasAttribute("Typed"))
                     {
-                        line.Typed = bool.Parse(element.Attribute("Typed").Value);
+                        line.Typed = bool.Parse(element.Attribute("Typed")!.Value);
                     }
 
                     if (element.HasAttribute("NoNewLine"))
                     {
-                        line.NoNewLine = bool.Parse(element.Attribute("NoNewLine").Value);
+                        line.NoNewLine = bool.Parse(element.Attribute("NoNewLine")!.Value);
                     }
 
                     if (!string.IsNullOrEmpty(element.Value))
@@ -109,6 +108,7 @@ namespace Commodore.GameLogic.Core.BootSequence
             }
             catch (Exception e)
             {
+                
                 Kernel.Instance.Terminal.WriteLine("ACTUAL GAME ERROR");
                 Kernel.Instance.Terminal.WriteLine("Boot sequence failed to build.\nIf you didn't mess with the XMLs contact the retarded developer.");
                 Kernel.Instance.Terminal.WriteLine($"\uFF04Tell him this happened when reading {bootSequenceFileName}\n: {e.Message}.\uFF40");

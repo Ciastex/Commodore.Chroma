@@ -28,13 +28,16 @@ namespace Commodore.GameLogic.Display
             Y = y;
         }
 
-        public void SetGranularPosition(int column, int row) 
+        public void SetGranularPosition(int column, int row)
             => SetPixelBasedPosition(column * Granularity, row * Granularity);
 
         public void Draw(RenderContext context)
         {
             if (_visible)
+            {
+                context.SetShapeBlendingPreset(BlendingPreset.Add);
                 context.Rectangle(ShapeMode.Fill, new Vector2(X, Y), Granularity, Granularity, ColorMask);
+            }
         }
 
         public void Update(float deltaTime)

@@ -21,22 +21,6 @@
         public const int SoftResetCompleteFlag = 0x000023;              // byte
         public const int __reservedE = 0x000024;                        // dword
         public const int __reservedF = 0x000028;                        // dword
-        public const int Voice1Frequency = 0x00002C;                    // word
-        public const int Voice1Generator = 0x00002E;                    // byte
-        public const int Voice2Frequency = 0x00002F;                    // word
-        public const int Voice2Generator = 0x000031;                    // byte
-        public const int Voice3Frequency = 0x000032;                    // word
-        public const int Voice3Generator = 0x000034;                    // byte
-        public const int Voice4Frequency = 0x000035;                    // word
-        public const int Voice4Generator = 0x000037;                    // byte
-        public const int Voice5Frequency = 0x000038;                    // word
-        public const int Voice5Generator = 0x00003A;                    // byte
-        public const int Voice6Frequency = 0x00003B;                    // word
-        public const int Voice6Generator = 0x00003D;                    // byte
-        public const int Voice7Frequency = 0x00003E;                    // word
-        public const int Voice7Generator = 0x000040;                    // byte
-        public const int Voice8Frequency = 0x000041;                    // word
-        public const int Voice8Generator = 0x000043;                    // byte
 
         // ----------------------------------------------------------------------
         public const int UserDataArea = 0x000600;

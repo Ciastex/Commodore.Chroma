@@ -13,7 +13,7 @@ namespace Commodore.GameLogic.Display
     public class VGA
     {
         private bool _alreadyInitialized;
-        
+
         private Log Log { get; } = LogManager.GetForCurrentAssembly();
 
         public TrueTypeFont Font;
@@ -35,8 +35,7 @@ namespace Commodore.GameLogic.Display
         {
             get
             {
-                var value = Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.CursorPositionX);
+                var value = Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CursorPositionX);
 
                 if (value > TotalColumns)
                 {
@@ -60,8 +59,7 @@ namespace Commodore.GameLogic.Display
                 else if (value < -1) // compensate for later processing
                     val = 0;
 
-                Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CursorPositionX,
-                    val);
+                Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CursorPositionX, val);
             }
         }
 
@@ -69,8 +67,7 @@ namespace Commodore.GameLogic.Display
         {
             get
             {
-                var value = Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.CursorPositionY);
+                var value = Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CursorPositionY);
 
                 if (value > TotalRows)
                 {
@@ -95,8 +92,7 @@ namespace Commodore.GameLogic.Display
                 else if (value < 0)
                     val = 0;
 
-                Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CursorPositionY,
-                    val);
+                Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CursorPositionY, val);
             }
         }
 
@@ -105,26 +101,20 @@ namespace Commodore.GameLogic.Display
 
         public Color ActiveForegroundColor
         {
-            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentForegroundColor));
-            set => Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentForegroundColor, (int)value.PackedValue);
+            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CurrentForegroundColor));
+            set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentForegroundColor, (int)value.PackedValue);
         }
 
         public Color ActiveBackgroundColor
         {
-            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentBackgroundColor));
-            set => Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentBackgroundColor, (int)value.PackedValue);
+            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CurrentBackgroundColor));
+            set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentBackgroundColor, (int)value.PackedValue);
         }
 
         public Color ActiveMarginColor
         {
-            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentMarginColor));
-            set => Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.CurrentMarginColor, (int)value.PackedValue);
+            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CurrentMarginColor));
+            set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentMarginColor, (int)value.PackedValue);
         }
 
         public event EventHandler InitialSetUpComplete;
@@ -167,13 +157,24 @@ namespace Commodore.GameLogic.Display
             BackgroundColorBuffer[y * TotalColumns + x] = background;
         }
 
+        public void ResetInitialization()
+        {
+            _alreadyInitialized = false;
+        }
+
         public void Update(float deltaTime)
         {
             ReloadOffsetParametersIfNeeded();
-            
-            if (!_alreadyInitialized)
+
+            if (!_alreadyInitialized || Kernel.Instance.Memory.PeekBool(SystemMemoryAddresses.SoftResetCompleteFlag))
             {
                 InitialSetUpComplete?.Invoke(this, EventArgs.Empty);
+                
+                Kernel.Instance.Memory.Poke(
+                    SystemMemoryAddresses.SoftResetCompleteFlag,
+                    false
+                );
+                
                 _alreadyInitialized = true;
             }
 
@@ -187,6 +188,7 @@ namespace Commodore.GameLogic.Display
         {
             DrawBackdrop(context);
             DrawDisplayBuffer(context);
+            
             Cursor.Draw(context);
         }
 
@@ -293,8 +295,8 @@ namespace Commodore.GameLogic.Display
 
         private void FailsafeReset()
         {
-            Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CurrentMarginSize, 1);
-            Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CurrentPaddingSize, 1);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentMarginSize, 1);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentPaddingSize, 1);
 
             Margin = 1;
             Padding = 1;
@@ -309,16 +311,12 @@ namespace Commodore.GameLogic.Display
 
         private void ReloadOffsetParametersIfNeeded()
         {
-            if (Kernel.Instance.Memory.PeekBool(SystemConstants.SystemMemoryPlane,
-                SystemMemoryAddresses.UpdateOffsetParametersFlag))
+            if (Kernel.Instance.Memory.PeekBool(SystemMemoryAddresses.UpdateOffsetParametersFlag))
             {
-                Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.UpdateOffsetParametersFlag, 0);
+                Kernel.Instance.Memory.Poke(SystemMemoryAddresses.UpdateOffsetParametersFlag, 0);
 
-                Margin = Kernel.Instance.Memory.Peek8(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.CurrentMarginSize);
-                Padding = Kernel.Instance.Memory.Peek8(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.CurrentPaddingSize);
+                Margin = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.CurrentMarginSize);
+                Padding = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.CurrentPaddingSize);
 
                 RecalculateDimensions();
             }
