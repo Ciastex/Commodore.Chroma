@@ -137,6 +137,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 var targetFile = dir.AddNewFile(targetFileName);
 
                 targetFile.SetData(sourceFile.GetData());
+                targetFile.Attributes = sourceFile.Attributes;
                 return targetFile;
             }
             else
@@ -145,6 +146,8 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 var targetFile = Create(targetPath, false, forceLocalContext);
 
                 targetFile.SetData(sourceFile.GetData());
+                targetFile.Attributes = sourceFile.Attributes;
+                
                 return targetFile;
             }
         }
