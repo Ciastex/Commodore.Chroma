@@ -21,7 +21,7 @@ namespace Commodore.EVIL.Parsing
                 if (Scanner.State.CurrentToken.Type == TokenType.EOF)
                     throw new ParserException($"Unexpected EOF in the function call stated in line {line}.");
 
-                parameters.Add(Expression());
+                parameters.Add(Comparison());
 
                 if (Scanner.State.CurrentToken.Type == TokenType.RParenthesis)
                     break;

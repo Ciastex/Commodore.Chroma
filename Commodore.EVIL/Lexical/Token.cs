@@ -17,7 +17,7 @@ namespace Commodore.EVIL.Lexical
         {
             switch (type)
             {
-                case TokenType.And: return "and";
+                case TokenType.And: return "&&";
                 case TokenType.Assign: return "=";
                 case TokenType.Break: return "break";
                 case TokenType.Colon: return ":";
@@ -52,7 +52,7 @@ namespace Commodore.EVIL.Lexical
                 case TokenType.NameOf: return "?";
                 case TokenType.Nand: return "$";
                 case TokenType.Negation: return "!";
-                case TokenType.Or: return "or";
+                case TokenType.Or: return "||";
                 case TokenType.Plus: return "+";
                 case TokenType.RBrace: return "}";
                 case TokenType.RBracket: return "]";

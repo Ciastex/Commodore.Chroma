@@ -10,12 +10,12 @@ namespace Commodore.EVIL.Parsing
         {
             var variable = Variable(identifier);
             var line = Match(TokenType.LBracket);
-            var keyExpression = Expression();
+            var keyExpression = Comparison();
             Match(TokenType.RBracket);
 
             Match(TokenType.Assign);
 
-            var valueExpression = Expression();
+            var valueExpression = Comparison();
 
             return new TableAssignmentNode(variable, keyExpression, valueExpression) { Line = line };
         }

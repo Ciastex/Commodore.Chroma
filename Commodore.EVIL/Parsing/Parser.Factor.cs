@@ -77,7 +77,7 @@ namespace Commodore.EVIL.Parsing
             {
                 var line = Match(TokenType.LParenthesis);
 
-                var node = Expression();
+                var node = Comparison();
                 node.Line = line;
 
                 Match(TokenType.RParenthesis);

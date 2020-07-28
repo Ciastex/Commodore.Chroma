@@ -17,7 +17,7 @@ namespace Commodore.EVIL.Parsing
                 size++;
             }
 
-            var node = Expression();
+            var node = Comparison();
 
             if (Scanner.State.CurrentToken.Type == TokenType.Colon)
             {

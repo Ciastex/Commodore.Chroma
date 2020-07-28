@@ -14,12 +14,6 @@ namespace Commodore.EVIL.Parsing
             TokenType.Divide,
             TokenType.Nand,
             TokenType.Modulo,
-            TokenType.CompareLessThan,
-            TokenType.CompareGreaterThan,
-            TokenType.CompareLessOrEqualTo,
-            TokenType.CompareGreaterOrEqualTo,
-            TokenType.CompareEqual,
-            TokenType.CompareNotEqual
         };
 
         private AstNode Term()
@@ -50,36 +44,6 @@ namespace Commodore.EVIL.Parsing
                 {
                     var line = Match(TokenType.Modulo);
                     node = new BinaryOperationNode(node, BinaryOperationType.Modulo, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareLessThan)
-                {
-                    var line = Match(TokenType.CompareLessThan);
-                    node = new BinaryOperationNode(node, BinaryOperationType.Less, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareGreaterThan)
-                {
-                    var line = Match(TokenType.CompareGreaterThan);
-                    node = new BinaryOperationNode(node, BinaryOperationType.Greater, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareLessOrEqualTo)
-                {
-                    var line = Match(TokenType.CompareLessOrEqualTo);
-                    node = new BinaryOperationNode(node, BinaryOperationType.LessOrEqual, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareGreaterOrEqualTo)
-                {
-                    var line = Match(TokenType.CompareGreaterOrEqualTo);
-                    node = new BinaryOperationNode(node, BinaryOperationType.GreaterOrEqual, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareEqual)
-                {
-                    var line = Match(TokenType.CompareEqual);
-                    node = new BinaryOperationNode(node, BinaryOperationType.Equal, Factor()) { Line = line };
-                }
-                else if (token.Type == TokenType.CompareNotEqual)
-                {
-                    var line = Match(TokenType.CompareNotEqual);
-                    node = new BinaryOperationNode(node, BinaryOperationType.NotEqual, Factor()) { Line = line };
                 }
             }
             return node;
