@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Timers;
 using Chroma.Input;
+using Commodore.Framework;
 using Commodore.Framework.Persistence.AppData;
 using Commodore.GameLogic.Core.IO.Storage;
 
@@ -76,7 +78,9 @@ namespace Commodore.GameLogic.Persistence
                     bf.Serialize(stream, this);
                 }
             }
-            catch {}
+            catch
+            {
+            }
             finally
             {
                 Saving = false;
@@ -104,8 +108,41 @@ namespace Commodore.GameLogic.Persistence
         }
 
         private void ProfileSaveTimer_Elapsed(object sender, ElapsedEventArgs e)
+            => SaveToFile();
+
+        public void CreateBaseFileSystem()
         {
-            SaveToFile();
+            var binDirectory = RootDirectory.AddNewDirectory("bin");
+            var homeDirectory = RootDirectory.AddNewDirectory("home");
+            RootDirectory.AddNewDirectory("lib");
+
+            homeDirectory.AddNewFile("fs.docs").SetData(
+                G.ContentProvider.Read("Text/Docs/fs.txt")
+            );
+
+            binDirectory.AddNewFile("ls", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/ls")
+            );
+
+            binDirectory.AddNewFile("cat", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/cat")
+            );
+
+            binDirectory.AddNewFile("cp", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/cp")
+            );
+
+            binDirectory.AddNewFile("rm", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/rm")
+            );
+
+            binDirectory.AddNewFile("cd", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/cd")
+            );
+
+            binDirectory.AddNewFile("help", FileAttributes.Executable).SetData(
+                G.ContentProvider.Read("Sources/BasePrograms/help")
+            );
         }
     }
 }

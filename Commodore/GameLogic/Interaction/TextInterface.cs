@@ -37,7 +37,7 @@ namespace Commodore.GameLogic.Interaction
 
             var breakKey = KeyCode.Pause;
             var gfxModeResetKey = KeyCode.F12;
-            var username = "lazarus";
+            var username = string.Empty;
 
             while (!processComplete)
             {
@@ -45,7 +45,7 @@ namespace Commodore.GameLogic.Interaction
 
                 while (!usernameValid)
                 {
-                    username = await Kernel.Instance.Terminal.ReadLine($" -> USERNAME [{username}]: ");
+                    username = await Kernel.Instance.Terminal.ReadLine($" -> ENTER USERNAME: ");
 
                     if (username.Length > 16)
                     {
@@ -55,15 +55,20 @@ namespace Commodore.GameLogic.Interaction
                     else if (username.Length == 0)
                     {
                         Kernel.Instance.Terminal.WriteLine("USERNAME_EMPTY".Glitched());
+                        continue;
                     }
 
                     usernameValid = true;
                 }
 
-                breakKey = (KeyCode)await Kernel.Instance.Terminal.Read($" -> PRESS_SCRIPT_BREAK_KEY [{breakKey}]");
+                breakKey = (KeyCode)await Kernel.Instance.Terminal.Read(
+                   $" -> PRESS USER PROGRAM KILL KEY [{breakKey}]"
+                );
                 Kernel.Instance.Terminal.Write("\n");
 
-                gfxModeResetKey = (KeyCode)await Kernel.Instance.Terminal.Read($" -> PRESS_GFXMODE_RESET_KEY [{gfxModeResetKey}]");
+                gfxModeResetKey = (KeyCode)await Kernel.Instance.Terminal.Read(
+                    $" -> PRESS GRAPHICS MODE RECOVERY KEY [{gfxModeResetKey}]"
+                );
                 Kernel.Instance.Terminal.Write("\n");
 
                 Kernel.Instance.Terminal.WriteLine("User input summary:");
@@ -83,40 +88,9 @@ namespace Commodore.GameLogic.Interaction
                 {
                     Kernel.Instance.Terminal.WriteLine("Y");
 
-                    UserProfile.Instance.RootDirectory.AddNewDirectory("bin");
-                    UserProfile.Instance.RootDirectory.AddNewDirectory("home");
-                    UserProfile.Instance.RootDirectory.AddNewDirectory("lib");
-                    var binDirectory = (UserProfile.Instance.RootDirectory.Children["bin"] as Core.IO.Storage.Directory);
-
-                    binDirectory.AddNewFile("ls").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/ls"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("cat").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/cat"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("cp").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/cp"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("rm").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/rm"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("cd").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/cd"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("help").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/help"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
-                    binDirectory.AddNewFile("crawl").SetData(
-                        Encoding.UTF8.GetString(G.ContentProvider.Read("Sources/BasePrograms/crawl"))
-                    ).Attributes = Core.IO.Storage.FileAttributes.Executable;
-
+                    UserProfile.Instance.CreateBaseFileSystem();
                     UserProfile.Instance.SaveToFile();
+                    
                     processComplete = true;
                 }
                 else Kernel.Instance.Terminal.WriteLine("N");
@@ -128,10 +102,10 @@ namespace Commodore.GameLogic.Interaction
 
             UserProfile.Instance.IsInitialized = true;
 
-            Kernel.Instance.Terminal.WriteLine("\nPROFILE_CONFIG_COMPLETE_AWAIT_REBOOT");
+            Kernel.Instance.Terminal.Write("\nPROFILE_CONFIG_COMPLETE_AWAIT_REBOOT");
             await Kernel.Instance.Terminal.WriteTyped(".....", 650);
 
-            Kernel.Instance.WarmBoot();
+            Kernel.Instance.Reboot(true);
         }
     }
 }

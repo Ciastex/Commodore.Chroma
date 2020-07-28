@@ -87,8 +87,15 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             var path = args[0].String;
 
-            Directory.ChangeWorkingDirectory(path);
-            return DynValue.Zero;
+            try
+            {
+                Directory.ChangeWorkingDirectory(path);
+                return DynValue.Zero;
+            }
+            catch
+            {
+                return new DynValue(-1);
+            }
         }
 
         public DynValue Remove(Interpreter interpreter, ClrFunctionArguments args)
@@ -96,7 +103,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             args.ExpectAtLeast(1)
                 .ExpectTypeAtIndex(0, DynValueType.String);
 
-            bool forceRemoveDirectory = false;
+            var forceRemoveDirectory = false;
 
             if (args.Count == 2)
             {
@@ -282,12 +289,10 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 if (c == 'h')
                 {
                     fileAttrs |= FileAttributes.Hidden;
-                    continue;
                 }
                 else if (c == '-')
                 {
                     fileAttrs &= ~(FileAttributes.Hidden);
-                    continue;
                 }
             }
 
@@ -332,9 +337,15 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             var path = args[0].String;
             var data = args[1].String;
 
-            File.Create(path, true).SetData(data);
-
-            return new DynValue(0);
+            try
+            {
+                File.Create(path, true).SetData(data);
+                return DynValue.Zero;
+            }
+            catch
+            {
+                return new DynValue(-1);
+            }
         }
 
         public DynValue WriteAllLines(Interpreter interpreter, ClrFunctionArguments args)
@@ -346,11 +357,18 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             var path = args[0].String;
             var table = args[1].Table;
 
-            File.Create(path, true).SetData(
-                string.Join("\n", table.Values.Select(x => x.AsString().String))
-            );
+            try
+            {
+                File.Create(path, true).SetData(
+                    string.Join("\n", table.Values.Select(x => x.AsString().String))
+                );
 
-            return new DynValue(0);
+                return DynValue.Zero;
+            }
+            catch
+            {
+                return new DynValue(-1);
+            }
         }
 
         public override void Register(Environment env, Interpreter interpreter)

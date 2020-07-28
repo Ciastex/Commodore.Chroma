@@ -10,9 +10,9 @@ namespace Commodore.GameLogic.Executive.CodeEditor
         {
             "fn", "while", "if", "do",
             "else", "end", "for", "skip",
-            "break", "ret", "local", "and",
-            "or", "undef", "exit", "elif",
-            "each"
+            "break", "ret", "local",
+            "undef", "exit", "elif",
+            "each", "&&", "||"
         };
 
         private readonly List<string> ValueWords = new List<string>
@@ -20,7 +20,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
             "true", "false"
         };
 
-        private readonly List<char> Operators = "()[].,=#$@+-*/%:<>{}?!".ToCharArray().ToList();
+        private readonly List<char> Operators = "()[].,=#$@+-*/%:<>{}?!|&".ToCharArray().ToList();
 
         public List<ColorizedSegment> Colorize(string line)
         {

@@ -3,12 +3,12 @@ using Commodore.GameLogic.Core.BootSequence;
 #endif
 using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Chroma.Graphics;
 using Chroma.Graphics.TextRendering;
 using Chroma.Input;
 using Commodore.Framework;
+using Commodore.Framework.Extensions;
 using Commodore.GameLogic.Core.Hardware;
 using Commodore.GameLogic.Core.IO;
 using Commodore.GameLogic.Core.IO.Storage;
@@ -64,16 +64,23 @@ namespace Commodore.GameLogic.Core
         public FileSystemContext FileSystemContext { get; set; }
         public FileSystemContext LocalFileSystemContext { get; private set; }
 
-        public void ColdBoot()
+        public void Reboot(bool isWarmBoot)
         {
             IsRebooting = true;
 
+            if (isWarmBoot)
+            {
+                if (UserProfile.Instance != null && !UserProfile.Instance.Saving)
+                    UserProfile.Instance.SaveToFile();
+            }
+            else
+            {
+                UserProfile.Load();
+                UserProfile.Instance.AutoSave = false;
+            }
 #if !DEBUG
-            BootSequence = new BootSequencePlayer(G.ContentProvider);
+            BootSequence = new BootSequencePlayer();
 #endif
-            UserProfile.Load();
-            UserProfile.Instance.AutoSave = false;
-
             Terminal?.CancelInput();
 
             InitializeSystemMemory();
@@ -86,32 +93,16 @@ namespace Commodore.GameLogic.Core
             LocalFileSystemContext = new FileSystemContext(UserProfile.Instance.RootDirectory);
             FileSystemContext = LocalFileSystemContext;
 
-            if (UserProfile.Instance.IsInitialized)
-                UserProfile.Instance.AutoSave = true;
-        }
+            if (!isWarmBoot)
+            {
+                if (UserProfile.Instance.IsInitialized)
+                    UserProfile.Instance.AutoSave = true;
+            }
 
-        public void WarmBoot()
-        {
-            IsRebooting = true;
-            
-            if (UserProfile.Instance != null && !UserProfile.Instance.Saving)
-                UserProfile.Instance.SaveToFile();
-            
-#if !DEBUG
-            BootSequence = new BootSequencePlayer(G.ContentProvider);
-#endif
-
-            InitializeSystemMemory();
-            InitializeVgaAdapter();
-            InitializeIoInterfaces();
-            InitializeCodeEditor();
-            InitializeTermShell();
-            InitializeCodeExecutionLayer();
-            
-            LocalFileSystemContext = new FileSystemContext(UserProfile.Instance.RootDirectory);
-            FileSystemContext = LocalFileSystemContext;
-            
-            Memory.Poke(SystemMemoryAddresses.SoftResetCompleteFlag, 1);
+            if (isWarmBoot)
+            {
+                Memory.Poke(SystemMemoryAddresses.SoftResetCompleteFlag, (byte)1);
+            }
         }
 
         public void Draw(RenderContext context)
@@ -141,6 +132,11 @@ namespace Commodore.GameLogic.Core
             Memory.Poke(
                 SystemMemoryAddresses.CtrlPressState,
                 Keyboard.IsKeyDown(KeyCode.LeftControl) || Keyboard.IsKeyDown(KeyCode.RightControl)
+            );
+
+            Memory.Poke(
+                SystemMemoryAddresses.AltPressState,
+                Keyboard.IsKeyDown(KeyCode.LeftAlt) || Keyboard.IsKeyDown(KeyCode.RightAlt)
             );
 
             Terminal.Update(deltaTime);
@@ -181,7 +177,8 @@ namespace Commodore.GameLogic.Core
             Memory.Poke(SystemMemoryAddresses.CursorPositionY, 0);
             Memory.Poke(SystemMemoryAddresses.CtrlPressState, (byte)0);
             Memory.Poke(SystemMemoryAddresses.ShiftPressState, (byte)0);
-            Memory.Poke(SystemMemoryAddresses.SoftResetCompleteFlag, 0);
+            Memory.Poke(SystemMemoryAddresses.AltPressState, (byte)0);
+            Memory.Poke(SystemMemoryAddresses.SoftResetCompleteFlag, (byte)0);
         }
 
         private void InitializeVgaAdapter()
@@ -201,13 +198,22 @@ namespace Commodore.GameLogic.Core
 
         private void InitializeIoInterfaces()
         {
+            Terminal?.InputHistory?.Clear();
             Terminal = null;
+            
             Terminal = new Terminal(Vga);
         }
 
         private void InitializeCodeExecutionLayer()
         {
-            ProcessManager = new ProcessManager();
+            if (ProcessManager == null)
+            {
+                ProcessManager = new ProcessManager();
+            }
+            else
+            {
+                ProcessManager.KillAll();
+            }
         }
 
         private void InitializeCodeEditor()
@@ -242,7 +248,9 @@ namespace Commodore.GameLogic.Core
 #endif
             if (!UserProfile.Instance.IsInitialized)
             {
+                IsRebooting = false;
                 await TextInterface.RunProfileConfigWizard();
+                
                 return;
             }
 
@@ -294,9 +302,9 @@ namespace Commodore.GameLogic.Core
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
                 {
                     ProcessManager.KillAll();
-                    
+
                     if (Memory.PeekBool(SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
-                        WarmBoot();
+                        Reboot(true);
                 }
 
                 Terminal.KeyPressed(keyCode, modifiers);
@@ -309,6 +317,9 @@ namespace Commodore.GameLogic.Core
 
         public void TextInput(char character)
         {
+            if (IsRebooting)
+                return;
+            
             if (!CodeEditor.IsVisible)
             {
                 Terminal.TextInput(character);

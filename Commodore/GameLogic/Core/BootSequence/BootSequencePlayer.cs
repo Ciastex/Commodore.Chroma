@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Chroma.ContentManagement;
+using Commodore.Framework;
 using Commodore.Framework.Extensions;
-using Commodore.GameLogic.Core.IO;
 
 namespace Commodore.GameLogic.Core.BootSequence
 {
     public class BootSequencePlayer
     {
-        private IContentProvider ContentManager { get; }
-
         private bool ScrollUpAfterwards { get; set; }
         private List<SequenceLine> Lines { get; set; }
-
-        public BootSequencePlayer(IContentProvider contentManager)
-        {
-            ContentManager = contentManager;
-        }
 
         public async Task TryPerformSequence()
         {
@@ -59,7 +51,7 @@ namespace Commodore.GameLogic.Core.BootSequence
 
             try
             {
-                var str = Encoding.UTF8.GetString(ContentManager.Read($"Text/Boot/{bootSequenceFileName}.xml"));
+                var str = Encoding.UTF8.GetString(G.ContentProvider.Read($"Text/Boot/{bootSequenceFileName}.xml"));
                 var xDocument = XDocument.Parse(str);
 
                 var bootSequenceElements = xDocument!.Root!.Elements("Line");

@@ -31,6 +31,9 @@ namespace Commodore.GameLogic.Display
         public int TotalColumns;
         public int TotalRows;
 
+        public byte Margin;
+        public byte Padding;
+            
         public int CursorX
         {
             get
@@ -96,8 +99,7 @@ namespace Commodore.GameLogic.Display
             }
         }
 
-        public byte Margin;
-        public byte Padding;
+
 
         public Color ActiveForegroundColor
         {
