@@ -9,6 +9,7 @@ using Chroma.Graphics.TextRendering;
 using Chroma.Input;
 using Commodore.Framework;
 using Commodore.Framework.Extensions;
+using Commodore.GameLogic.Core.Exceptions;
 using Commodore.GameLogic.Core.Hardware;
 using Commodore.GameLogic.Core.IO;
 using Commodore.GameLogic.Core.IO.Storage;
@@ -81,7 +82,6 @@ namespace Commodore.GameLogic.Core
 #if !DEBUG
             BootSequence = new BootSequencePlayer();
 #endif
-            Terminal?.CancelInput();
 
             InitializeSystemMemory();
             InitializeVgaAdapter();
@@ -186,21 +186,23 @@ namespace Commodore.GameLogic.Core
             if (Vga == null)
             {
                 Vga = new VGA(Font);
-                
+
                 Vga.InitialSetUpComplete += VGA_InitialSetUpComplete;
                 Vga.FailsafeTriggered += VGA_FailsafeTriggered;
             }
             else
             {
+                Vga.ResetInitialization();
                 Vga.ClearScreen(false);
             }
         }
 
         private void InitializeIoInterfaces()
         {
+            Terminal?.CancelInput();
             Terminal?.InputHistory?.Clear();
             Terminal = null;
-            
+
             Terminal = new Terminal(Vga);
         }
 
@@ -246,54 +248,61 @@ namespace Commodore.GameLogic.Core
             BootSequence.Build("RegularBoot");
             await BootSequence.TryPerformSequence();
 #endif
+            IsRebooting = false;
+            
             if (!UserProfile.Instance.IsInitialized)
             {
-                IsRebooting = false;
                 await TextInterface.RunProfileConfigWizard();
-                
                 return;
             }
 
-            TextInterface.PrintWelcomeBanner(
-                Memory.PeekBool(SystemMemoryAddresses.SoftResetCompleteFlag)
-            );
-
-            IsRebooting = false;
-
-            while (!IsRebooting)
+            await TryRunSystemProgram("/etc/startup");
+            
+            try
             {
-                var customPromptSuccess = false;
-                var promptPath = "/etc/prompt";
-                
-                if (File.Exists(promptPath))
+                while (true)
                 {
-                    try
+                    var customPromptSuccess = await TryRunSystemProgram("/etc/prompt");
+
+                    if (!customPromptSuccess)
                     {
-                        var pid = await ProcessManager.ExecuteProgram(
-                            Encoding.UTF8.GetString(File.Get(promptPath).Data),
-                            promptPath
-                        );
-                        
-                        await ProcessManager.WaitForProgram(pid);
-                        
-                        customPromptSuccess = true;
+                        Terminal.Write($"{FileSystemContext.WorkingDirectory.GetAbsolutePath()} $ ");
                     }
-                    catch
-                    {
-                    }
+
+                    var str = await Terminal.ReadLine(string.Empty);
+
+                    if (string.IsNullOrWhiteSpace(str))
+                        continue;
+
+                    await TermShell.HandleCommand(str);
                 }
-
-                if (!customPromptSuccess)
-                    Terminal.Write($"{FileSystemContext.WorkingDirectory.GetAbsolutePath()} $ ");
-
-                var str = await Terminal.ReadLine(string.Empty);
-
-                if (string.IsNullOrWhiteSpace(str))
-                    continue;
-
-                await Task.Run(async () => await TermShell.HandleCommand(str));
+            }
+            catch (TaskCanceledException)
+            {
             }
         }
+
+        private async Task<bool> TryRunSystemProgram(string path)
+        {
+            if (!File.Exists(path))
+                return false;
+
+            try
+            {
+                var pid = await ProcessManager.ExecuteProgram(
+                    Encoding.UTF8.GetString(File.Get(path).Data),
+                    path
+                );
+
+                await ProcessManager.WaitForProgram(pid);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
         public void KeyPressed(KeyCode keyCode, KeyModifiers modifiers)
         {
@@ -304,7 +313,10 @@ namespace Commodore.GameLogic.Core
                     ProcessManager.KillAll();
 
                     if (Memory.PeekBool(SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
+                    {
                         Reboot(true);
+                        return;
+                    }
                 }
 
                 Terminal.KeyPressed(keyCode, modifiers);
@@ -319,7 +331,7 @@ namespace Commodore.GameLogic.Core
         {
             if (IsRebooting)
                 return;
-            
+
             if (!CodeEditor.IsVisible)
             {
                 Terminal.TextInput(character);
