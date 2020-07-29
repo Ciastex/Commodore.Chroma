@@ -4,6 +4,7 @@ using System.Text;
 using System.Timers;
 using Chroma.Input;
 using Commodore.Framework;
+using Commodore.Framework.Extensions;
 using Commodore.Framework.Persistence.AppData;
 using Commodore.GameLogic.Core.IO.Storage;
 
@@ -112,37 +113,41 @@ namespace Commodore.GameLogic.Persistence
 
         public void CreateBaseFileSystem()
         {
-            var binDirectory = RootDirectory.AddNewDirectory("bin");
             var homeDirectory = RootDirectory.AddNewDirectory("home");
             RootDirectory.AddNewDirectory("lib");
 
             homeDirectory.AddNewFile("fs.docs").SetData(
                 G.ContentProvider.Read("Text/Docs/fs.txt")
             );
+            
+            PopulateBaseBinDirectory();
+            PopulateBaseEtcDirectory();
+        }
 
-            binDirectory.AddNewFile("ls", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/ls")
-            );
+        private void PopulateBaseBinDirectory()
+        {
+            var binDirectory = RootDirectory.AddNewDirectory("bin");
+            var fileNames = G.ContentProvider.GetContentFileNames("Sources/BaseBin");
 
-            binDirectory.AddNewFile("cat", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/cat")
-            );
+            foreach (var fileName in fileNames)
+            {
+                binDirectory.AddNewFile(fileName, FileAttributes.Executable).SetData(
+                    G.ContentProvider.Read("Sources/BaseBin/" + fileName)
+                );
+            }
+        }
 
-            binDirectory.AddNewFile("cp", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/cp")
-            );
+        private void PopulateBaseEtcDirectory()
+        {
+            var etcDirectory = RootDirectory.AddNewDirectory("etc");
+            var fileNames = G.ContentProvider.GetContentFileNames("Sources/BaseEtc");
 
-            binDirectory.AddNewFile("rm", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/rm")
-            );
-
-            binDirectory.AddNewFile("cd", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/cd")
-            );
-
-            binDirectory.AddNewFile("help", FileAttributes.Executable).SetData(
-                G.ContentProvider.Read("Sources/BasePrograms/help")
-            );
+            foreach (var fileName in fileNames)
+            {
+                etcDirectory.AddNewFile(fileName).SetData(
+                    G.ContentProvider.Read("Sources/BaseEtc/" + fileName)
+                );
+            }
         }
     }
 }

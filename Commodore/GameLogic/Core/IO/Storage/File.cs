@@ -37,9 +37,10 @@ namespace Commodore.GameLogic.Core.IO.Storage
         }
 
         public string GetData()
-        {
-            return Encoding.UTF8.GetString(Data);
-        }
+            => Encoding.UTF8.GetString(Data);
+
+        public void StripUnnecessaryCharacters()
+            => SetData(GetData().Trim(new[] {'\uFEFF', '\u200B', '\r'}));
 
         public static bool Exists(string path, bool forceLocalContext = false)
         {
@@ -61,7 +62,8 @@ namespace Commodore.GameLogic.Core.IO.Storage
             }
         }
 
-        public static File Create(string path, bool overwrite = false, bool forceLocalContext = false, Directory forceStartingPoint = null)
+        public static File Create(string path, bool overwrite = false, bool forceLocalContext = false,
+            Directory forceStartingPoint = null)
         {
             if (Path.ContainsInvalidCharacters(path))
                 throw new InvalidPathException(path, "The path contains invalid characters.");
@@ -150,7 +152,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
 
                 targetFile.SetData(sourceFile.GetData());
                 targetFile.Attributes = sourceFile.Attributes;
-                
+
                 return targetFile;
             }
         }

@@ -1,0 +1,16 @@
+﻿for local i=0xFF01,0xFF3F do
+  sys.print(
+    str.chr(i) + 
+    "0x" + 
+      str.uc(
+        str.n2s(i, 16)
+      ) + 
+    "   "
+  )
+
+  if (i % 4 == 0) do
+    sys.println("")
+  end
+end
+
+sys.print("\uFF40\n")
