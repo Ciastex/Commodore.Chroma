@@ -112,7 +112,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Chroma" Version="0.17.0" />
+    <PackageReference Include="Chroma" Version="0.17.1" />
   </ItemGroup>
 
 </Project>
