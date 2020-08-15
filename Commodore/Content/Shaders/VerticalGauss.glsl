@@ -9,44 +9,22 @@ varying vec2 texCoord;
 varying vec4 color;
 
 uniform vec2 rt_dims;
-uniform float vx_offset;
 
-float offset[3];
-float weight[3];
+vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+    vec4 color = vec4(0.0);
+    vec2 off1 = vec2(1.3846153846) * direction;
+    vec2 off2 = vec2(3.2307692308) * direction;
+    color += texture2D(image, uv) * 0.2270270270;
+    color += texture2D(image, uv + (off1 / resolution)) * 0.3162162162;
+    color += texture2D(image, uv - (off1 / resolution)) * 0.3162162162;
+    color += texture2D(image, uv + (off2 / resolution)) * 0.0702702703;
+    color += texture2D(image, uv - (off2 / resolution)) * 0.0702702703;
+    return color;
+}
 
 void main()
 {
-    offset[0] = 0.0;
-    offset[1] = 1.3846153846;
-    offset[2] = 3.2307692308;
-    
-    weight[0] = 0.2270270270;
-    weight[1] = 0.3162162162;
-    weight[2] = 0.0702702703;
-    
-    vec3 tc = vec3(1.0, 0.0, 0.0);
-    if (texCoord.x<(vx_offset-0.01))
-    {
-        vec2 uv = texCoord.xy;
-        tc = texture2D(texture, uv).rgb * weight[0];
-
-        for (int i=1; i<3; i++)
-        {
-            tc += texture2D(
-                texture,
-                uv + vec2(offset[i]) / rt_dims.x, 0.0
-            ).rgb * weight[i];
-            
-            tc += texture2D(
-                texture, 
-                uv - vec2(offset[i]) / rt_dims.x, 0.0
-            ).rgb * weight[i];
-        }
-    }
-    else if (texCoord.x>=(vx_offset+0.01))
-    {
-        tc = texture2D(texture, texCoord.xy).rgb;
-    }
-
-    gl_FragColor = vec4(tc, 1.0);
+    vec4 c = blur9(texture, texCoord, rt_dims, vec2(0.75, 0.75));
+    c += blur9(texture, texCoord, rt_dims, vec2(-0.75, -0.75)) / 2.0;
+    gl_FragColor = c;
 }
