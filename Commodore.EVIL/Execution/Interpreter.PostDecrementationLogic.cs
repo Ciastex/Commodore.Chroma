@@ -21,17 +21,27 @@ namespace Commodore.EVIL.Execution
                     retVal = stackTop.ParameterScope[name].Copy();
                     stackTop.ParameterScope[name] = new DynValue(retVal.Number - 1);
                 }
-
-                if (stackTop.LocalVariableScope.ContainsKey(name))
+                else if (stackTop.LocalVariableScope.ContainsKey(name))
                 {
                     retVal = stackTop.LocalVariableScope[name].Copy();
                     stackTop.LocalVariableScope[name] = new DynValue(retVal.Number - 1);
+                }
+                else if (Environment.Globals.ContainsKey(name))
+                {
+                    retVal = Environment.Globals[name].Copy();
+                    Environment.Globals[name] = new DynValue(retVal.Number - 1);
+                }
+                else
+                {
+                    throw new RuntimeException($"The referenced variable '{name}' was never defined.",
+                        postDecrementationNode.Line);
                 }
             }
             else
             {
                 if (!Environment.Globals.ContainsKey(name))
-                    throw new RuntimeException($"The referenced variable '{name}' was never defined.", postDecrementationNode.Line);
+                    throw new RuntimeException($"The referenced variable '{name}' was never defined.",
+                        postDecrementationNode.Line);
 
                 retVal = Environment.Globals[name].Copy();
                 Environment.Globals[name] = new DynValue(retVal.Number - 1);
