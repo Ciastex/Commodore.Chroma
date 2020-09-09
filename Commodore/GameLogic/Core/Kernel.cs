@@ -173,9 +173,10 @@ namespace Commodore.GameLogic.Core
         }
 
         public void Notify(string text)
-        {
-            Notifications.Enqueue(new Notification(text));
-        }
+            => Notify(text, Color.White, Color.Black, Color.White);
+
+        public void Notify(string text, Color borderColor, Color backgroundColor, Color textColor)
+            => Notifications.Enqueue(new Notification(text, borderColor, backgroundColor, textColor));
 
         private void InitializeSystemMemory()
         {
