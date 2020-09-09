@@ -2,6 +2,8 @@
 using Commodore.GameLogic.Core.BootSequence;
 #endif
 using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Chroma.Graphics;
@@ -47,6 +49,8 @@ namespace Commodore.GameLogic.Core
         private static Kernel _instance;
         public static Kernel Instance => _instance ??= new Lazy<Kernel>(() => new Kernel()).Value;
 
+        private Notification _currentNotification;
+
 #if !DEBUG
         public BootSequencePlayer BootSequence;
 #endif
@@ -64,9 +68,18 @@ namespace Commodore.GameLogic.Core
 
         public FileSystemContext FileSystemContext { get; set; }
         public FileSystemContext LocalFileSystemContext { get; private set; }
+        
+        public Queue<Notification> Notifications { get; private set; } = new Queue<Notification>();
 
         public void Reboot(bool isWarmBoot)
         {
+            if (_currentNotification != null)
+            {
+                _currentNotification.IsActive = false;
+                _currentNotification = null;
+            }
+            Notifications.Clear();
+
             IsRebooting = true;
 
             if (isWarmBoot)
@@ -115,14 +128,31 @@ namespace Commodore.GameLogic.Core
             {
                 CodeEditor.Draw(context);
             }
+
+            if (_currentNotification != null)
+                _currentNotification.Draw(context);
         }
 
-        public void Update(float deltaTime)
+        public void Update(float delta)
         {
-            if (CodeEditor.IsVisible)
-                CodeEditor.Update(deltaTime);
+            if (Notifications.Count > 0 && _currentNotification == null)
+            {
+                _currentNotification = Notifications.Dequeue();
+                _currentNotification.IsActive = true;
+            }
 
-            Vga.Update(deltaTime);
+            if (_currentNotification != null)
+            {
+                _currentNotification.Update(delta);
+                
+                if (!_currentNotification.IsActive)
+                    _currentNotification = null;
+            }
+            
+            if (CodeEditor.IsVisible)
+                CodeEditor.Update(delta);
+
+            Vga.Update(delta);
 
             Memory.Poke(
                 SystemMemoryAddresses.ShiftPressState,
@@ -139,7 +169,12 @@ namespace Commodore.GameLogic.Core
                 Keyboard.IsKeyDown(KeyCode.LeftAlt) || Keyboard.IsKeyDown(KeyCode.RightAlt)
             );
 
-            Terminal.Update(deltaTime);
+            Terminal.Update(delta);
+        }
+
+        public void Notify(string text)
+        {
+            Notifications.Enqueue(new Notification(text));
         }
 
         private void InitializeSystemMemory()
@@ -306,6 +341,14 @@ namespace Commodore.GameLogic.Core
 
         public void KeyPressed(KeyCode keyCode, KeyModifiers modifiers)
         {
+            if (keyCode == KeyCode.F4)
+            {
+                Notify("lorem ipsum dolor sit amet\nonsectetur adipisici elit\n\nensign dont pay me enough");
+                Notify("to remove this shit");
+                Notify("from tech preview");
+                Notify("so enjoy the toasts, clients");
+                Notify("om-nom-nom");
+            }
             if (!CodeEditor.IsVisible)
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))

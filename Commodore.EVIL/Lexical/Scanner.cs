@@ -479,7 +479,7 @@ namespace Commodore.EVIL.Lexical
 
         private void SkipWhitespace()
         {
-            while (char.IsWhiteSpace(State.Character))
+            while (char.IsWhiteSpace(State.Character) || State.Character == 0xFEFF)
                 Advance();
         }
 

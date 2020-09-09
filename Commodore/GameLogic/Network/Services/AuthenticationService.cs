@@ -27,8 +27,8 @@ namespace Commodore.GameLogic.Network.Services
         public override string Banner => "AUTHSERV_1.0";
 
         public byte Salt { get; } = (byte)G.Random.Next(0, 128);
-        public string Password { get; } = StringGenerator.GenerateRandomAlphanumericString(4, G.Random);
-        public string UserName { get; } = UsernameGenerator.Generate(G.Random);
+        public string Password { get; } = StringGenerator.GenerateRandomAlphanumericString(4);
+        public string UserName { get; } = UsernameGenerator.Generate();
 
         public bool IsAuthenticated { get; private set; }
 

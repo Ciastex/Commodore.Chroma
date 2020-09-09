@@ -25,8 +25,6 @@ namespace Commodore
         private bool _gaussShaderEnabled = true;
         
         private PixelShader _crtShader;
-        private PixelShader _gaussShader;
-        
         private RenderTarget _frameBuffer;
 
         public CommodoreMain() : base(false)
@@ -58,7 +56,6 @@ namespace Commodore
             
             _frameBuffer = new RenderTarget(Window.Size);
             _crtShader = Content.Load<PixelShader>("Shaders/CrtScreen.glsl");
-            _gaussShader = Content.Load<PixelShader>("Shaders/VerticalGauss.glsl");
         }
 
         private void WindowOnQuitRequested(object sender, CancelEventArgs e)
@@ -89,19 +86,6 @@ namespace Commodore
                 Kernel.Instance.Draw(context);
             });
 
-            if (_gaussShaderEnabled)
-            {
-                _gaussShader.Activate();
-                _gaussShader.SetUniform("rt_dims",
-                    new Vector2(
-                        Window.Size.Width,
-                        Window.Size.Height
-                    )
-                );
-                context.DrawTexture(_frameBuffer, Vector2.Zero, Vector2.One, Vector2.Zero, 0);
-                Shader.Deactivate();
-            }
-            
             if (_crtShaderEnabled)
             {
                 _crtShader.Activate();
