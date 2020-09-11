@@ -19,7 +19,6 @@ using Commodore.GameLogic.Display;
 using Commodore.GameLogic.Executive.CodeEditor;
 using Commodore.GameLogic.Executive.CodeEditor.Events;
 using Commodore.GameLogic.Interaction;
-using Commodore.GameLogic.Interaction.Shell;
 using Commodore.GameLogic.Network;
 using Commodore.GameLogic.Persistence;
 
@@ -64,8 +63,8 @@ namespace Commodore.GameLogic.Core
 
         public ProcessManager ProcessManager;
 
-        public Editor CodeEditor;
-        public TermShell TermShell;
+        public Editor Editor;
+        public Shell Shell;
 
         public FileSystemContext FileSystemContext { get; set; }
         public FileSystemContext LocalFileSystemContext { get; private set; }
@@ -101,7 +100,7 @@ namespace Commodore.GameLogic.Core
             InitializeVgaAdapter();
             InitializeIoInterfaces();
             InitializeCodeEditor();
-            InitializeTermShell();
+            InitializeShell();
             InitializeCodeExecutionLayer();
 
             LocalFileSystemContext = new FileSystemContext(UserProfile.Instance.RootDirectory);
@@ -121,13 +120,13 @@ namespace Commodore.GameLogic.Core
 
         public void Draw(RenderContext context)
         {
-            if (!CodeEditor.IsVisible)
+            if (!Editor.IsVisible)
             {
                 Vga.Draw(context);
             }
             else
             {
-                CodeEditor.Draw(context);
+                Editor.Draw(context);
             }
 
             if (_currentNotification != null)
@@ -150,8 +149,8 @@ namespace Commodore.GameLogic.Core
                     _currentNotification = null;
             }
             
-            if (CodeEditor.IsVisible)
-                CodeEditor.Update(delta);
+            if (Editor.IsVisible)
+                Editor.Update(delta);
 
             Vga.Update(delta);
 
@@ -257,21 +256,21 @@ namespace Commodore.GameLogic.Core
 
         private void InitializeCodeEditor()
         {
-            if (CodeEditor == null)
+            if (Editor == null)
             {
-                CodeEditor = new Editor(Font);
-                CodeEditor.FileSaved += CodeEditor_FileSaved;
+                Editor = new Editor(Font);
+                Editor.FileSaved += Editor_FileSaved;
             }
             else
             {
-                CodeEditor.Reset();
+                Editor.Reset();
             }
         }
 
-        private void InitializeTermShell()
+        private void InitializeShell()
         {
-            if (TermShell == null)
-                TermShell = new TermShell();
+            if (Shell == null)
+                Shell = new Shell();
         }
 
         private void VGA_FailsafeTriggered(object sender, EventArgs e)
@@ -313,7 +312,7 @@ namespace Commodore.GameLogic.Core
                     if (string.IsNullOrWhiteSpace(str))
                         continue;
 
-                    await TermShell.HandleCommand(str);
+                    await Shell.HandleCommand(str);
                 }
             }
             catch (TaskCanceledException)
@@ -323,10 +322,7 @@ namespace Commodore.GameLogic.Core
 
         private void DoPostBootActions()
         {
-            Terminal.WriteLine(new Address(12345678, 0).ToString());
-            Terminal.WriteLine(new Address(0xDEADDEAD, 0x6F).ToString());
-            Terminal.WriteLine(Address.Parse("05C3:0666+21").ToString());
-            Terminal.WriteLine(Address.Parse("05C3:1234").ToString());
+
         }
 
         private async Task<bool> TryRunSystemProgram(string path)
@@ -362,7 +358,7 @@ namespace Commodore.GameLogic.Core
                 Notify("om-nom-nom");
             }
             
-            if (CodeEditor != null && !CodeEditor.IsVisible)
+            if (Editor != null && !Editor.IsVisible)
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
                 {
@@ -380,7 +376,7 @@ namespace Commodore.GameLogic.Core
             }
             else
             {
-                CodeEditor.KeyPressed(keyCode, modifiers);
+                Editor.KeyPressed(keyCode, modifiers);
             }
         }
 
@@ -389,17 +385,17 @@ namespace Commodore.GameLogic.Core
             if (IsRebooting)
                 return;
 
-            if (!CodeEditor.IsVisible)
+            if (!Editor.IsVisible)
             {
                 Terminal.TextInput(character);
             }
             else
             {
-                CodeEditor.TextInput(character);
+                Editor.TextInput(character);
             }
         }
 
-        private void CodeEditor_FileSaved(object sender, FileSavedEventArgs e)
+        private void Editor_FileSaved(object sender, FileSavedEventArgs e)
         {
             var file = File.Create(e.FilePath, true);
             file.SetData(e.Contents);

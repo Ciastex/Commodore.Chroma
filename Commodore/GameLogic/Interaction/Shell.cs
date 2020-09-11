@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Commodore.GameLogic.Interaction.Shell
+namespace Commodore.GameLogic.Interaction
 {
-    public class TermShell
+    public class Shell
     {
         public delegate bool Command(string[] args);
 
         public Dictionary<string, Command> BuiltIns { get; }
 
-        public TermShell()
+        public Shell()
         {
             BuiltIns = new Dictionary<string, Command>();
 
@@ -21,12 +21,12 @@ namespace Commodore.GameLogic.Interaction.Shell
             {
                 if (args.Length == 0)
                 {
-                    Kernel.Instance.CodeEditor.Reset();
-                    Kernel.Instance.CodeEditor.IsVisible = true;
+                    Kernel.Instance.Editor.Reset();
+                    Kernel.Instance.Editor.IsVisible = true;
                 }
 
                 if (args.Length > 0)
-                    Kernel.Instance.CodeEditor.OpenPath(args[0]);
+                    Kernel.Instance.Editor.OpenPath(args[0]);
 
                 return true;
             });
