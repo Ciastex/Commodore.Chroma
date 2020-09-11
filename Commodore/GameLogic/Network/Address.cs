@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Commodore.GameLogic.Persistence;
 
 namespace Commodore.GameLogic.Network
 {
@@ -37,6 +38,9 @@ namespace Commodore.GameLogic.Network
 
             return sb.ToString();
         }
+
+        public static Address Random()
+            => new Address((uint)UserProfile.Instance.Random.Next());
 
         public static Address Parse(string address)
         {
