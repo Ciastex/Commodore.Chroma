@@ -15,7 +15,6 @@ namespace Commodore.Framework
         private static IContentProvider _contentProvider;
         private static DebugManager _debugManager;
         private static SettingsManager _settingsManager;
-        private static MersenneTwister _random;
 
         public static Window Window { get; set; }
 
@@ -79,6 +78,6 @@ namespace Commodore.Framework
             }
         }
 
-        public static MersenneTwister Random { get; } = _random ?? (_random = new MersenneTwister());
+        public static MersenneTwister Random { get; set; } = new MersenneTwister();
     }
 }

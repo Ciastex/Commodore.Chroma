@@ -23,6 +23,12 @@ namespace Commodore.GameLogic.Core.IO.Storage
             Name = name;
             Parent = parent;
         }
+        
+        public Directory Subdirectory(string name)
+            => Children[name] as Directory;
+
+        public File File(string name)
+            => Children[name] as File;
 
         public File AddNewFile(string name, FileAttributes attributes = 0)
         {
@@ -60,12 +66,12 @@ namespace Commodore.GameLogic.Core.IO.Storage
             }
         }
 
-        public void CreateGivenPath(string path)
+        public Directory CreateGivenPath(string path)
         {
             if (Path.ContainsInvalidCharacters(path))
                 throw new InvalidPathException(path, "The provided path contains invalid characters.");
 
-            Directory current = this;
+            var current = this;
 
             // we don't support empty strings
             if (string.IsNullOrEmpty(path))
@@ -93,8 +99,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
                     if (current.HasDirectoryChildNamed(targetName))
                         throw new InvalidOperationException($"The directory '{targetName}' already exists in the destination directory.");
 
-                    current.AddNewDirectory(targetName);
-                    return;
+                    return current.AddNewDirectory(targetName);
                 }
                 else // gotta traverse some more
                 {
@@ -123,6 +128,8 @@ namespace Commodore.GameLogic.Core.IO.Storage
                     current = current.Children[segment] as Directory;
                 }
             }
+
+            return current;
         }
 
         public static bool Exists(string path, bool forceLocalContext = false)

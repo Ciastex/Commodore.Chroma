@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Commodore.GameLogic.Persistence;
+using Commodore.Framework;
 
 namespace Commodore.GameLogic.Network
 {
@@ -10,7 +10,7 @@ namespace Commodore.GameLogic.Network
     {
         [NonSerialized]
         private static readonly Regex _addrValidator =
-            new Regex(@"(?<CorePartA>[A-Fa-f0-9]{4})\:(?<CorePartB>[A-Fa-f0-9]{4})(\+(?<Service>[A-Fa-f0-9]{2}))?");
+            new Regex(@"(?<CorePartA>[A-Fa-f0-9]{4})\:(?<CorePartB>[A-Fa-f0-9]{4})(\+(?<Node>[A-Fa-f0-9]{2}))?");
 
         public uint Core { get; }
         public byte Node { get; }
@@ -33,19 +33,23 @@ namespace Commodore.GameLogic.Network
             sb.Append(((Core & 0xFFFF0000) >> 16).ToString("X4"));
             sb.Append(':');
             sb.Append(((Core & 0x0000FFFF)).ToString("X4"));
-            sb.Append('+');
-            sb.Append(Node.ToString("X2"));
+
+            if (Node > 0)
+            {
+                sb.Append('+');
+                sb.Append(Node.ToString("X2"));
+            }
 
             return sb.ToString();
         }
 
         public static Address Random()
-            => new Address((uint)UserProfile.Instance.Random.Next());
+            => new Address((uint)G.Random.Next());
 
         public static Address Parse(string address)
         {
             uint core = 0;
-            byte service = 0;
+            byte node = 0;
 
             var match = _addrValidator.Match(address);
 
@@ -58,10 +62,10 @@ namespace Commodore.GameLogic.Network
             core |= (uint)(corePartA << 16);
             core |= corePartB;
 
-            if (!string.IsNullOrWhiteSpace(match.Groups["Service"].Value))
-                service = Convert.ToByte(match.Groups["Service"].Value, 16);
+            if (!string.IsNullOrWhiteSpace(match.Groups["Node"].Value))
+                node = Convert.ToByte(match.Groups["Node"].Value, 16);
 
-            return new Address(core, service);
+            return new Address(core, node);
         }
 
         public override int GetHashCode()
