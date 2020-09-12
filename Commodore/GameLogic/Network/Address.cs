@@ -13,17 +13,17 @@ namespace Commodore.GameLogic.Network
             new Regex(@"(?<CorePartA>[A-Fa-f0-9]{4})\:(?<CorePartB>[A-Fa-f0-9]{4})(\+(?<Service>[A-Fa-f0-9]{2}))?");
 
         public uint Core { get; }
-        public byte Service { get; }
+        public byte Node { get; }
 
         public Address(uint core)
             : this(core, 0)
         {
         }
 
-        public Address(uint core, byte service)
+        public Address(uint core, byte node)
         {
             Core = core;
-            Service = service;
+            Node = node;
         }
 
         public override string ToString()
@@ -34,7 +34,7 @@ namespace Commodore.GameLogic.Network
             sb.Append(':');
             sb.Append(((Core & 0x0000FFFF)).ToString("X4"));
             sb.Append('+');
-            sb.Append(Service.ToString("X2"));
+            sb.Append(Node.ToString("X2"));
 
             return sb.ToString();
         }
