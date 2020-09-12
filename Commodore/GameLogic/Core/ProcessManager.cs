@@ -119,17 +119,17 @@ namespace Commodore.GameLogic.Core
             catch (ScannerException se)
             {
                 Kernel.Instance.Terminal.WriteLine(
-                    $"\uFF24LEXER ERROR ({se.Line} : {se.Column})\uFF40\n{se.Message}\n");
+                    $"\uFF24LEXER ERROR | LINE {se.Line}\uFF40\n{se.Message}\n");
             }
             catch (ParserException pe)
             {
                 Kernel.Instance.Terminal.WriteLine(
-                    $"\uFF24PARSER ERROR // LINE {(pe.ScannerState?.Line - 1)?.ToString() ?? "??"}\uFF40\n{pe.Message}\n");
+                    $"\uFF24PARSER ERROR | LINE {(pe.ScannerState?.Line)?.ToString() ?? "??"}\uFF40\n{pe.Message}\n");
             }
             catch (RuntimeException re)
             {
                 Kernel.Instance.Terminal.WriteLine(
-                    $"\uFF24RUNTIME ERROR // LINE {re.Line?.ToString() ?? "??"}\uFF40\n{re.Message}\n");
+                    $"\uFF24RUNTIME ERROR | LINE {(re?.Line - 1).ToString() ?? "??"}\uFF40\n{re.Message}\n");
             }
             catch (ClrFunctionException cfe)
             {

@@ -19,6 +19,7 @@ namespace Commodore.GameLogic.Interaction
             var breakKey = UserProfile.Instance.PreferredBreakKey;
             var gfxModeResetKey = UserProfile.Instance.GfxModeResetKey;
             var username = UserProfile.Instance.Username;
+            var seed = UserProfile.Instance.Random.Seed;
 
             while (!processComplete)
             {
@@ -50,10 +51,16 @@ namespace Commodore.GameLogic.Interaction
                 );
                 Kernel.Instance.Terminal.Write("\n");
 
-                Kernel.Instance.Terminal.WriteLine("User input summary:");
-                Kernel.Instance.Terminal.WriteLine($"  Username: {username}");
-                Kernel.Instance.Terminal.WriteLine($"  Break key: {breakKey.ToString()}");
-                Kernel.Instance.Terminal.WriteLine($"  Graphics reset key: {gfxModeResetKey.ToString()}");
+                var seedInput = await Kernel.Instance.Terminal.ReadLine($" -> ENTER RNG SEED [{seed}]: ");
+                
+                if (!string.IsNullOrEmpty(seedInput) && !int.TryParse(seedInput, out seed))
+                    seed = seedInput.GetHashCode();
+
+                Kernel.Instance.Terminal.WriteLine("PROFILE SUMMARY");
+                Kernel.Instance.Terminal.WriteLine($"  USERNAME: \uFF3F{username}\uFF40");
+                Kernel.Instance.Terminal.WriteLine($"   BRK KEY: \uFF3F{breakKey.ToString()}\uFF40");
+                Kernel.Instance.Terminal.WriteLine($"  GFXR KEY: \uFF3F{gfxModeResetKey.ToString()}\uFF40");
+                Kernel.Instance.Terminal.WriteLine($"  RNG SEED: \uFF3F{seed}\uFF40");
 
                 var input = (KeyCode)0;
                 while (input != KeyCode.Y && input != KeyCode.N)
