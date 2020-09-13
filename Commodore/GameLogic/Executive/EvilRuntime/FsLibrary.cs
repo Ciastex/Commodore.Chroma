@@ -77,7 +77,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
         public DynValue CurrentWorkingDirectory(Interpreter interpreter, ClrFunctionArguments args)
         {
-            return new DynValue(Kernel.Instance.FileSystemContext.WorkingDirectory.GetAbsolutePath());
+            return new DynValue(Kernel.Instance.CurrentSystemContext.WorkingDirectory.GetAbsolutePath());
         }
 
         public DynValue ChangeDirectory(Interpreter interpreter, ClrFunctionArguments args)

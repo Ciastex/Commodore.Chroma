@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 using Chroma.Diagnostics.Logging;
+using Commodore.GameLogic.Core;
 using Commodore.GameLogic.Core.IO.Storage;
 
 namespace Commodore.GameLogic.Network
@@ -19,9 +18,35 @@ namespace Commodore.GameLogic.Network
 
         public bool ShellEnabled { get; set; } = true;
         public Directory RootDirectory { get; } = new Directory("/", null);
+        public SystemContext SystemContext { get; }
 
         public int NetX { get; set; }
         public int NetY { get; set; }
+
+        public Device()
+        {
+            SystemContext = new SystemContext(this);
+        }
+
+        public virtual void OnShellAttached()
+        {
+            foreach (var neighbor in Entities)
+                neighbor.Value.NeighborShellAttached(this);
+        }
+
+        public virtual void OnShellDetached()
+        {
+            foreach (var neighbor in Entities)
+                neighbor.Value.NeighborShellDetached(this);
+        }
+        
+        public virtual void OnLinked()
+        {
+        }
+
+        public virtual void OnUnlinked()
+        {
+        }
 
         public void CreateServiceNode<T>(byte port) where T : Node
         {
@@ -38,6 +63,20 @@ namespace Commodore.GameLogic.Network
             }
 
             Entities.Add(port, (T)Activator.CreateInstance(typeof(T), new object[] {this}));
+        }
+
+        public string GetHostName()
+        {
+            try
+            {
+                return RootDirectory.Subdirectory("etc")
+                    .File("hostname")
+                    .GetData();
+            }
+            catch
+            {
+                return Address?.ToString() ?? Network.Address.Zero.ToString();
+            }
         }
 
         public bool IsConnectedToDevice(byte port)
@@ -57,7 +96,7 @@ namespace Commodore.GameLogic.Network
         public Vector2 GetNetPositionVector()
             => new Vector2(NetX, NetY);
 
-        public int GetDistanceTo(Vector2 point)
-            => (int)MathF.Abs(GetNetPositionVector().Length() - point.Length());
+        public float GetDistanceTo(Vector2 point)
+            => MathF.Abs(GetNetPositionVector().Length() - point.Length());
     }
 }

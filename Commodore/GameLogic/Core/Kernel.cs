@@ -4,15 +4,12 @@ using Commodore.GameLogic.Core.BootSequence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Chroma.Graphics;
 using Chroma.Graphics.TextRendering;
 using Chroma.Input;
 using Commodore.Framework;
-using Commodore.Framework.Extensions;
-using Commodore.GameLogic.Core.Exceptions;
 using Commodore.GameLogic.Core.Hardware;
 using Commodore.GameLogic.Core.IO;
 using Commodore.GameLogic.Core.IO.Storage;
@@ -68,9 +65,9 @@ namespace Commodore.GameLogic.Core
         public Editor Editor;
         public Shell Shell;
 
-        public FileSystemContext FileSystemContext { get; set; }
-        public FileSystemContext LocalFileSystemContext { get; private set; }
-        
+        public SystemContext CurrentSystemContext { get; set; }
+        public SystemContext LocalSystemContext { get; private set; }
+
         public Queue<Notification> Notifications { get; private set; } = new Queue<Notification>();
         public Stack<Entity> NetworkConnectionStack { get; set; } = new Stack<Entity>();
 
@@ -81,6 +78,7 @@ namespace Commodore.GameLogic.Core
                 _currentNotification.IsActive = false;
                 _currentNotification = null;
             }
+
             Notifications.Clear();
 
             IsRebooting = true;
@@ -94,7 +92,7 @@ namespace Commodore.GameLogic.Core
             {
                 UserProfile.Load();
                 G.Random = UserProfile.Instance.Random;
-                
+
                 UserProfile.Instance.AutoSave = false;
             }
 #if !DEBUG
@@ -108,8 +106,8 @@ namespace Commodore.GameLogic.Core
             InitializeShell();
             InitializeCodeExecutionLayer();
 
-            LocalFileSystemContext = new FileSystemContext(UserProfile.Instance.RootDirectory);
-            FileSystemContext = LocalFileSystemContext;
+            LocalSystemContext = new SystemContext(UserProfile.Instance.RootDirectory);
+            CurrentSystemContext = LocalSystemContext;
 
             if (!isWarmBoot)
             {
@@ -149,11 +147,11 @@ namespace Commodore.GameLogic.Core
             if (_currentNotification != null)
             {
                 _currentNotification.Update(delta);
-                
+
                 if (!_currentNotification.IsActive)
                     _currentNotification = null;
             }
-            
+
             if (Editor.IsVisible)
                 Editor.Update(delta);
 
@@ -182,6 +180,59 @@ namespace Commodore.GameLogic.Core
 
         public void Notify(string text, Color borderColor, Color backgroundColor, Color textColor)
             => Notifications.Enqueue(new Notification(text, borderColor, backgroundColor, textColor));
+
+        public void LinkToDevice(Device device)
+        {
+            if (device == null)
+                return;
+
+            NetworkConnectionStack.Push(device);
+            device.OnLinked();
+        }
+
+        public void UnlinkFromDevice()
+        {
+            if (NetworkConnectionStack.TryPeek(out var entity))
+            {
+                if (entity is Device device)
+                {
+                    NetworkConnectionStack.Pop();
+                    device.OnUnlinked();
+                }
+            }
+        }
+
+        public void BindToNode(Node node)
+        {
+            NetworkConnectionStack.Push(node);
+            node.OnBound();
+        }
+
+        public void UnbindFromNode()
+        {
+            if (NetworkConnectionStack.TryPeek(out var entity))
+            {
+                if (entity is Node node)
+                {
+                    NetworkConnectionStack.Pop();
+                    node.OnUnbound();
+                }
+            }
+        }
+
+        public void AttachShell(Device device)
+        {
+            CurrentSystemContext = device.SystemContext;
+            device.OnShellAttached();
+        }
+
+        public void DetachShell()
+        {
+            var device = CurrentSystemContext.RemoteDevice;
+            CurrentSystemContext = LocalSystemContext;
+            
+            device.OnShellDetached();
+        }
 
         private void InitializeSystemMemory()
         {
@@ -290,19 +341,19 @@ namespace Commodore.GameLogic.Core
             await BootSequence.TryPerformSequence();
 #endif
             IsRebooting = false;
-            
+
             if (!UserProfile.Instance.IsInitialized)
             {
                 await TextInterface.RunProfileConfigWizard();
                 return;
             }
-            
+
             StartNetworkUpdates();
 
             await TryRunSystemProgram("/etc/startup");
 
             DoPostBootActions();
-            
+
             try
             {
                 while (true)
@@ -311,7 +362,12 @@ namespace Commodore.GameLogic.Core
 
                     if (!customPromptSuccess)
                     {
-                        Terminal.Write($"{FileSystemContext.WorkingDirectory.GetAbsolutePath()} $ ");
+                        var host = "localhost";
+
+                        if (!CurrentSystemContext.IsLocal)
+                            host = CurrentSystemContext.RemoteDevice.GetHostName();
+
+                        Terminal.Write($"{CurrentSystemContext.WorkingDirectory.GetAbsolutePath()} @ {host} $ ");
                     }
 
                     var str = await Terminal.ReadLine(string.Empty);
@@ -329,7 +385,6 @@ namespace Commodore.GameLogic.Core
 
         private void DoPostBootActions()
         {
-
         }
 
         private async Task<bool> TryRunSystemProgram(string path)
@@ -347,7 +402,7 @@ namespace Commodore.GameLogic.Core
                 _foregroundProcess = pid;
                 await ProcessManager.WaitForProgram(pid);
                 _foregroundProcess = null;
-                
+
                 return true;
             }
             catch
@@ -366,7 +421,7 @@ namespace Commodore.GameLogic.Core
                 Notify("so enjoy the toasts, clients");
                 Notify("om-nom-nom");
             }
-            
+
             if (Editor != null && !Editor.IsVisible)
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
@@ -383,7 +438,7 @@ namespace Commodore.GameLogic.Core
                             Notify("CANNOT REBOOT: CONNECTED TO REMOTE NET_ENTITY");
                             return;
                         }
-                        
+
                         Reboot(true);
                         return;
                     }
@@ -440,7 +495,7 @@ namespace Commodore.GameLogic.Core
 
                     if (UserProfile.Instance.Internet == null)
                         continue;
-                    
+
                     await UserProfile.Instance.Internet.Tick();
                 }
             });

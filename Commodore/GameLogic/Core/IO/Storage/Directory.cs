@@ -149,11 +149,11 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 return true;
 
             if (Path.IsAbsolute(path))
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.RootDirectory :
-                                                    Kernel.Instance.FileSystemContext.RootDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.RootDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.RootDirectory;
             else
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.WorkingDirectory :
-                                                    Kernel.Instance.FileSystemContext.WorkingDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.WorkingDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             current = startingPoint;
             var segments = path.Split('/');
@@ -211,11 +211,11 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 throw new InvalidPathException(path, "The provided path was invalid.");
 
             if (Path.IsAbsolute(path))
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.RootDirectory :
-                                                    Kernel.Instance.FileSystemContext.RootDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.RootDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.RootDirectory;
             else
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.WorkingDirectory :
-                                                    Kernel.Instance.FileSystemContext.WorkingDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.WorkingDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             current = startingPoint;
             var segments = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -290,11 +290,11 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 throw new InvalidPathException(path, "The provided path was invalid.");
 
             if (Path.IsAbsolute(path))
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.RootDirectory :
-                                                    Kernel.Instance.FileSystemContext.RootDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.RootDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.RootDirectory;
             else
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.WorkingDirectory :
-                                                    Kernel.Instance.FileSystemContext.WorkingDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.WorkingDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             current = startingPoint;
             var segments = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -367,16 +367,16 @@ namespace Commodore.GameLogic.Core.IO.Storage
             // handle root path directly
             if (path == "/")
             {
-                Kernel.Instance.FileSystemContext.WorkingDirectory = Kernel.Instance.FileSystemContext.RootDirectory;
+                Kernel.Instance.CurrentSystemContext.WorkingDirectory = Kernel.Instance.CurrentSystemContext.RootDirectory;
                 return;
             }
 
             if (Path.IsAbsolute(path))
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.RootDirectory :
-                                                    Kernel.Instance.FileSystemContext.RootDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.RootDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.RootDirectory;
             else
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.WorkingDirectory :
-                                                    Kernel.Instance.FileSystemContext.WorkingDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.WorkingDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             current = startingPoint;
             var segments = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -413,7 +413,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
             }
 
             // if we arrived here safely, change directory
-            Kernel.Instance.FileSystemContext.WorkingDirectory = current;
+            Kernel.Instance.CurrentSystemContext.WorkingDirectory = current;
         }
 
         public static Directory GetDirectory(string path, bool forceLocalContext = false)
@@ -428,18 +428,18 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 throw new InvalidOperationException("The provided path was empty.");
 
             if (path == SpecialFileNames.CurrentWorkingDirectory)
-                return Kernel.Instance.FileSystemContext.WorkingDirectory;
+                return Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             // handle root path directly
             if (path == "/")
-                return Kernel.Instance.FileSystemContext.RootDirectory;
+                return Kernel.Instance.CurrentSystemContext.RootDirectory;
 
             if (Path.IsAbsolute(path))
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.RootDirectory :
-                                                    Kernel.Instance.FileSystemContext.RootDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.RootDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.RootDirectory;
             else
-                startingPoint = forceLocalContext ? Kernel.Instance.LocalFileSystemContext.WorkingDirectory :
-                                                    Kernel.Instance.FileSystemContext.WorkingDirectory;
+                startingPoint = forceLocalContext ? Kernel.Instance.LocalSystemContext.WorkingDirectory :
+                                                    Kernel.Instance.CurrentSystemContext.WorkingDirectory;
 
             current = startingPoint;
             var segments = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).ToArray();

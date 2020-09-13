@@ -13,6 +13,14 @@ namespace Commodore.GameLogic.Network
         public Node(Device owner)
             => Owner = owner;
 
+        public virtual void OnBound()
+        {
+        }
+
+        public virtual void OnUnbound()
+        {
+        }
+
         public virtual byte[] GetResponse(byte[] data)
             => new byte[] {0x4C, 0x4F, 0x4C};
 

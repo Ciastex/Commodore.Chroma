@@ -15,10 +15,6 @@ namespace Commodore.GameLogic.Network
 
         public Dictionary<Address, Device> Devices { get; } = new Dictionary<Address, Device>();
 
-        public Internet()
-        {
-        }
-
         public async Task Tick()
         {
             foreach (var device in Devices.Values)
@@ -35,6 +31,14 @@ namespace Commodore.GameLogic.Network
                 return null;
 
             return Devices[addr];
+        }
+
+        public Device GetDevice(Address address)
+        {
+            if (!Devices.ContainsKey(address))
+                return null;
+
+            return Devices[address];
         }
 
         public void AddDevice(Device device, Vector2? centerPoint = null, int? maxDistance = null)

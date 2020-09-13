@@ -15,6 +15,8 @@ namespace Commodore.GameLogic.Network
         public uint Core { get; }
         public byte Node { get; }
 
+        public static readonly Address Zero = new Address(0, 0);
+
         public Address(uint core)
             : this(core, 0)
         {
@@ -34,11 +36,19 @@ namespace Commodore.GameLogic.Network
             sb.Append(':');
             sb.Append(((Core & 0x0000FFFF)).ToString("X4"));
 
-            if (Node > 0)
-            {
-                sb.Append('+');
-                sb.Append(Node.ToString("X2"));
-            }
+            sb.Append('+');
+            sb.Append(Node.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+        public string ToStringWithoutNode()
+        {
+            var sb = new StringBuilder();
+
+            sb.Append(((Core & 0xFFFF0000) >> 16).ToString("X4"));
+            sb.Append(':');
+            sb.Append(((Core & 0x0000FFFF)).ToString("X4"));
 
             return sb.ToString();
         }
