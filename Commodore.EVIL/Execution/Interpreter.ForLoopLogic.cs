@@ -31,7 +31,7 @@ namespace Commodore.EVIL.Execution
                 LoopStack.Push(new LoopStackItem());
                 while (true)
                 {
-                    ExecuteStatementList(forLoopNode.StatementList);
+                    ExecuteStatementList(forLoopNode.StatementList).GetAwaiter().GetResult();
 
                     double iterator;
                     if (isLocalScope)

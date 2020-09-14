@@ -46,7 +46,7 @@ namespace Commodore.EVIL.Execution
                 var retval = DynValue.Zero;
                 try
                 {
-                    retval = ExecuteStatementList(scriptFunction.StatementList);
+                    retval = ExecuteStatementList(scriptFunction.StatementList).Result;
                 }
                 catch (ScriptTerminationException)
                 {

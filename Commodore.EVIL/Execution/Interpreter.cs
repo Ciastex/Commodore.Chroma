@@ -14,6 +14,7 @@ namespace Commodore.EVIL.Execution
         public delegate DynValue ClrFunction(Interpreter interpreter, ClrFunctionArguments args);
 
         public bool BreakExecution { get; set; }
+        public bool SuspendExecution { get; set; }
 
         public Stack<CallStackItem> CallStack { get; }
         public Stack<LoopStackItem> LoopStack { get; }
@@ -62,7 +63,7 @@ namespace Commodore.EVIL.Execution
 
             try
             {
-                return await Task.Run(() => Visit(node));
+                return await Task.Run(async () => await VisitAsync(node));
             }
             catch (ExitStatementException)
             {
@@ -75,8 +76,12 @@ namespace Commodore.EVIL.Execution
 
         public override DynValue Visit(RootNode rootNode)
         {
-            ExecuteStatementList(rootNode.Children);
-            return DynValue.Zero;
+            return ExecuteStatementList(rootNode.Children).Result;
+        }
+
+        public async Task<DynValue> VisitAsync(RootNode rootNode)
+        {
+            return await ExecuteStatementList(rootNode.Children);
         }
 
         public List<CallStackItem> StackTrace()
@@ -84,7 +89,7 @@ namespace Commodore.EVIL.Execution
             return new List<CallStackItem>(CallStack);
         }
 
-        private DynValue ExecuteStatementList(List<AstNode> statements)
+        private async Task<DynValue> ExecuteStatementList(List<AstNode> statements)
         {
             var retVal = DynValue.Zero;
 
@@ -96,6 +101,11 @@ namespace Commodore.EVIL.Execution
 
             foreach (var statement in statements)
             {
+                while (SuspendExecution)
+                {
+                    await Task.Delay(1);
+                }
+                
                 if (BreakExecution)
                 {
                     BreakExecution = false;
