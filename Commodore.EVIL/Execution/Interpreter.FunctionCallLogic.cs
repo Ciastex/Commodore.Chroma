@@ -33,7 +33,8 @@ namespace Commodore.EVIL.Execution
                 foreach (var parameterName in scriptFunction.ParameterNames)
                 {
                     if (callStackItem.ParameterScope.ContainsKey(parameterName))
-                        throw new RuntimeException($"Parameter {parameterName} already defined.", functionCallNode.Line);
+                        throw new RuntimeException($"Parameter {parameterName} already defined.",
+                            functionCallNode.Line);
 
                     if (iterator < parameters.Count)
                         callStackItem.ParameterScope.Add(parameterName, parameters[iterator++]);
@@ -56,10 +57,13 @@ namespace Commodore.EVIL.Execution
                 {
                     throw;
                 }
-                catch (ExitStatementException) { }
+                catch (ExitStatementException)
+                {
+                }
                 catch (Exception e)
                 {
-                    throw new RuntimeException(e.Message, functionCallNode.Line);
+                    if (!(e.InnerException is ScriptTerminationException))
+                        throw new RuntimeException(e.Message, functionCallNode.Line);
                 }
                 finally
                 {
