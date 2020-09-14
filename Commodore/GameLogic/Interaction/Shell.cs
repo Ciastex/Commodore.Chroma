@@ -74,7 +74,7 @@ namespace Commodore.GameLogic.Interaction
 
                     if ((file.Attributes & FileAttributes.Executable) != 0)
                     {
-                        var pid = await Kernel.Instance.ProcessManager.ExecuteProgram(
+                        var pid = Kernel.Instance.ProcessManager.ExecuteProgram(
                             file.GetData(), 
                             filePath,
                             args

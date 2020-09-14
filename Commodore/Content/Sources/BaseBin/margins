@@ -1,0 +1,36 @@
+vga.margins(1,1,24,1)
+
+local margins = vga.margins()
+local cols = vga.cols()
+local rows = vga.rows()
+
+for local y=0,rows do
+  vga.setxy(
+    "", 
+    cols - margins["right"],
+    y,
+    255, 255, 255
+  )
+end
+
+vga.clear()
+vga.setcurpos(0,0)
+
+local offsetx = 0
+local offsety = 0
+local counter = 0
+
+while (true) do
+  for local y=0,rows do
+    for local x=cols - margins["right"] + 1,cols do
+      vga.setxy(
+        "", x, y,
+        0, 
+        (64 + (offsetx++ + counter) % 24) % 255, 
+        (64 + (offsety++ + counter) % 24) % 255
+      )
+    end
+    sys.wait(16)
+    counter++
+  end
+end

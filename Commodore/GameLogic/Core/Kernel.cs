@@ -22,7 +22,7 @@ using Commodore.GameLogic.Persistence;
 
 namespace Commodore.GameLogic.Core
 {
-    public class Kernel
+    public partial class Kernel
     {
         private static readonly TrueTypeFont Font;
 
@@ -181,59 +181,6 @@ namespace Commodore.GameLogic.Core
         public void Notify(string text, Color borderColor, Color backgroundColor, Color textColor)
             => Notifications.Enqueue(new Notification(text, borderColor, backgroundColor, textColor));
 
-        public void LinkToDevice(Device device)
-        {
-            if (device == null)
-                return;
-
-            NetworkConnectionStack.Push(device);
-            device.OnLinked();
-        }
-
-        public void UnlinkFromDevice()
-        {
-            if (NetworkConnectionStack.TryPeek(out var entity))
-            {
-                if (entity is Device device)
-                {
-                    NetworkConnectionStack.Pop();
-                    device.OnUnlinked();
-                }
-            }
-        }
-
-        public void BindToNode(Node node)
-        {
-            NetworkConnectionStack.Push(node);
-            node.OnBound();
-        }
-
-        public void UnbindFromNode()
-        {
-            if (NetworkConnectionStack.TryPeek(out var entity))
-            {
-                if (entity is Node node)
-                {
-                    NetworkConnectionStack.Pop();
-                    node.OnUnbound();
-                }
-            }
-        }
-
-        public void AttachShell(Device device)
-        {
-            CurrentSystemContext = device.SystemContext;
-            device.OnShellAttached();
-        }
-
-        public void DetachShell()
-        {
-            var device = CurrentSystemContext.RemoteDevice;
-            CurrentSystemContext = LocalSystemContext;
-            
-            device.OnShellDetached();
-        }
-
         private void InitializeSystemMemory()
         {
             if (Memory == null)
@@ -247,8 +194,7 @@ namespace Commodore.GameLogic.Core
 
             Memory.Poke(SystemMemoryAddresses.BreakKeyScancode, (byte)UserProfile.Instance.PreferredBreakKey);
             Memory.Poke(SystemMemoryAddresses.RevertToTextModeScancode, (byte)UserProfile.Instance.GfxModeResetKey);
-            Memory.Poke(SystemMemoryAddresses.CurrentMarginSize, (byte)0);
-            Memory.Poke(SystemMemoryAddresses.CurrentPaddingSize, (byte)1);
+            Memory.Poke(SystemMemoryAddresses.MarginArea, (int)0x01010101);
             Memory.Poke(SystemMemoryAddresses.UpdateOffsetParametersFlag, (byte)1);
             Memory.Poke(
                 SystemMemoryAddresses.CurrentMarginColor,
@@ -362,12 +308,7 @@ namespace Commodore.GameLogic.Core
 
                     if (!customPromptSuccess)
                     {
-                        var host = "localhost";
-
-                        if (!CurrentSystemContext.IsLocal)
-                            host = CurrentSystemContext.RemoteDevice.GetHostName();
-
-                        Terminal.Write($"{CurrentSystemContext.WorkingDirectory.GetAbsolutePath()} @ {host} $ ");
+                        Terminal.Write($"[{GetHostName()}] | {CurrentSystemContext.WorkingDirectory.GetAbsolutePath()}\n$ ");
                     }
 
                     var str = await Terminal.ReadLine(string.Empty);
@@ -394,7 +335,7 @@ namespace Commodore.GameLogic.Core
 
             try
             {
-                var pid = await ProcessManager.ExecuteProgram(
+                var pid = ProcessManager.ExecuteProgram(
                     Encoding.UTF8.GetString(File.Get(path).Data),
                     path
                 );
@@ -482,23 +423,6 @@ namespace Commodore.GameLogic.Core
 
             if (e.FilePath.StartsWith("/bin/"))
                 file.Attributes = FileAttributes.Executable;
-        }
-
-        private void StartNetworkUpdates()
-        {
-            Task.Run(async () =>
-            {
-                while (!IsRebooting)
-                {
-                    if (!UserProfile.Instance.IsInitialized)
-                        continue;
-
-                    if (UserProfile.Instance.Internet == null)
-                        continue;
-
-                    await UserProfile.Instance.Internet.Tick();
-                }
-            });
         }
     }
 }

@@ -16,13 +16,28 @@ namespace Commodore.GameLogic.Core
     public class ProcessManager
     {
         public const int MaximumProcessCount = 64;
-        
-        private Log Log { get; } = LogManager.GetForCurrentAssembly();
+
+        private readonly string _programTemplate;
         private int _nextPid;
 
-        public Dictionary<int, Process> Processes { get; private set; }
+        private Log Log { get; } = LogManager.GetForCurrentAssembly();
 
-        public ProcessManager() => Reset();
+        public Dictionary<int, Process> Processes { get; private set; }
+        public Stack<DynValue> ReturnValues { get; private set; } = new Stack<DynValue>();
+
+        public ProcessManager()
+        {
+            if (_programTemplate == null)
+            {
+                using (var fs = G.ContentProvider.Open("Sources/Templates/program.template.cplx"))
+                {
+                    using (var sr = new StreamReader(fs))
+                        _programTemplate = sr.ReadToEnd();
+                }
+            }
+
+            Reset();
+        }
 
         public void Reset()
         {
@@ -34,6 +49,9 @@ namespace Commodore.GameLogic.Core
             {
                 Processes = new Dictionary<int, Process>();
             }
+            
+            _nextPid = 0;
+            ReturnValues.Clear();
         }
 
         public void Kill(int pid)
@@ -58,7 +76,7 @@ namespace Commodore.GameLogic.Core
         public int GetPid(Interpreter interpreter)
         {
             var proc = GetProcess(interpreter);
-            
+
             if (proc == null)
                 return -1;
 
@@ -71,19 +89,15 @@ namespace Commodore.GameLogic.Core
                 await Task.Delay(1);
         }
 
-        public async Task<int> ExecuteProgram(string code, string filePath, params string[] args)
+        public int ExecuteProgram(string code, string filePath, params string[] args)
         {
             if (Processes.Count >= MaximumProcessCount)
                 return -1;
-            
+
             var interp = CreateProcess();
             var targetCode = code ?? string.Empty;
 
-            using (var fs = G.ContentProvider.Open("Sources/Templates/program.template.cplx"))
-            {
-                using (var sr = new StreamReader(fs))
-                    targetCode = (await sr.ReadToEndAsync()).Replace("%prepped_source%", targetCode);
-            }
+            targetCode = _programTemplate.Replace("%prepped_source%", targetCode);
 
             var argsTable = new Table();
             for (var i = 0; i < args.Length; i++)
@@ -92,14 +106,14 @@ namespace Commodore.GameLogic.Core
             interp.Environment.SupplementLocalLookupTable.Add("args", new DynValue(argsTable));
 
             var pid = _nextPid++;
-            Processes.Add(pid, new Process(pid, string.Join(' ', args), interp) { FilePath = filePath });
+            Processes.Add(pid, new Process(pid, string.Join(' ', args), interp) {FilePath = filePath});
 
             // We don't want to wait for this here.
 #pragma warning disable 4014
             Task.Run(async () =>
 #pragma warning restore 4014
             {
-                await ExecuteCode(interp, targetCode);
+                ReturnValues.Push(await ExecuteCode(interp, targetCode));
                 Processes.Remove(pid);
             });
 
@@ -129,7 +143,7 @@ namespace Commodore.GameLogic.Core
             catch (RuntimeException re)
             {
                 Kernel.Instance.Terminal.WriteLine(
-                    $"\uFF24RUNTIME ERROR | LINE {(re?.Line - 1).ToString() ?? "??"}\uFF40\n{re.Message}\n");
+                    $"\uFF24RUNTIME ERROR | LINE {(re.Line - 1).ToString()}\uFF40\n{re.Message}\n");
             }
             catch (ClrFunctionException cfe)
             {
@@ -152,7 +166,7 @@ namespace Commodore.GameLogic.Core
 
             return DynValue.Zero;
         }
-        
+
         private Interpreter CreateProcess()
         {
             var interp = new Interpreter();
