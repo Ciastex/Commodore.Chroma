@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading;
 using Commodore.Framework;
 using Commodore.Framework.Extensions;
 using Commodore.GameLogic.Core;
@@ -10,7 +11,7 @@ namespace Commodore.GameLogic.Interaction
 {
     public class TextInterface
     {
-        public static async Task RunProfileConfigWizard()
+        public static async Task RunProfileConfigWizard(CancellationToken token)
         {
             Kernel.Instance.Terminal.WriteLine("\nNEW USER DETECTED");
 
@@ -27,7 +28,7 @@ namespace Commodore.GameLogic.Interaction
 
                 while (!usernameValid)
                 {
-                    var usernameInput = await Kernel.Instance.Terminal.ReadLine($" -> ENTER USERNAME [{username}]: ");
+                    var usernameInput = Kernel.Instance.Terminal.ReadLine($" -> ENTER USERNAME [{username}]: ", token);
 
                     if (usernameInput.Length > 16)
                     {
@@ -41,17 +42,19 @@ namespace Commodore.GameLogic.Interaction
                     usernameValid = true;
                 }
 
-                breakKey = (KeyCode)await Kernel.Instance.Terminal.Read(
-                    $" -> PRESS USER PROGRAM KILL KEY [{breakKey}]"
+                breakKey = (KeyCode)Kernel.Instance.Terminal.Read(
+                    $" -> PRESS USER PROGRAM KILL KEY [{breakKey}]",
+                    token
                 );
                 Kernel.Instance.Terminal.Write("\n");
 
-                gfxModeResetKey = (KeyCode)await Kernel.Instance.Terminal.Read(
-                    $" -> PRESS GRAPHICS MODE RECOVERY KEY [{gfxModeResetKey}]"
+                gfxModeResetKey = (KeyCode)Kernel.Instance.Terminal.Read(
+                    $" -> PRESS GRAPHICS MODE RECOVERY KEY [{gfxModeResetKey}]",
+                    token
                 );
                 Kernel.Instance.Terminal.Write("\n");
 
-                var seedInput = await Kernel.Instance.Terminal.ReadLine($" -> ENTER RNG SEED [{seed}]: ");
+                var seedInput = Kernel.Instance.Terminal.ReadLine($" -> ENTER RNG SEED [{seed}]: ", token);
                 
                 if (!string.IsNullOrEmpty(seedInput) && !int.TryParse(seedInput, out seed))
                     seed = seedInput.GetHashCode();
@@ -66,7 +69,7 @@ namespace Commodore.GameLogic.Interaction
                 while (input != KeyCode.Y && input != KeyCode.N)
                 {
                     Kernel.Instance.Terminal.Write("Is this correct (y/n)? ");
-                    input = (KeyCode)await Kernel.Instance.Terminal.Read("");
+                    input = (KeyCode)Kernel.Instance.Terminal.Read("", token);
                 }
 
                 if (input == KeyCode.Y)

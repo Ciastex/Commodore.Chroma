@@ -13,7 +13,6 @@ namespace Commodore.GameLogic.Core.IO
     {
         private bool _awaitingInputString;
         private bool _awaitingInputCharacter;
-        private bool _cancelled;
 
         private int _historyIndex;
         private int _inputBufferIndex;
@@ -32,17 +31,17 @@ namespace Commodore.GameLogic.Core.IO
             InputHistory = new List<string>();
         }
 
-        public void CancelInput()
-        {
-            _cancelled = true;
-            
-            _inputBuffer = string.Empty;
-            _inputBufferIndex = 0;
-            _awaitingInputString = false;
-            
-            _keyBuffer = 0;
-            _awaitingInputCharacter = false;
-        }
+        // public void CancelInput()
+        // {
+        //     _cancelled = true;
+        //     
+        //     _inputBuffer = string.Empty;
+        //     _inputBufferIndex = 0;
+        //     _awaitingInputString = false;
+        //     
+        //     _keyBuffer = 0;
+        //     _awaitingInputCharacter = false;
+        // }
 
         public void ResetInputHistory()
         {
@@ -55,25 +54,28 @@ namespace Commodore.GameLogic.Core.IO
             _vga.Cursor.ForceHidden = !_awaitingInputString && !_awaitingInputCharacter;
         }
 
-        public async Task<string> ReadLine(string prompt)
+        public string ReadLine(string prompt, CancellationToken token)
         {
             Write(prompt);
             _awaitingInputString = true;
 
             while (_awaitingInputString)
-                await Task.Delay(1);
-
-            if (_cancelled)
             {
-                _cancelled = true;
-                throw new TaskCanceledException(string.Empty);
+                token.ThrowIfCancellationRequested();
             }
+
+            // if (_cancelled)
+            // {
+            //     _cancelled = true;
+            //     throw new TaskCanceledException(string.Empty);
+            // }
 
             if (!string.IsNullOrWhiteSpace(_inputBuffer))
             {
                 InputHistory.Add(_inputBuffer);
                 _historyIndex = InputHistory.Count;
             }
+
             var output = _inputBuffer;
             _inputBuffer = string.Empty;
             _inputBufferIndex = 0;
@@ -81,19 +83,21 @@ namespace Commodore.GameLogic.Core.IO
             return output;
         }
 
-        public async Task<int> Read(string prompt)
+        public int Read(string prompt, CancellationToken token)
         {
             Write(prompt);
             _awaitingInputCharacter = true;
 
             while (_awaitingInputCharacter)
-                await Task.Delay(1);
-
-            if (_cancelled)
             {
-                _cancelled = false;
-                throw new TaskCanceledException(string.Empty);
+                token.ThrowIfCancellationRequested();
             }
+
+            // if (_cancelled)
+            // {
+            //     _cancelled = false;
+            //     throw new TaskCanceledException(string.Empty);
+            // }
 
             var output = _keyBuffer;
             _keyBuffer = 0;
@@ -121,7 +125,7 @@ namespace Commodore.GameLogic.Core.IO
                 return;
             }
 
-            if(character == '\ufe40')
+            if (character == '\ufe40')
             {
                 _vga.ActiveBackgroundColor = _vga.DefaultBackgroundColor;
                 return;
@@ -296,9 +300,10 @@ namespace Commodore.GameLogic.Core.IO
                 {
                     var shiftPressed = modifiers.HasFlag(KeyModifiers.LeftShift) ||
                                        modifiers.HasFlag(KeyModifiers.RightShift);
-                    
-                    var dict = shiftPressed ? PetsciiControlCodes.PetsciiSymbolMappings 
-                                            : PetsciiControlCodes.PetsciiSymbolMappingShifted;
+
+                    var dict = shiftPressed
+                        ? PetsciiControlCodes.PetsciiSymbolMappings
+                        : PetsciiControlCodes.PetsciiSymbolMappingShifted;
 
                     if (dict.ContainsKey(keyCode))
                     {
@@ -392,7 +397,7 @@ namespace Commodore.GameLogic.Core.IO
 
             if (!char.IsControl(character))
             {
-                if(_vga.Font.CanRenderGlyph(character))
+                if (_vga.Font.CanRenderGlyph(character))
                     HandlePrintableCharacter(character);
             }
         }

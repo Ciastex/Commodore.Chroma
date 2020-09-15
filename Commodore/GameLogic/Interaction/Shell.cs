@@ -3,6 +3,7 @@ using Commodore.GameLogic.Core.IO.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Commodore.GameLogic.Interaction
@@ -32,7 +33,7 @@ namespace Commodore.GameLogic.Interaction
             });
         }
 
-        public async Task<bool> HandleCommand(string input)
+        public async Task<bool> HandleCommand(string input, CancellationToken token)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace Commodore.GameLogic.Interaction
 
                 var command = tokens[0];
                 var argList = tokens.Skip(1).ToList();
-                
+
                 var waitForProcess = true;
                 var lastArg = argList.LastOrDefault();
 
@@ -75,13 +76,16 @@ namespace Commodore.GameLogic.Interaction
                     if ((file.Attributes & FileAttributes.Executable) != 0)
                     {
                         var pid = Kernel.Instance.ProcessManager.ExecuteProgram(
-                            file.GetData(), 
+                            file.GetData(),
                             filePath,
+                            Kernel.Instance.InteractionCancellation.Token,
                             args
                         );
-                        
+
                         if (waitForProcess)
-                            await Kernel.Instance.ProcessManager.WaitForProgram(pid);
+                        {
+                            await Kernel.Instance.ProcessManager.WaitForProgram(pid, token);
+                        }
 
                         return true;
                     }
@@ -94,6 +98,10 @@ namespace Commodore.GameLogic.Interaction
 
                 Kernel.Instance.Terminal.WriteLine($"\uFF26UNRECOGNIZED COMMAND AND NO EXECUTABLE FOUND\uFF40\n");
                 return false;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception e)
             {

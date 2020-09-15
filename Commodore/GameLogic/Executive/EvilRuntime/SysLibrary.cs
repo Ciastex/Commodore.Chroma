@@ -51,8 +51,9 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             return new DynValue(
                 Kernel.Instance.Terminal.Read(
-                    prompt
-                ).GetAwaiter().GetResult()
+                    prompt,
+                    Kernel.Instance.InteractionCancellation.Token
+                )
             );
         }
 
@@ -69,8 +70,9 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             return new DynValue(
                 Kernel.Instance.Terminal.ReadLine(
-                    prompt
-                ).GetAwaiter().GetResult()
+                    prompt,
+                    Kernel.Instance.InteractionCancellation.Token
+                )
             );
         }
 
@@ -110,7 +112,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 .ExpectIntegerAtIndex(0);
 
             interpreter.SuspendExecution = true;
-            Kernel.Instance.ProcessManager.WaitForProgram((int)args[0].Number).GetAwaiter().GetResult();
+            Kernel.Instance.ProcessManager.WaitForProgram((int)args[0].Number, Kernel.Instance.InteractionCancellation.Token).GetAwaiter().GetResult();
             interpreter.SuspendExecution = false;
 
             return DynValue.Zero;
@@ -140,7 +142,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 var content = file.GetData();
                 process.ImportedLibraryPaths.Add(absPath);
 
-                return interpreter.ExecuteAsync(content).GetAwaiter().GetResult();
+                return interpreter.ExecuteAsync(content, Kernel.Instance.InteractionCancellation.Token).GetAwaiter().GetResult();
             }
             catch
             {
@@ -226,7 +228,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 }
             }
 
-            var pid = Kernel.Instance.ProcessManager.ExecuteProgram(file.GetData(), path, processArgs.ToArray());
+            var pid = Kernel.Instance.ProcessManager.ExecuteProgram(file.GetData(), path, Kernel.Instance.InteractionCancellation.Token, processArgs.ToArray());
 
             if (pid < 0)
                 return new DynValue(SystemReturnCodes.Kernel.ProcessSpaceExhausted);

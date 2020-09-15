@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Chroma.Graphics;
 using Chroma.Graphics.TextRendering;
@@ -50,6 +51,8 @@ namespace Commodore.GameLogic.Core
         private Notification _currentNotification;
         private int? _foregroundProcess;
 
+        public CancellationTokenSource InteractionCancellation { get; private set; }
+
 #if !DEBUG
         public BootSequencePlayer BootSequence;
 #endif
@@ -79,8 +82,10 @@ namespace Commodore.GameLogic.Core
                 _currentNotification = null;
             }
 
-            Notifications.Clear();
+            InteractionCancellation?.Cancel();
+            InteractionCancellation = new CancellationTokenSource();
 
+            Notifications.Clear();
             IsRebooting = true;
 
             if (isWarmBoot)
@@ -225,7 +230,17 @@ namespace Commodore.GameLogic.Core
             {
                 Vga = new VGA(Font);
 
-                Vga.InitialSetUpComplete += VGA_InitialSetUpComplete;
+                Vga.InitialSetupComplete = () =>
+                {
+                    try
+                    {
+                        Task.Run(VGA_InitialSetUpComplete, InteractionCancellation.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Console.WriteLine("lol..");
+                    }
+                };
                 Vga.FailsafeTriggered += VGA_FailsafeTriggered;
             }
             else
@@ -237,7 +252,7 @@ namespace Commodore.GameLogic.Core
 
         private void InitializeIoInterfaces()
         {
-            Terminal?.CancelInput();
+            // Terminal?.CancelInput();
             Terminal?.InputHistory?.Clear();
             Terminal = null;
 
@@ -280,7 +295,7 @@ namespace Commodore.GameLogic.Core
             Terminal.WriteLine("abnormal vga parameters triggered a failsafe reset");
         }
 
-        private async void VGA_InitialSetUpComplete(object sender, EventArgs e)
+        private async Task VGA_InitialSetUpComplete()
         {
 #if !DEBUG
             BootSequence.Build("RegularBoot");
@@ -290,37 +305,40 @@ namespace Commodore.GameLogic.Core
 
             if (!UserProfile.Instance.IsInitialized)
             {
-                await TextInterface.RunProfileConfigWizard();
+                await TextInterface.RunProfileConfigWizard(InteractionCancellation.Token);
                 return;
             }
 
             StartNetworkUpdates();
 
-            await TryRunSystemProgram("/etc/startup");
+            await TryRunSystemProgram("/etc/startup", InteractionCancellation.Token);
 
             DoPostBootActions();
 
-            try
+            while (!InteractionCancellation.IsCancellationRequested)
             {
-                while (true)
+                var customPromptSuccess = await TryRunSystemProgram("/etc/prompt", InteractionCancellation.Token);
+
+                if (!customPromptSuccess)
                 {
-                    var customPromptSuccess = await TryRunSystemProgram("/etc/prompt");
-
-                    if (!customPromptSuccess)
-                    {
-                        Terminal.Write($"[{GetHostName()}] | {CurrentSystemContext.WorkingDirectory.GetAbsolutePath()}\n$ ");
-                    }
-
-                    var str = await Terminal.ReadLine(string.Empty);
-
-                    if (string.IsNullOrWhiteSpace(str))
+                    Terminal.Write(
+                        $"[{GetHostName()}] | {CurrentSystemContext.WorkingDirectory.GetAbsolutePath()}\n$ ");
+                }
+    
+                try
+                {
+                    var input = Terminal.ReadLine(string.Empty, InteractionCancellation.Token);
+                    
+                    if (string.IsNullOrWhiteSpace(input))
                         continue;
 
-                    await Shell.HandleCommand(str);
+                    await Shell.HandleCommand(input, InteractionCancellation.Token);
                 }
-            }
-            catch (TaskCanceledException)
-            {
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("task canceled");
+                    return;
+                }
             }
         }
 
@@ -328,8 +346,10 @@ namespace Commodore.GameLogic.Core
         {
         }
 
-        private async Task<bool> TryRunSystemProgram(string path)
+        private async Task<bool> TryRunSystemProgram(string path, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             if (!File.Exists(path))
                 return false;
 
@@ -337,11 +357,12 @@ namespace Commodore.GameLogic.Core
             {
                 var pid = ProcessManager.ExecuteProgram(
                     Encoding.UTF8.GetString(File.Get(path).Data),
-                    path
+                    path,
+                    token
                 );
 
                 _foregroundProcess = pid;
-                await ProcessManager.WaitForProgram(pid);
+                await ProcessManager.WaitForProgram(pid, InteractionCancellation.Token);
                 _foregroundProcess = null;
 
                 return true;
@@ -397,7 +418,7 @@ namespace Commodore.GameLogic.Core
             }
             else
             {
-                Editor.KeyPressed(keyCode, modifiers);
+                Editor?.KeyPressed(keyCode, modifiers);
             }
         }
 

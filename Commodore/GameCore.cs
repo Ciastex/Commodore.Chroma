@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
 using Chroma;
 using Chroma.Graphics;
 using Chroma.Graphics.Accelerated;

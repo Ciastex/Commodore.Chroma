@@ -110,7 +110,7 @@ namespace Commodore.GameLogic.Display
             set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentBackgroundColor, (int)value.PackedValue);
         }
 
-        public event EventHandler InitialSetUpComplete;
+        public Action InitialSetupComplete;
         public event EventHandler FailsafeTriggered;
 
         public VGA(TrueTypeFont font)
@@ -163,7 +163,7 @@ namespace Commodore.GameLogic.Display
             {
                 _alreadyInitialized = true;
 
-                InitialSetUpComplete?.Invoke(this, EventArgs.Empty);
+                InitialSetupComplete?.Invoke();
 
                 Kernel.Instance.Memory.Poke(
                     SystemMemoryAddresses.SoftResetCompleteFlag,
