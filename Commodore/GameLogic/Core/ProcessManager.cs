@@ -50,7 +50,7 @@ namespace Commodore.GameLogic.Core
             {
                 Processes = new Dictionary<int, Process>();
             }
-            
+
             _nextPid = 0;
             ReturnValues.Clear();
         }
@@ -60,13 +60,25 @@ namespace Commodore.GameLogic.Core
             if (!Processes.ContainsKey(pid))
                 return;
 
-            Processes[pid].Interpreter.BreakExecution = true;
+            var proc = Processes[pid];
+            
+            proc.Interpreter.BreakExecution = true;
+
+            foreach (var childProcPid in proc.Children)
+            {
+                Kill(childProcPid);
+            }
+            
+            if (proc.Parent != null)
+                proc.Children.Remove(Processes[pid].Pid);
+
+            Processes.Remove(pid);
         }
 
         public void KillAll()
         {
             for (var i = 0; i < Processes.Values.Count; i++)
-                Processes.Values.ElementAt(i).Interpreter.BreakExecution = true;
+                Kill(i);
         }
 
         public Process GetProcess(Interpreter interpreter)
@@ -86,14 +98,20 @@ namespace Commodore.GameLogic.Core
 
         public async Task WaitForProgram(int pid, CancellationToken token)
         {
-            while (Processes.ContainsKey(pid))
+            while (IsProcessRunning(pid))
             {
                 token.ThrowIfCancellationRequested();
                 await Task.Delay(1);
             }
         }
 
-        public int ExecuteProgram(string code, string filePath, CancellationToken token, params string[] args)
+        public bool IsProcessRunning(int pid)
+        {
+            return Processes.ContainsKey(pid);
+        }
+
+        public int ExecuteProgram(string code, string filePath, int? parentPid, CancellationToken token,
+            params string[] args)
         {
             if (Processes.Count >= MaximumProcessCount)
                 return -1;
@@ -110,7 +128,18 @@ namespace Commodore.GameLogic.Core
             interp.Environment.SupplementLocalLookupTable.Add("args", new DynValue(argsTable));
 
             var pid = _nextPid++;
-            Processes.Add(pid, new Process(pid, string.Join(' ', args), interp) {FilePath = filePath});
+            if (parentPid == null)
+            {
+                Processes.Add(pid, new Process(pid, string.Join(' ', args), interp) {FilePath = filePath});
+            }
+            else
+            {
+                var child = new Process(pid, string.Join(' ', args), interp, parentPid) {FilePath = filePath};
+                var parent = Processes[parentPid.Value];
+                parent.Children.Add(child.Pid);
+
+                Processes.Add(pid, child);
+            }
 
             // We don't want to wait for this here.
 #pragma warning disable 4014
@@ -118,7 +147,7 @@ namespace Commodore.GameLogic.Core
 #pragma warning restore 4014
             {
                 ReturnValues.Push(await ExecuteCode(interp, targetCode, token));
-                Processes.Remove(pid);
+                Kill(pid);
             });
 
             return pid;

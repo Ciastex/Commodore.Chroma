@@ -49,7 +49,6 @@ namespace Commodore.GameLogic.Core
         public static Kernel Instance => _instance ??= new Lazy<Kernel>(() => new Kernel()).Value;
 
         private Notification _currentNotification;
-        private int? _foregroundProcess;
 
         public CancellationTokenSource InteractionCancellation { get; private set; }
 
@@ -358,12 +357,11 @@ namespace Commodore.GameLogic.Core
                 var pid = ProcessManager.ExecuteProgram(
                     Encoding.UTF8.GetString(File.Get(path).Data),
                     path,
+                    null,
                     token
                 );
 
-                _foregroundProcess = pid;
                 await ProcessManager.WaitForProgram(pid, InteractionCancellation.Token);
-                _foregroundProcess = null;
 
                 return true;
             }
@@ -406,9 +404,9 @@ namespace Commodore.GameLogic.Core
                     }
                     else
                     {
-                        if (_foregroundProcess != null)
+                        if (Shell.ForegroundPid != null)
                         {
-                            ProcessManager.Kill(_foregroundProcess.Value);
+                            ProcessManager.Kill(Shell.ForegroundPid.Value);
                         }
                     }
                 }

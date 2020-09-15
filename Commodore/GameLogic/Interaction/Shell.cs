@@ -13,7 +13,8 @@ namespace Commodore.GameLogic.Interaction
         public delegate bool Command(string[] args);
 
         public Dictionary<string, Command> BuiltIns { get; }
-
+        public int? ForegroundPid { get; private set; }
+        
         public Shell()
         {
             BuiltIns = new Dictionary<string, Command>();
@@ -78,13 +79,16 @@ namespace Commodore.GameLogic.Interaction
                         var pid = Kernel.Instance.ProcessManager.ExecuteProgram(
                             file.GetData(),
                             filePath,
+                            null,
                             Kernel.Instance.InteractionCancellation.Token,
                             args
                         );
 
                         if (waitForProcess)
                         {
+                            ForegroundPid = pid;
                             await Kernel.Instance.ProcessManager.WaitForProgram(pid, token);
+                            ForegroundPid = null;
                         }
 
                         return true;
