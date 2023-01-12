@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Commodore-Chroma.440952860.00" t="ExcludeRecursive" />
-    <e p="$PROJECT_DIR$" t="IncludeFlat">
+    <e p="C:\Users\tcich\AppData\local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\tcich\AppData\local\JetBrains\Rider2020.1\resharper-host\local\Transient\ReSharperHost\v201\SolutionCaches\_Commodore-Chroma.-1677706083.00" t="ExcludeRecursive" />
+    <e p="H:\Visual Studio\Projects\Commodore.Chroma" t="IncludeFlat">
       <e p="Commodore-Chroma.sln" t="IncludeFlat" />
       <e p="Commodore.Chroma" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
         <e p="Commodore.Chroma.csproj" t="IncludeRecursive" />
         <e p="CommodoreMain.cs" t="Include" />
         <e p="Content" t="Include">
@@ -115,9 +116,9 @@
                 <e p="StatusControl.cs" t="Include" />
               </e>
               <e p="ColorizedSegment.cs" t="Include" />
+              <e p="Editor.cs" t="Include" />
               <e p="Editor.CursorManipulation.cs" t="Include" />
               <e p="Editor.SpecialCharacters.cs" t="Include" />
-              <e p="Editor.cs" t="Include" />
               <e p="EditorBuffer.cs" t="Include" />
               <e p="EditorColors.cs" t="Include" />
               <e p="EditorOptions.cs" t="Include" />
@@ -166,8 +167,6 @@
             <e p="NetworkCursor.cs" t="Include" />
           </e>
         </e>
-        <e p="Program.cs" t="Include" />
-        <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -175,8 +174,73 @@
             </e>
           </e>
         </e>
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="Commodore.Engine" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Commodore.Engine.csproj" t="IncludeRecursive" />
+        <e p="CrashHandler.cs" t="Include" />
+        <e p="DebugLog.cs" t="Include" />
+        <e p="EngineBasedGame.cs" t="Include" />
+        <e p="EngineObject.cs" t="Include" />
+        <e p="Exceptions" t="Include">
+          <e p="JsonSettingsException.cs" t="Include" />
+        </e>
+        <e p="FrameworkExtensions" t="Include">
+          <e p="ColorExtensions.cs" t="Include" />
+          <e p="StringExtensions.cs" t="Include" />
+          <e p="XDocumentExtensions.cs" t="Include" />
+        </e>
+        <e p="G.cs" t="Include" />
+        <e p="Generators" t="Include">
+          <e p="MersenneTwister.cs" t="Include" />
+          <e p="SimplexNoise.cs" t="Include" />
+          <e p="StringGenerator.cs" t="Include" />
+        </e>
+        <e p="GlobalSuppressions.cs" t="Include" />
+        <e p="Graphics" t="Include">
+          <e p="FullscreenMode.cs" t="Include" />
+        </e>
+        <e p="Interop" t="Include">
+          <e p="Kernel32.cs" t="Include" />
+        </e>
+        <e p="Managers" t="Include">
+          <e p="DebugManager.cs" t="Include" />
+          <e p="SettingsManager.cs" t="Include" />
+        </e>
+        <e p="Margins.cs" t="Include" />
+        <e p="Math.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.1" t="Include">
+              <e p="Commodore.Engine.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Persistence" t="Include">
+          <e p="AppData" t="Include">
+            <e p="RoamingStorage.cs" t="Include" />
+          </e>
+          <e p="JsonConfig" t="Include">
+            <e p="JsonSettings.cs" t="Include" />
+            <e p="Section.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Thickness.cs" t="Include" />
+        <e p="Time.cs" t="Include" />
       </e>
       <e p="Commodore.EVIL" t="IncludeRecursive">
+        <e p="Abstraction" t="Include">
+          <e p="Base" t="Include">
+            <e p="IFunction.cs" t="Include" />
+          </e>
+          <e p="ClrFunctionArguments.cs" t="Include" />
+          <e p="DynValue.cs" t="Include" />
+          <e p="DynValueType.cs" t="Include" />
+          <e p="FunctionType.cs" t="Include" />
+          <e p="ScriptFunction.cs" t="Include" />
+          <e p="Table.cs" t="Include" />
+        </e>
         <e p="AST" t="Include">
           <e p="Base" t="Include">
             <e p="AstNode.cs" t="Include" />
@@ -216,18 +280,8 @@
             <e p="WhileLoopNode.cs" t="Include" />
           </e>
         </e>
-        <e p="Abstraction" t="Include">
-          <e p="Base" t="Include">
-            <e p="IFunction.cs" t="Include" />
-          </e>
-          <e p="ClrFunctionArguments.cs" t="Include" />
-          <e p="DynValue.cs" t="Include" />
-          <e p="DynValueType.cs" t="Include" />
-          <e p="FunctionType.cs" t="Include" />
-          <e p="ScriptFunction.cs" t="Include" />
-          <e p="Table.cs" t="Include" />
-        </e>
         <e p="AstVisitor.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
         <e p="Commodore.EVIL.csproj" t="IncludeRecursive" />
         <e p="Diagnostics" t="Include">
           <e p="CallStackItem.cs" t="Include" />
@@ -250,6 +304,7 @@
           <e p="Interpreter.BreakNode.cs" t="Include" />
           <e p="Interpreter.CompoundAssignmentLogic.cs" t="Include" />
           <e p="Interpreter.ConditionLogic.cs" t="Include" />
+          <e p="Interpreter.cs" t="Include" />
           <e p="Interpreter.EachLoopLogic.cs" t="Include" />
           <e p="Interpreter.ExitLogic.cs" t="Include" />
           <e p="Interpreter.ForLoopLogic.cs" t="Include" />
@@ -268,7 +323,6 @@
           <e p="Interpreter.ValueLogic.cs" t="Include" />
           <e p="Interpreter.VariableLogic.cs" t="Include" />
           <e p="Interpreter.WhileLoopLogic.cs" t="Include" />
-          <e p="Interpreter.cs" t="Include" />
         </e>
         <e p="IMemory.cs" t="Include" />
         <e p="Lexical" t="Include">
@@ -277,10 +331,18 @@
           <e p="Token.cs" t="Include" />
           <e p="TokenType.cs" t="Include" />
         </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Commodore.EVIL.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Parsing" t="Include">
           <e p="Parser.Assignment.cs" t="Include" />
           <e p="Parser.Break.cs" t="Include" />
           <e p="Parser.CompoundAssignment.cs" t="Include" />
+          <e p="Parser.cs" t="Include" />
           <e p="Parser.EachLoop.cs" t="Include" />
           <e p="Parser.Exit.cs" t="Include" />
           <e p="Parser.Expression.cs" t="Include" />
@@ -302,7 +364,6 @@
           <e p="Parser.UndefineSymbol.cs" t="Include" />
           <e p="Parser.Variable.cs" t="Include" />
           <e p="Parser.WhileLoop.cs" t="Include" />
-          <e p="Parser.cs" t="Include" />
         </e>
         <e p="RuntimeLibrary" t="Include">
           <e p="Base" t="Include">
@@ -313,67 +374,6 @@
           <e p="StringLibrary.cs" t="Include" />
           <e p="TableLibrary.cs" t="Include" />
           <e p="TimeLibrary.cs" t="Include" />
-        </e>
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netstandard2.0" t="Include">
-              <e p="Commodore.EVIL.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-      </e>
-      <e p="Commodore.Engine" t="IncludeRecursive">
-        <e p="Commodore.Engine.csproj" t="IncludeRecursive" />
-        <e p="CrashHandler.cs" t="Include" />
-        <e p="DebugLog.cs" t="Include" />
-        <e p="EngineBasedGame.cs" t="Include" />
-        <e p="EngineObject.cs" t="Include" />
-        <e p="Exceptions" t="Include">
-          <e p="JsonSettingsException.cs" t="Include" />
-        </e>
-        <e p="FrameworkExtensions" t="Include">
-          <e p="ColorExtensions.cs" t="Include" />
-          <e p="StringExtensions.cs" t="Include" />
-          <e p="XDocumentExtensions.cs" t="Include" />
-        </e>
-        <e p="G.cs" t="Include" />
-        <e p="Generators" t="Include">
-          <e p="MersenneTwister.cs" t="Include" />
-          <e p="SimplexNoise.cs" t="Include" />
-          <e p="StringGenerator.cs" t="Include" />
-        </e>
-        <e p="GlobalSuppressions.cs" t="Include" />
-        <e p="Graphics" t="Include">
-          <e p="FullscreenMode.cs" t="Include" />
-        </e>
-        <e p="Interop" t="Include">
-          <e p="Kernel32.cs" t="Include" />
-        </e>
-        <e p="Managers" t="Include">
-          <e p="DebugManager.cs" t="Include" />
-          <e p="SettingsManager.cs" t="Include" />
-        </e>
-        <e p="Margins.cs" t="Include" />
-        <e p="Math.cs" t="Include" />
-        <e p="Persistence" t="Include">
-          <e p="AppData" t="Include">
-            <e p="RoamingStorage.cs" t="Include" />
-          </e>
-          <e p="JsonConfig" t="Include">
-            <e p="JsonSettings.cs" t="Include" />
-            <e p="Section.cs" t="Include" />
-          </e>
-        </e>
-        <e p="Thickness.cs" t="Include" />
-        <e p="Time.cs" t="Include" />
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netstandard2.1" t="Include">
-              <e p="Commodore.Engine.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
         </e>
       </e>
       <e p="packages" t="ExcludeRecursive" />

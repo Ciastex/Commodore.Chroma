@@ -296,7 +296,7 @@ namespace Commodore.GameLogic.Core.IO
                         var petscii = dict[keyCode];
                         var measure = _vga.MeasureString(petscii.ToString());
 
-                        if (measure.X != 0)
+                        if (measure.Width != 0)
                             HandlePrintableCharacter(petscii);
                     }
                 }
@@ -383,7 +383,7 @@ namespace Commodore.GameLogic.Core.IO
 
             if (!char.IsControl(character))
             {
-                if(_vga.Font.HasGlyph(character))
+                if(_vga.Font.CanRenderGlyph(character))
                     HandlePrintableCharacter(character);
             }
         }

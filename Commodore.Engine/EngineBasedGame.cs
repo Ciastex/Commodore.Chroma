@@ -16,7 +16,8 @@ namespace Commodore.Engine
             // All built-in managers are assigned here, otherwise
             // the initialization is located in specific manger's
             // constructor.
-            
+
+            G.ContentManager = Content;
             EngineInitialize();
         }
 
@@ -58,8 +59,6 @@ namespace Commodore.Engine
 
         protected override void LoadContent()
         {
-            G.ContentManager = Content;
-
             EngineLoad();
             base.LoadContent();
         }

@@ -75,9 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Chroma, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\Chroma\Chroma\bin\Debug\netstandard2.1\Chroma.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Chroma" Version="0.16.0" />
   </ItemGroup>
 
 </Project>

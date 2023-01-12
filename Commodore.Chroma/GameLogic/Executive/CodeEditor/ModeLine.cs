@@ -6,6 +6,7 @@ using Chroma.Input;
 using System;
 using System.Numerics;
 using Chroma.Graphics.TextRendering;
+using Cursor = Commodore.GameLogic.Display.Cursor;
 
 namespace Commodore.GameLogic.Executive.CodeEditor
 {
@@ -52,8 +53,8 @@ namespace Commodore.GameLogic.Executive.CodeEditor
 
         public void Update(float deltaTime)
         {
-            ScreenWidth = (uint)G.Window.Properties.Width;
-            ScreenHeight = (uint)G.Window.Properties.Height;
+            ScreenWidth = (uint)G.Window.Size.Width;
+            ScreenHeight = (uint)G.Window.Size.Height;
 
             if (IsTakingInput)
             {
@@ -71,7 +72,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
 
         public void Draw(RenderContext context)
         {
-            var targetTextPosition = new Vector2(0, ScreenHeight - ActualHeight - 2);
+            var targetTextPosition = new Vector2(0, ScreenHeight - ActualHeight);
 
             context.Rectangle(
                 ShapeMode.Fill,
@@ -144,7 +145,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
             if (!IsTakingInput)
                 return;
 
-            if (!_font.HasGlyph(character))
+            if (!_font.CanRenderGlyph(character))
                 return;
 
             InputText += character;

@@ -33,6 +33,7 @@ namespace Commodore.GameLogic.World
 
         public Network() : this((int)Time.Stamp) { }
 
+
         public Network(int seed)
         {
             DebugLog.Info($"Starting a new network with a seed of {seed}");
@@ -149,7 +150,7 @@ namespace Commodore.GameLogic.World
                     {
                         var d2 = d.LinkableNeighbours[j];
 
-                        context.LineThickness = 1;
+                        G.GraphicsSettings.LineThickness = 1;
                         context.Line(
                             new Vector2(
                                 MapOffsetH + (d.X * MapScale) + MapScale / 2,
