@@ -1,0 +1,21 @@
+// rm.xec
+// removes stuff... for removal.
+// will fail for directories
+// i think it was your task to make it work for directories?
+// fix it.
+
+if (!#args) do
+  sys.println("usage: rm <path>")
+ret 0 end
+
+local status = fs.rm(args[0])
+
+if (status) do
+  if status == -1 do
+    sys.println("rm: cannot remove - directory not empty")
+  ret 0 end
+  
+  if status == -2 do
+    sys.println("rm: path does not exist")
+  end
+end

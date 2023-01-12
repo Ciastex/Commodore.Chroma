@@ -1,0 +1,13 @@
+﻿local prevhost = ""
+
+while (true) do
+  local hosts = net.scan()
+  local host = hosts[math.rnd(#hosts-1)]
+
+  if(host == prevhost) do skip end
+
+  sys.println(host)
+  prevhost = host
+
+  net.link(host)
+end

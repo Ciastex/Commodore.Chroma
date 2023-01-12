@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj": {}
+  },
+  "projects": {
+    "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj",
+        "projectName": "Commodore.Engine",
+        "projectPath": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj",
+        "packagesPath": "/home/vdd/.nuget/packages/",
+        "outputPath": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vdd/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.103/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+﻿fn main()
+	%prepped_source%
+end
+
+main()

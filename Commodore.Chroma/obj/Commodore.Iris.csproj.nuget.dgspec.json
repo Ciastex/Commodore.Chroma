@@ -1,0 +1,180 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Iris/Commodore.Iris.csproj": {}
+  },
+  "projects": {
+    "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/Commodore.EVIL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/Commodore.EVIL.csproj",
+        "projectName": "Commodore.EVIL",
+        "projectPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/Commodore.EVIL.csproj",
+        "packagesPath": "/home/vdd/.nuget/packages/",
+        "outputPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vdd/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/Commodore.Engine.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/Commodore.Engine.csproj",
+        "projectName": "Commodore.Engine",
+        "projectPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/Commodore.Engine.csproj",
+        "packagesPath": "/home/vdd/.nuget/packages/",
+        "outputPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vdd/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Iris/Commodore.Iris.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Iris/Commodore.Iris.csproj",
+        "projectName": "Commodore",
+        "projectPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Iris/Commodore.Iris.csproj",
+        "packagesPath": "/home/vdd/.nuget/packages/",
+        "outputPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Iris/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/vdd/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/Commodore.EVIL.csproj": {
+                "projectPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.EVIL/Commodore.EVIL.csproj"
+              },
+              "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/Commodore.Engine.csproj": {
+                "projectPath": "/home/vdd/Development/dotnet/Commodore-Iris/Commodore.Engine/Commodore.Engine.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "SFML.Net": {
+              "target": "Package",
+              "version": "[2.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

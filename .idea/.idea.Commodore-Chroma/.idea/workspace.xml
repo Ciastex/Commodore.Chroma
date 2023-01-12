@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c016ee5e-762e-4149-af8d-dae192b2bae8" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/World/Device.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/World/Network.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Cursor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/VGA.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2DBFBC25-8F2A-4D07-9DDA-AA146A0B126E/22/7f548e6b/Char.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/CommodoreMain.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Interaction/TextInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2DBFBC25-8F2A-4D07-9DDA-AA146A0B126E/bc/5e5dc49d/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Persistence/UserProfile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Engine/G.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2DBFBC25-8F2A-4D07-9DDA-AA146A0B126E/26/d9f5d084/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.EVIL/RuntimeLibrary/StringLibrary.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Engine/Math.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Terminal.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/BootSequence/BootSequencePlayer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Data/ColoredSegment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Data/Character.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Engine/EngineBasedGame.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Mappings/ColorMappings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/TextRenderer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Mappings/PetsciiControlCodes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/ColorizedSegment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Hotkey.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/Modification.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/TextColorizer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/StatusControl.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/FileSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/ModeLine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/Navigation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Editor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/EditorColors.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Window.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Engine/Managers/DebugManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Chroma/Chroma/Graphics/TextRendering/TrueTypeFont.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/ComplexRuntime/VgaLibrary.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/Kernel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/CodeExecutionLayer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Commodore.Engine/FrameworkExtensions/ColorExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Commodore-Chroma/Program.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Engine/FrameworkExtensions/ColorExtensions.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Engine/Managers/DebugManager.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Engine/Math.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/BootSequence/BootSequencePlayer.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Mappings/ColorMappings.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/Kernel.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Cursor.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Data/Character.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/Data/ColoredSegment.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Engine/G.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Display/VGA.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/FileSystem.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/Modification.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/Navigation.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Bindings/StatusControl.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/ColorizedSegment.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/EditorColors.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Hotkey.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/ModeLine.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/ComplexRuntime/VgaLibrary.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Interaction/HackingMiniGame/HackingSubroutine.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Interaction/HackingMiniGame/MiniEditor/CodeBox.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Interaction/TextInterface.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Persistence/UserProfile.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/World/Device.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/World/Network.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/CodeExecutionLayer.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Window.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Mappings/PetsciiControlCodes.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/Program.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Engine/EngineBasedGame.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Core/IO/Terminal.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/Content/Shaders/CrtScreen.glsl" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/CommodoreMain.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/Editor.cs" />
+        <option value="$PROJECT_DIR$/Commodore.Chroma/GameLogic/Executive/CodeEditor/TextRenderer.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1aRnZkyqCiKueHC2etH6QVvSXJT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Chroma/Chroma/bin/Debug/netstandard2.1/Chroma.dll" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Commodore-Chroma" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/Commodore.Chroma/bin/Debug/netcoreapp3.1/Commodore.dll" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Commodore.Chroma/bin/Debug/netcoreapp3.1" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Commodore.Chroma/Commodore.Chroma.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value=".NETCoreApp,Version=v3.1" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="364" y="57" key="#Commodore-Chroma" timestamp="1586710648404">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state x="364" y="57" key="#Commodore-Chroma/36.0.1330.768@36.0.1330.768" timestamp="1586710648404" />
+    <state width="508" height="438" key="DebuggerActiveHint" timestamp="1586712994339">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="508" height="438" key="DebuggerActiveHint/36.0.1330.768@36.0.1330.768" timestamp="1586712994339" />
+    <state x="489" y="142" key="FileChooserDialogImpl" timestamp="1586707811627">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state x="489" y="142" key="FileChooserDialogImpl/36.0.1330.768@36.0.1330.768" timestamp="1586707811627" />
+    <state width="1284" height="229" key="GridCell.Tab.0.bottom" timestamp="1586713117847">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.0.bottom/36.0.1330.768@36.0.1330.768" timestamp="1586713117847" />
+    <state width="1284" height="229" key="GridCell.Tab.0.center" timestamp="1586713117846">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.0.center/36.0.1330.768@36.0.1330.768" timestamp="1586713117846" />
+    <state width="1284" height="229" key="GridCell.Tab.0.left" timestamp="1586713117846">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.0.left/36.0.1330.768@36.0.1330.768" timestamp="1586713117846" />
+    <state width="1284" height="229" key="GridCell.Tab.0.right" timestamp="1586713117847">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.0.right/36.0.1330.768@36.0.1330.768" timestamp="1586713117847" />
+    <state width="1284" height="229" key="GridCell.Tab.1.bottom" timestamp="1586713117848">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.1.bottom/36.0.1330.768@36.0.1330.768" timestamp="1586713117848" />
+    <state width="1284" height="229" key="GridCell.Tab.1.center" timestamp="1586713117847">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.1.center/36.0.1330.768@36.0.1330.768" timestamp="1586713117847" />
+    <state width="1284" height="229" key="GridCell.Tab.1.left" timestamp="1586713117847">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.1.left/36.0.1330.768@36.0.1330.768" timestamp="1586713117847" />
+    <state width="1284" height="229" key="GridCell.Tab.1.right" timestamp="1586713117847">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.1.right/36.0.1330.768@36.0.1330.768" timestamp="1586713117847" />
+    <state width="1284" height="229" key="GridCell.Tab.2.bottom" timestamp="1586713117849">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.2.bottom/36.0.1330.768@36.0.1330.768" timestamp="1586713117849" />
+    <state width="1284" height="229" key="GridCell.Tab.2.center" timestamp="1586713117848">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.2.center/36.0.1330.768@36.0.1330.768" timestamp="1586713117848" />
+    <state width="1284" height="229" key="GridCell.Tab.2.left" timestamp="1586713117848">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.2.left/36.0.1330.768@36.0.1330.768" timestamp="1586713117848" />
+    <state width="1284" height="229" key="GridCell.Tab.2.right" timestamp="1586713117849">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.2.right/36.0.1330.768@36.0.1330.768" timestamp="1586713117849" />
+    <state width="1284" height="229" key="GridCell.Tab.3.bottom" timestamp="1586713117852">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.3.bottom/36.0.1330.768@36.0.1330.768" timestamp="1586713117852" />
+    <state width="1284" height="229" key="GridCell.Tab.3.center" timestamp="1586713117850">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.3.center/36.0.1330.768@36.0.1330.768" timestamp="1586713117850" />
+    <state width="1284" height="229" key="GridCell.Tab.3.left" timestamp="1586713117850">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.3.left/36.0.1330.768@36.0.1330.768" timestamp="1586713117849" />
+    <state width="1284" height="229" key="GridCell.Tab.3.right" timestamp="1586713117851">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.3.right/36.0.1330.768@36.0.1330.768" timestamp="1586713117851" />
+    <state width="1284" height="229" key="GridCell.Tab.4.bottom" timestamp="1586713117853">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.4.bottom/36.0.1330.768@36.0.1330.768" timestamp="1586713117853" />
+    <state width="1284" height="229" key="GridCell.Tab.4.center" timestamp="1586713117852">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.4.center/36.0.1330.768@36.0.1330.768" timestamp="1586713117852" />
+    <state width="1284" height="229" key="GridCell.Tab.4.left" timestamp="1586713117852">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.4.left/36.0.1330.768@36.0.1330.768" timestamp="1586713117852" />
+    <state width="1284" height="229" key="GridCell.Tab.4.right" timestamp="1586713117852">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state width="1284" height="229" key="GridCell.Tab.4.right/36.0.1330.768@36.0.1330.768" timestamp="1586713117852" />
+    <state x="296" y="119" width="800" height="529" key="Rider.ProjectTemplateDialog.Size" timestamp="1586707331792">
+      <screen x="36" y="0" width="1330" height="768" />
+    </state>
+    <state x="296" y="119" width="800" height="529" key="Rider.ProjectTemplateDialog.Size/36.0.1330.768@36.0.1330.768" timestamp="1586707331792" />
+  </component>
+</project>

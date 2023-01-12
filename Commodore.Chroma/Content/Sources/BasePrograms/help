@@ -1,0 +1,3 @@
+sys.println("Still no details, Allan?")
+sys.println("note: for the time being please just ls the /bin directory")
+sys.println("      Allan is still working on the help system.")
