@@ -5,6 +5,7 @@ using Commodore.EVIL.Diagnostics;
 using Commodore.EVIL.Exceptions;
 using Commodore.EVIL.Parsing;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Commodore.EVIL.Execution
@@ -56,14 +57,14 @@ namespace Commodore.EVIL.Execution
             }
         }
 
-        public async Task<DynValue> ExecuteAsync(string sourceCode)
+        public async Task<DynValue> ExecuteAsync(string sourceCode, CancellationToken token)
         {
             Parser.LoadSource(sourceCode);
             var node = Parser.Parse();
 
             try
             {
-                return await Task.Run(async () => await VisitAsync(node));
+                return await Task.Run(async () => await VisitAsync(node, token), token);
             }
             catch (ExitStatementException)
             {
@@ -79,9 +80,9 @@ namespace Commodore.EVIL.Execution
             return ExecuteStatementList(rootNode.Children).Result;
         }
 
-        public async Task<DynValue> VisitAsync(RootNode rootNode)
+        public async Task<DynValue> VisitAsync(RootNode rootNode, CancellationToken token)
         {
-            return await ExecuteStatementList(rootNode.Children);
+            return await ExecuteStatementList(rootNode.Children, token);
         }
 
         public List<CallStackItem> StackTrace()
@@ -90,6 +91,9 @@ namespace Commodore.EVIL.Execution
         }
 
         private async Task<DynValue> ExecuteStatementList(List<AstNode> statements)
+            => await ExecuteStatementList(statements, CancellationToken.None);
+
+        private async Task<DynValue> ExecuteStatementList(List<AstNode> statements, CancellationToken token)
         {
             var retVal = DynValue.Zero;
 
@@ -101,11 +105,11 @@ namespace Commodore.EVIL.Execution
 
             foreach (var statement in statements)
             {
-                while (SuspendExecution)
+                do
                 {
-                    await Task.Delay(1);
-                }
-                
+                    token.ThrowIfCancellationRequested();
+                } while (SuspendExecution);
+
                 if (BreakExecution)
                 {
                     BreakExecution = false;

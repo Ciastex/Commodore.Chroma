@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Chroma.Diagnostics.Logging;
 using Commodore.Framework;
@@ -83,13 +84,16 @@ namespace Commodore.GameLogic.Core
             return proc.Pid;
         }
 
-        public async Task WaitForProgram(int pid)
+        public async Task WaitForProgram(int pid, CancellationToken token)
         {
             while (Processes.ContainsKey(pid))
+            {
+                token.ThrowIfCancellationRequested();
                 await Task.Delay(1);
+            }
         }
 
-        public int ExecuteProgram(string code, string filePath, params string[] args)
+        public int ExecuteProgram(string code, string filePath, CancellationToken token, params string[] args)
         {
             if (Processes.Count >= MaximumProcessCount)
                 return -1;
@@ -113,18 +117,18 @@ namespace Commodore.GameLogic.Core
             Task.Run(async () =>
 #pragma warning restore 4014
             {
-                ReturnValues.Push(await ExecuteCode(interp, targetCode));
+                ReturnValues.Push(await ExecuteCode(interp, targetCode, token));
                 Processes.Remove(pid);
             });
 
             return pid;
         }
 
-        public async Task<DynValue> ExecuteCode(Interpreter interpreter, string code)
+        public async Task<DynValue> ExecuteCode(Interpreter interpreter, string code, CancellationToken token)
         {
             try
             {
-                return await interpreter.ExecuteAsync(code);
+                return await interpreter.ExecuteAsync(code, token);
             }
             catch (ScriptTerminationException)
             {
