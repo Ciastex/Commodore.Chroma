@@ -1,4 +1,7 @@
-﻿using Chroma.Input;
+﻿using System.Linq;
+using System.Text;
+using Chroma;
+using Chroma.Input;
 
 namespace Commodore.GameLogic.Executive.CodeEditor.Bindings
 {
@@ -15,6 +18,46 @@ namespace Commodore.GameLogic.Executive.CodeEditor.Bindings
             editor.Bind(true, false, KeyCode.Y, Yank);
 
             editor.Bind(true, false, KeyCode.Backspace, BackspaceBlock);
+            
+            editor.Bind(true, true, KeyCode.F6, CopyAllToSystemClipboard);
+            editor.Bind(true, true, KeyCode.F7, ReplaceWithSystemClipboard);
+            editor.Bind(true, true, KeyCode.V, PasteFromSystemClipboard);
+        }
+        
+        public void CopyAllToSystemClipboard()
+        {
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < Editor.Buffer.Lines.Count; i++)
+                sb.AppendLine(Editor.Buffer.Lines[i]);
+
+            Clipboard.Text = sb.ToString();
+        }
+        
+        public void PasteFromSystemClipboard()
+        {
+            var lines = Clipboard.Text.Split('\n').Select(x => x.TrimEnd()).ToList();
+
+            for (var i = 0; i < lines.Count; i++)
+            {
+                for (var j = 0; j < lines[i].Length; i++)
+                {
+                    Editor.PrintableCharacter(lines[i][j]);
+                }
+
+                if (lines.Count > 1)
+                    Editor.NewLine();
+            }
+        }
+
+        public void ReplaceWithSystemClipboard()
+        {
+            var lines = Clipboard.Text.Split('\n').Select(x => x.TrimEnd()).ToList();
+
+            Editor.Buffer.CursorX = Editor.Buffer.CursorY = 0;
+            Editor.Buffer.Lines.Clear();
+
+            Editor.Buffer.Lines.AddRange(lines);
         }
 
         public void Duplicate()
