@@ -361,7 +361,8 @@ namespace Commodore.GameLogic.Core
                 Notify("so enjoy the toasts, clients");
                 Notify("om-nom-nom");
             }
-            if (!CodeEditor.IsVisible)
+            
+            if (CodeEditor != null && !CodeEditor.IsVisible)
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
                 {
@@ -375,6 +376,7 @@ namespace Commodore.GameLogic.Core
                 }
 
                 Terminal.KeyPressed(keyCode, modifiers);
+                Vga.Cursor.Reset();
             }
             else
             {

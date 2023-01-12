@@ -40,6 +40,12 @@ namespace Commodore.GameLogic.Display
             }
         }
 
+        public void Reset()
+        {
+            _timer = 0;
+            _visible = true;
+        }
+
         public void Update(float deltaTime)
         {
             if (ForceHidden)
@@ -58,7 +64,7 @@ namespace Commodore.GameLogic.Display
             {
                 _visible = !_visible;
                 _timer = 0;
-
+                
                 return;
             }
 
