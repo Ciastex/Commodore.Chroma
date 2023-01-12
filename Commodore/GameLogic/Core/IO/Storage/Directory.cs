@@ -24,9 +24,9 @@ namespace Commodore.GameLogic.Core.IO.Storage
             Parent = parent;
         }
 
-        public File AddNewFile(string name)
+        public File AddNewFile(string name, FileAttributes attributes = 0)
         {
-            AddFile(name, new File(name, this));
+            AddFile(name, new File(name, this) { Attributes = attributes });
             return Children[name] as File;
         }
 
@@ -537,11 +537,14 @@ namespace Commodore.GameLogic.Core.IO.Storage
         public bool HasFileChildNamed(string name)
             => Children.ContainsKey(name) && Children[name] is File;
 
-        public void AddNewDirectory(string name)
+        public Directory AddNewDirectory(string name)
         {
             if (!Children.ContainsKey(name))
             {
-                Children.Add(name, new Directory(name, this));
+                var directory = new Directory(name, this);
+                Children.Add(name, directory);
+
+                return directory;
             }
             else
             {

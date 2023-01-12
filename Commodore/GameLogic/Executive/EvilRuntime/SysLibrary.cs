@@ -109,15 +109,29 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             var libName = args[0].String;
 
+            var path = "/lib/" + libName + ".lib";
+            var file = File.Get(path);
+            var absPath = file.GetAbsolutePath();
+            
+            var process = Kernel.Instance.ProcessManager.GetProcess(interpreter);
+
+            if (process.ImportedLibraryPaths.Contains(absPath))
+            {
+                interpreter.TerminateWithKernelMessage($"{absPath} WAS ALREADY IMPORTED");
+                return new DynValue(-1);
+            }
+
             try
             {
-                var content = File.Get("/lib/" + libName + ".lib").GetData();
+                var content = file.GetData();
+                process.ImportedLibraryPaths.Add(absPath);
+                
                 return interpreter.ExecuteAsync(content).GetAwaiter().GetResult();
             }
             catch
             {
-                interpreter.TerminateWithKernelMessage($"FAILED TO IMPORT /lib/{libName}.lib");
-                return new DynValue(-1);
+                interpreter.TerminateWithKernelMessage($"FAILED TO IMPORT {absPath}");
+                return new DynValue(-2);
             }
         }
 
@@ -188,3 +202,4 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
         }
     }
 }
+    

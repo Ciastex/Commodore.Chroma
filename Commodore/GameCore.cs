@@ -69,7 +69,7 @@ namespace Commodore
             if (!_kernelStarted)
             {
                 _kernelStarted = true;
-                Kernel.Instance.ColdBoot();
+                Kernel.Instance.Reboot(false);
             }
             
             Window.Title = $"Project Commodore [{Window.FPS} FPS]";

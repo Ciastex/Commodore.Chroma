@@ -15,8 +15,17 @@
   
   <Line NoNewLine="True" Delay="500">Detecting &#xFF36;DEVICE_STORAGE&#xFF40;... </Line>
   <Line> 2MB</Line>
+
+  <CheckBinDirectory />
   
+  <Line />
+  <Line NoNewLine="True" Delay="1000">&#x000D;HOLD&#xFF3F; [F8] &#xFF40;TO ACCESS &#xFF05;EMERGENCY RECOVERY MENU&#xFF40; [3]</Line>
+  <Line NoNewLine="True" Delay="1000">&#x000D;HOLD&#xFF3F; [F8] &#xFF40;TO ACCESS &#xFF05;EMERGENCY RECOVERY MENU&#xFF40; [2]</Line>
+  <Line NoNewLine="True" Delay="1000">&#x000D;HOLD&#xFF3F; [F8] &#xFF40;TO ACCESS &#xFF05;EMERGENCY RECOVERY MENU&#xFF40; [1]</Line>
+  <Line NoNewLine="True" Delay="1000">&#x000D;HOLD&#xFF3F; [F8] &#xFF40;TO ACCESS &#xFF05;EMERGENCY RECOVERY MENU&#xFF40; [0]</Line>
+  <Line />
+
   <Line Delay="0">Detecting &#xFF14;DEVICE_TMTRVL&#xFF40;...      &#xFF04;ERR&#xFF40;</Line>
-  
+
   <ScrollUp />
 </BootSequence>

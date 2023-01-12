@@ -5,7 +5,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
 {
     public static class Path
     {
-        public static readonly char[] InvalidPathCharacters = ":[]{};|\"<>=+\\,?!#%^&*()`'-".ToCharArray();
+        public static readonly char[] InvalidPathCharacters = new char[0];
 
         public static bool IsAbsolute(string path)
             => path.StartsWith("/");

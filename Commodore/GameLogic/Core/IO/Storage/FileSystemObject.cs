@@ -23,8 +23,8 @@ namespace Commodore.GameLogic.Core.IO.Storage
 
         public Directory Parent { get; set; }
 
-        public virtual DateTime DateCreated { get; set; }
-        public virtual DateTime LastModified { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime LastModified { get; set; }
 
         public FileSystemObject()
         {

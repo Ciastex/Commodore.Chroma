@@ -2,6 +2,7 @@
 using Chroma.Input;
 using System;
 using System.Text;
+using Chroma;
 
 namespace Commodore.GameLogic.Executive.CodeEditor.Bindings
 {
@@ -10,6 +11,17 @@ namespace Commodore.GameLogic.Executive.CodeEditor.Bindings
         public FileSystem(Editor editor) : base(editor)
         {
             editor.Bind(true, false, KeyCode.O, Save);
+            editor.Bind(true, true, KeyCode.F6, CopyAllToSystemClipboard);
+        }
+
+        public void CopyAllToSystemClipboard()
+        {
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < Editor.Buffer.Lines.Count; i++)
+                sb.AppendLine(Editor.Buffer.Lines[i]);
+
+            Clipboard.Text = sb.ToString();
         }
 
         public void Save()

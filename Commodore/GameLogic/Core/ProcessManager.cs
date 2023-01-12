@@ -15,6 +15,8 @@ namespace Commodore.GameLogic.Core
 {
     public class ProcessManager
     {
+        public const int MaximumProcessCount = 64;
+        
         private Log Log { get; } = LogManager.GetForCurrentAssembly();
         private int _nextPid;
         
@@ -25,9 +27,13 @@ namespace Commodore.GameLogic.Core
         public void Reset()
         {
             if (Processes != null)
+            {
                 KillAll();
-
-            Processes = new Dictionary<int, Process>();
+            }
+            else
+            {
+                Processes = new Dictionary<int, Process>();
+            }
         }
 
         public void Kill(int pid)
@@ -44,10 +50,15 @@ namespace Commodore.GameLogic.Core
                 Processes.Values.ElementAt(i).Interpreter.BreakExecution = true;
         }
 
+        public Process GetProcess(Interpreter interpreter)
+        {
+            return Processes.Values.FirstOrDefault(p => p.Interpreter == interpreter);
+        }
+
         public int GetPid(Interpreter interpreter)
         {
-            var proc = Processes.Values.FirstOrDefault(p => p.Interpreter == interpreter);
-
+            var proc = GetProcess(interpreter);
+            
             if (proc == null)
                 return -1;
 
@@ -62,6 +73,9 @@ namespace Commodore.GameLogic.Core
 
         public async Task<int> ExecuteProgram(string code, string filePath, params string[] args)
         {
+            if (Processes.Count >= MaximumProcessCount)
+                return -1;
+            
             var interp = CreateProcess();
             var targetCode = code ?? string.Empty;
 
@@ -80,7 +94,10 @@ namespace Commodore.GameLogic.Core
             var pid = _nextPid++;
             Processes.Add(pid, new Process(pid, string.Join(' ', args), interp) { FilePath = filePath });
 
+            // We don't want to wait for this here.
+#pragma warning disable 4014
             Task.Run(async () =>
+#pragma warning restore 4014
             {
                 await ExecuteCode(interp, targetCode);
                 Processes.Remove(pid);

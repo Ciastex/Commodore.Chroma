@@ -25,7 +25,7 @@
         </Goals>
         
         <OnCompletion>
-          <BlinkingMesageBox Content="VALID CONFIG DETECED" />
+          <BlinkingMessageBox Content="VALID CONFIG DETECED" />
         </OnCompletion>
       </Step>
       

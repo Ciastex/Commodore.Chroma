@@ -1,0 +1,135 @@
+﻿evOS EVIL Runtime Library Reference - filesystem operations
+
+fs.files(dir, [abspaths = false])
+  | dir: string
+  | abspaths: number
+  |
+  | retrieve list of files in given dir
+  | alternatively provide true to get absolute paths
+  \ RETURNS
+   | a table of strings
+  
+fs.dirs(dir, [abspaths = false])
+  | dir: string
+  | abspaths: number
+  |
+  | retrieve list of dirs in given dir
+  | alternatively provide true to get absolute paths
+  \ RETURNS
+   | a table of strings.
+  
+fs.cwd()
+  | get current working dir
+  \ RETURNS 
+   | -> a string
+  
+fs.cd(path)
+  | path: string
+  |
+  | change current directory to given path
+  \ RETURNS 
+   | ->  0 on success,
+   | -> -1 on failure.
+  
+fs.rm(path, [force = false])
+  | path: string
+  | force: number
+  |
+  | removes a filesystem object at given path
+  \ RETURNS 
+   | ->  0 on success, 
+   | -> -1 if is dir and not empty,
+   | -> -2 if nonexistent. 
+  
+fs.lines(path)
+  | path: string
+  |
+  | retrieves all lines from a file
+  \ RETURNS
+   | -> -1 if file does not exist,
+   | -> table of lines on success.
+   
+fs.copy(src, dst)
+  | src: string
+  | dst: string
+  |
+  | copies a filesystem object from src to dst
+  \ RETURNS
+   | -> 0 on success,
+   | -> -1 on failure.
+   
+fs.touch(path)
+  | path: string
+  |
+  | creates an empty file at path
+  \ RETURNS
+   | -> 0 on success,
+   | -> -1 on failure.
+  
+fs.md(path)
+  | path: string
+  |
+  | creates an empty directory at path
+  \ RETURNS
+   | -> 0 on success,
+   | -> -1 on failure
+   
+fs.mv(src, dst)
+  | src: string
+  | dst: string
+  |
+  | moves a filesystem object from src to dst
+  \ RETURNS
+   | -> 0 on success,
+   | -> -1 on failure,
+   | -> -2 if src not found
+   
+fs.exists(path)
+  | path: string
+  |
+  | checks if a filesystem object exists at the given path
+  \ RETURNS
+   | -> 0 if not found,
+   | -> 1 if the object a file
+   | -> 2 if the object is a directory
+   
+fs.setattr(path, attr)
+  | path: string
+  | attr: string: [xh -h x- --]
+  |       x: executable
+  |       h: hidden
+  |
+  | sets file attributes
+  \ RETURNS
+   | -> 0 on success,
+   | -> -1 if object not found or is not a file,
+   | -> -2 if attr format invalid.
+   
+fs.getattr(path)
+  | path: string
+  |
+  | retrieves file attributes
+  \ RETURNS
+   | -> -1 if object not found or is not a file,
+   | -> attr string on success.
+   
+fs.write(path, data)
+  | path: string
+  | data: string
+  |
+  | writes data to a file located at path.
+  | if file exists, it will be overwritten.
+  \ RETURNS
+   | -> 0 on success
+   | -> -1 on failure
+   
+fs.writeall(path, tbl)
+  | path: string
+  | tbl: table
+  |
+  | concatenates whatever is inside the tables
+  | and writes it to a file located at path.
+  | if file exists, it will be overwritten.
+  \ RETURNS
+   | -> 0 on success
+   | -> -1 on failure

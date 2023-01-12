@@ -26,8 +26,11 @@ namespace Commodore.GameLogic.Core.IO.Storage
         }
 
         public File SetData(string data)
+            => SetData(Encoding.UTF8.GetBytes(data));
+
+        public File SetData(byte[] data)
         {
-            Data = Encoding.UTF8.GetBytes(data);
+            Data = data;
             LastModified = DateTime.Now;
 
             return this;
