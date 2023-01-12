@@ -23,7 +23,7 @@ namespace Commodore
         private bool _kernelStarted;
         private bool _crtShaderEnabled = true;
         private bool _gaussShaderEnabled = true;
-        
+
         private PixelShader _crtShader;
         private RenderTarget _frameBuffer;
 
@@ -35,12 +35,12 @@ namespace Commodore
             G.AudioManager = Audio;
 
             G.SettingsManager = new SettingsManager();
-            
+
             G.DebugManager = new DebugManager();
             G.DebugManager.BindDebugAction(KeyCode.F9, () => { _crtShaderEnabled = !_crtShaderEnabled; });
             G.DebugManager.BindDebugAction(KeyCode.F10, () => { _gaussShaderEnabled = !_gaussShaderEnabled; });
-            
-            Window.QuitRequested += WindowOnQuitRequested;            
+
+            Window.QuitRequested += WindowOnQuitRequested;
         }
 
         protected override void LoadContent()
@@ -53,7 +53,7 @@ namespace Commodore
                     sr.ReadToEnd().Split('\n')
                 );
             }
-            
+
             _frameBuffer = new RenderTarget(Window.Size);
             _crtShader = Content.Load<PixelShader>("Shaders/CrtScreen.glsl");
         }
@@ -73,7 +73,7 @@ namespace Commodore
                 _kernelStarted = true;
                 Kernel.Instance.Reboot(false);
             }
-            
+
             Window.Title = $"Project Commodore [{Window.FPS} FPS]";
             Kernel.Instance.Update(deltaTime);
         }
@@ -124,7 +124,7 @@ namespace Commodore
                 G.SettingsManager.ScreenWidth,
                 G.SettingsManager.ScreenHeight
             );
-            
+
             Window.CenterScreen();
 
             if (G.SettingsManager.FullscreenEnabled)
@@ -133,6 +133,6 @@ namespace Commodore
                     Window.GoFullscreen(true);
                 else Window.GoFullscreen();
             }
-        }
+        }        
     }
 }

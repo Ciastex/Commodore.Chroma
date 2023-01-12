@@ -291,6 +291,8 @@ namespace Commodore.GameLogic.Core
                 await TextInterface.RunProfileConfigWizard();
                 return;
             }
+            
+            StartNetworkUpdates();
 
             await TryRunSystemProgram("/etc/startup");
 
@@ -345,7 +347,6 @@ namespace Commodore.GameLogic.Core
                 return false;
             }
         }
-
 
         public void KeyPressed(KeyCode keyCode, KeyModifiers modifiers)
         {
@@ -402,6 +403,23 @@ namespace Commodore.GameLogic.Core
 
             if (e.FilePath.StartsWith("/bin/"))
                 file.Attributes = FileAttributes.Executable;
+        }
+
+        private void StartNetworkUpdates()
+        {
+            Task.Run(async () =>
+            {
+                while (!IsRebooting)
+                {
+                    if (!UserProfile.Instance.IsInitialized)
+                        continue;
+
+                    if (UserProfile.Instance.Internet == null)
+                        continue;
+                    
+                    await UserProfile.Instance.Internet.Tick();
+                }
+            });
         }
     }
 }

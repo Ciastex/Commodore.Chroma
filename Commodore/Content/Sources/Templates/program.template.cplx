@@ -1,5 +1,1 @@
-﻿fn main()
-	%prepped_source%
-end
-
-main()
+﻿fn main() %prepped_source% end main()
