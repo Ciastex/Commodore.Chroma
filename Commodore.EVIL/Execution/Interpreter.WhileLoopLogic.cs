@@ -14,7 +14,7 @@ namespace Commodore.EVIL.Execution
 
                 while (Visit(whileLoopNode.Expression).Number != 0)
                 {
-                    ExecuteStatementList(whileLoopNode.StatementList);
+                    ExecuteStatementList(whileLoopNode.StatementList).GetAwaiter().GetResult();
 
                     var stackTop = LoopStack.Peek();
 

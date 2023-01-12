@@ -78,7 +78,7 @@ namespace Commodore.EVIL.Execution
                         Environment.Globals.Add(keyName, element.Key);
                         Environment.Globals.Add(valueName, element.Value);
 
-                        ExecuteStatementList(eachLoopNode.StatementList);
+                        ExecuteStatementList(eachLoopNode.StatementList).GetAwaiter().GetResult();
                     }
                 }
                 catch (InvalidOperationException)

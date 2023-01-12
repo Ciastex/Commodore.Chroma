@@ -13,13 +13,13 @@ namespace Commodore.EVIL.Execution
 
                 if (exprResult.Number != 0)
                 {
-                    ExecuteStatementList(branch.Value);
+                    ExecuteStatementList(branch.Value).GetAwaiter().GetResult();
                     return DynValue.Zero;
                 }
             }
 
             if (conditionNode.ElseBranch != null)
-                ExecuteStatementList(conditionNode.ElseBranch);
+                ExecuteStatementList(conditionNode.ElseBranch).GetAwaiter().GetResult();
 
             return DynValue.Zero;
         }
