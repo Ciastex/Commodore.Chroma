@@ -1,15 +1,7 @@
-<Quest Title="It's Hacking Time" Description="Where did Hackerman go?">
-    <Requirements>
-      <!-- HasMemoryBanks Count=3 -->
-      <!-- HasModuleLoaded Name="hackingtools" -->
-    </Requirements>
-    
-    <Devices>
-      <Device Path="HackingTime/HackermansIBM.xml" />
-      <Device Path="HackingTime/HackermansModem.xml" />
-      <Device Path="HackingTime/GridRelay.xml" />
-      <Device Path="HackingTime/CoreTerminal.xml" />
-    </Devices>
+<Quest Title="Tooling up #1">
+    <Networks>
+      <Network Path="Tutorials/ToolingUp.xml" />
+    </Networks>
     
     <QuestSteps>
       <Step Order="1">
@@ -19,14 +11,10 @@
         </Description>
         
         <Goals>
-          <FileExists On="HT_HackermansIBM"
+          <FileExists On="$"
                       VfsPath="/cfg/hw.conf"
                       ContentsOf="HackingTime/hw.conf" />
         </Goals>
-        
-        <OnCompletion>
-          <BlinkingMessageBox Content="VALID CONFIG DETECED" />
-        </OnCompletion>
       </Step>
       
       <Step Order="2">

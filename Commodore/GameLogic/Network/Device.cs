@@ -7,13 +7,9 @@ namespace Commodore.GameLogic.Network
 {
     public abstract class Device
     {
-        public virtual string Address { get; protected set; } = "AAA:AA:AA:AAA";
-        public Directory RootDirectory { get; protected set; } = new Directory("/", null);
-
-        public Dictionary<ushort, Service> Services { get; protected set; }
-
-        public AuthenticationService GetFirstActiveAuthenticationService()
-            => (AuthenticationService)Services.Values.FirstOrDefault(x =>
-                x is AuthenticationService serv && !serv.IsAuthenticated);
+        public abstract string Address { get; protected set; }
+        
+        public Directory RootDirectory { get; }  = new Directory("/", null);
+        public Dictionary<ushort, Service> Services { get; } = new Dictionary<ushort, Service>();
     }
 }

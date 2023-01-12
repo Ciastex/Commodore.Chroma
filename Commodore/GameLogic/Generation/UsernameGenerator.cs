@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Commodore.Framework;
 using Commodore.Framework.Generators;
 
 namespace Commodore.GameLogic.Generation
@@ -15,12 +16,12 @@ namespace Commodore.GameLogic.Generation
         public static void AddRange(IEnumerable<string> usernames)
             => _usernames.AddRange(usernames);
 
-        public static string Generate(MersenneTwister random)
+        public static string Generate()
         {
             if (_usernames.Any())
-                return _usernames[random.Next(0, _usernames.Count - 1)];
+                return _usernames[G.Random.Next(0, _usernames.Count - 1)];
 
-            return StringGenerator.GenerateRandomString(_fallbackAlphabet, 6, random);
+            return StringGenerator.GenerateRandomString(_fallbackAlphabet, 6);
         }
     }
 }

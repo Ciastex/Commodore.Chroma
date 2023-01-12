@@ -21,9 +21,6 @@
     <None Update="Content\QuestGoals\HackingTime\hackerman_tutorial.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\QuestGoals\HackingTime\hw.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Content\Quests\HackingTime.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -90,10 +87,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 
-    <None Update="Content\Shaders\VerticalGauss.glsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-
     <None Update="Content\Sources\BaseBin\colors">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -101,7 +94,9 @@
 
   <ItemGroup>
     <Folder Include="Content\Banners\" />
+    <Folder Include="Content\Devices" />
     <Folder Include="Content\Devices\" />
+    <Folder Include="Content\Networks" />
     <Folder Include="Content\People\" />
     <Folder Include="Content\Scripts\" />
     <Folder Include="Content\Shellsites\" />
