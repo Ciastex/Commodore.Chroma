@@ -224,6 +224,12 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             return new DynValue(SystemReturnCodes.Success);
         }
 
+        public DynValue GetHostName(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectNone();
+            return new DynValue(Kernel.Instance.GetHostName());
+        }
+
         public override void Register(Environment env, Interpreter interpreter)
         {
             env.RegisterBuiltIn("net.scan", ScanCurrentNeighborhood);
@@ -235,6 +241,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             env.RegisterBuiltIn("net.send", SendDataToBoundNode);
             env.RegisterBuiltIn("net.attach", AttachShellToDevice);
             env.RegisterBuiltIn("net.detach", DetachShellFromDevice);
+            env.RegisterBuiltIn("net.host", GetHostName);
         }
     }
 }

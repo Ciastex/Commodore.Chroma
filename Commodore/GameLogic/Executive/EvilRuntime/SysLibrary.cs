@@ -1,13 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Chroma.Input;
-using Commodore.EVIL;
 using Commodore.EVIL.Abstraction;
 using Commodore.EVIL.Execution;
 using Commodore.EVIL.RuntimeLibrary.Base;
 using Commodore.GameLogic.Core;
 using Commodore.GameLogic.Core.IO.Storage;
+using Environment = Commodore.EVIL.Environment;
 
 namespace Commodore.GameLogic.Executive.EvilRuntime
 {
@@ -81,7 +83,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             return new DynValue(Keyboard.IsKeyDown((KeyCode)keyCode) ? 1 : 0);
         }
-        
+
         public DynValue KeyUp(Interpreter interpreter, ClrFunctionArguments args)
         {
             args.ExpectExactly(1)
@@ -102,6 +104,18 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             return DynValue.Zero;
         }
 
+        public DynValue WaitForProcess(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectExactly(1)
+                .ExpectIntegerAtIndex(0);
+
+            interpreter.SuspendExecution = true;
+            Kernel.Instance.ProcessManager.WaitForProgram((int)args[0].Number).GetAwaiter().GetResult();
+            interpreter.SuspendExecution = false;
+
+            return DynValue.Zero;
+        }
+
         public DynValue Import(Interpreter interpreter, ClrFunctionArguments args)
         {
             args.ExpectExactly(1)
@@ -112,7 +126,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             var path = "/lib/" + libName + ".lib";
             var file = File.Get(path);
             var absPath = file.GetAbsolutePath();
-            
+
             var process = Kernel.Instance.ProcessManager.GetProcess(interpreter);
 
             if (process.ImportedLibraryPaths.Contains(absPath))
@@ -125,7 +139,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             {
                 var content = file.GetData();
                 process.ImportedLibraryPaths.Add(absPath);
-                
+
                 return interpreter.ExecuteAsync(content).GetAwaiter().GetResult();
             }
             catch
@@ -147,7 +161,7 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
 
             var tbl = new Table();
             var sb = new StringBuilder();
-            
+
             for (var i = 0; i < Kernel.Instance.ProcessManager.Processes.Values.Count; i++)
             {
                 var proc = Kernel.Instance.ProcessManager.Processes.Values.ElementAt(i);
@@ -183,7 +197,57 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 return DynValue.Zero;
             }
         }
-        
+
+        public DynValue SpawnProcess(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectAtLeast(1)
+                .ExpectTypeAtIndex(0, DynValueType.String);
+
+            var path = args[0].String;
+
+            if (!File.Exists(path, true))
+            {
+                return new DynValue(SystemReturnCodes.FileSystem.FileDoesNotExist);
+            }
+
+            var file = File.Get(path, true);
+            if ((file.Attributes & FileAttributes.Executable) == 0)
+            {
+                return new DynValue(SystemReturnCodes.FileSystem.AccessDenied);
+            }
+
+            var processArgs = new List<string>();
+            if (args.Count > 1)
+            {
+                for (var i = 1; i < args.Count; i++)
+                {
+                    args.ExpectTypeAtIndex(i, DynValueType.String);
+                    processArgs.Add(args[i].String);
+                }
+            }
+
+            var pid = Kernel.Instance.ProcessManager.ExecuteProgram(file.GetData(), path, processArgs.ToArray());
+
+            if (pid < 0)
+                return new DynValue(SystemReturnCodes.Kernel.ProcessSpaceExhausted);
+
+            var tbl = new Table();
+            tbl["pid"] = new DynValue(pid);
+            tbl["path"] = new DynValue(path);
+
+            return new DynValue(tbl);
+        }
+
+        public DynValue LastReturnValue(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectNone();
+
+            if (!Kernel.Instance.ProcessManager.ReturnValues.TryPeek(out var value))
+                return DynValue.Zero;
+
+            return value;
+        }
+
         public override void Register(Environment env, Interpreter interpreter)
         {
             env.RegisterBuiltIn("import", Import);
@@ -195,11 +259,13 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             env.RegisterBuiltIn("sys.wait", Wait);
             env.RegisterBuiltIn("sys.keyup", KeyUp);
             env.RegisterBuiltIn("sys.keydown", KeyDown);
-            
+
             env.RegisterBuiltIn("sys.pid", Pid);
             env.RegisterBuiltIn("sys.proclist", ProcList);
             env.RegisterBuiltIn("sys.kill", Kill);
+            env.RegisterBuiltIn("sys.exec", SpawnProcess);
+            env.RegisterBuiltIn("sys.waitproc", WaitForProcess);
+            env.RegisterBuiltIn("sys.retval", LastReturnValue);
         }
     }
 }
-    

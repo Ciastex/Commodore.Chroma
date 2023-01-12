@@ -20,7 +20,6 @@ namespace Commodore.GameLogic.Display
 
         public readonly Color DefaultForegroundColor = Color.Gray;
         public readonly Color DefaultBackgroundColor = Color.Black;
-        public readonly Color DefaultMarginColor = Color.Gray;
 
         public Cursor Cursor;
 
@@ -31,24 +30,23 @@ namespace Commodore.GameLogic.Display
         public int TotalColumns;
         public int TotalRows;
 
-        public byte Margin;
-        public byte Padding;
-            
+        public VgaMargins Margins;
+
         public int CursorX
         {
             get
             {
                 var value = Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CursorPositionX);
 
-                if (value > TotalColumns)
+                if (value > TotalColumns - Margins.Right)
                 {
-                    CursorX = TotalColumns - 1;
-                    return TotalColumns - 1;
+                    CursorX = TotalColumns - Margins.Right - 1;
+                    return TotalColumns - Margins.Right - 1;
                 }
-                else if (value < -1) // compensate for later processing
+                else if (value < Margins.Left - 1)
                 {
-                    CursorX = 0;
-                    return 0;
+                    CursorX = Margins.Left;
+                    return Margins.Left;
                 }
 
                 return value;
@@ -57,10 +55,10 @@ namespace Commodore.GameLogic.Display
             {
                 var val = value;
 
-                if (value > TotalColumns)
-                    val = TotalColumns - 1;
-                else if (value < -1) // compensate for later processing
-                    val = 0;
+                if (val > TotalColumns - Margins.Right)
+                    val = TotalColumns - Margins.Right - 1;
+                else if (val < Margins.Left - 1)
+                    val = Margins.Left;
 
                 Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CursorPositionX, val);
             }
@@ -72,15 +70,15 @@ namespace Commodore.GameLogic.Display
             {
                 var value = Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CursorPositionY);
 
-                if (value > TotalRows)
+                if (value > TotalRows - Margins.Bottom)
                 {
-                    CursorY = TotalRows - 1;
-                    return TotalRows - 1;
+                    CursorY = TotalRows - Margins.Bottom;
+                    return TotalRows - Margins.Bottom;
                 }
-                else if (value < 0)
+                else if (value < Margins.Top)
                 {
-                    CursorY = 0;
-                    return 0;
+                    CursorY = Margins.Top;
+                    return Margins.Top;
                 }
 
                 return value;
@@ -90,15 +88,14 @@ namespace Commodore.GameLogic.Display
             {
                 var val = value;
 
-                if (value > TotalRows)
-                    val = TotalRows - 1;
-                else if (value < 0)
-                    val = 0;
+                if (value > TotalRows - Margins.Bottom)
+                    val = TotalRows - Margins.Bottom ;
+                else if (value < Margins.Top)
+                    val = Margins.Top;
 
                 Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CursorPositionY, val);
             }
         }
-
 
 
         public Color ActiveForegroundColor
@@ -111,12 +108,6 @@ namespace Commodore.GameLogic.Display
         {
             get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CurrentBackgroundColor));
             set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentBackgroundColor, (int)value.PackedValue);
-        }
-
-        public Color ActiveMarginColor
-        {
-            get => new Color((uint)Kernel.Instance.Memory.Peek32(SystemMemoryAddresses.CurrentMarginColor));
-            set => Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentMarginColor, (int)value.PackedValue);
         }
 
         public event EventHandler InitialSetUpComplete;
@@ -171,16 +162,16 @@ namespace Commodore.GameLogic.Display
             if (!_alreadyInitialized)
             {
                 _alreadyInitialized = true;
-                
+
                 InitialSetUpComplete?.Invoke(this, EventArgs.Empty);
-                
+
                 Kernel.Instance.Memory.Poke(
                     SystemMemoryAddresses.SoftResetCompleteFlag,
                     false
                 );
             }
 
-            Cursor.SetGranularPosition(CursorX + Margin + Padding, CursorY + Margin + Padding);
+            Cursor.SetGranularPosition(CursorX, CursorY);
             Cursor.ColorMask = ActiveForegroundColor;
 
             Cursor.Update(deltaTime);
@@ -190,22 +181,22 @@ namespace Commodore.GameLogic.Display
         {
             DrawBackdrop(context);
             DrawDisplayBuffer(context);
-            
+
             Cursor.Draw(context);
         }
 
         public void ClearScreen(bool preserveColors)
         {
-            for (var y = 0; y < TotalRows; y++)
+            for (var y = Margins.Top; y < TotalRows - Margins.Bottom; y++)
             {
                 if (preserveColors)
                 {
-                    for (var x = 0; x < TotalColumns; x++)
+                    for (var x = Margins.Left; x < TotalColumns - Margins.Right; x++)
                         CharacterBuffer[y * TotalRows + x] = ' ';
                 }
                 else
                 {
-                    for (var x = 0; x < TotalColumns; x++)
+                    for (var x = Margins.Left; x < TotalColumns - Margins.Right; x++)
                     {
                         CharacterBuffer[y * TotalColumns + x] = ' ';
                         ForegroundColorBuffer[y * TotalColumns + x] = DefaultForegroundColor;
@@ -220,9 +211,9 @@ namespace Commodore.GameLogic.Display
 
         public virtual void ScrollUp()
         {
-            for (var y = 1; y < TotalRows; y++)
+            for (var y = Margins.Top + 1; y < TotalRows - Margins.Bottom; y++)
             {
-                for (var x = 0; x < TotalColumns; x++)
+                for (var x = Margins.Left; x < TotalColumns - Margins.Right; x++)
                 {
                     CharacterBuffer[(y - 1) * TotalColumns + x] = CharacterBuffer[y * TotalColumns + x];
                     ForegroundColorBuffer[(y - 1) * TotalColumns + x] = ForegroundColorBuffer[y * TotalColumns + x];
@@ -230,11 +221,11 @@ namespace Commodore.GameLogic.Display
                 }
             }
 
-            for (var x = 0; x < TotalColumns; x++)
+            for (var x = Margins.Left; x < TotalColumns - Margins.Right; x++)
             {
-                CharacterBuffer[(TotalRows - 1) * TotalColumns + x] = ' ';
-                ForegroundColorBuffer[(TotalRows - 1) * TotalColumns + x] = DefaultForegroundColor;
-                BackgroundColorBuffer[(TotalRows - 1) * TotalColumns + x] = DefaultBackgroundColor;
+                CharacterBuffer[(TotalRows - Margins.Bottom - 1) * TotalColumns + x] = ' ';
+                ForegroundColorBuffer[(TotalRows - Margins.Bottom - 1) * TotalColumns + x] = DefaultForegroundColor;
+                BackgroundColorBuffer[(TotalRows - Margins.Bottom - 1) * TotalColumns + x] = DefaultBackgroundColor;
             }
         }
 
@@ -249,18 +240,8 @@ namespace Commodore.GameLogic.Display
             renderContext.Rectangle(
                 ShapeMode.Fill,
                 Vector2.Zero,
-                G.Window.Size,
-                ActiveMarginColor
-            );
-
-            renderContext.Rectangle(
-                ShapeMode.Fill,
-                new Vector2(
-                    Margin * Cursor.Granularity,
-                    Margin * Cursor.Granularity
-                ),
-                G.Window.Size.Width - (Margin * 2 * Cursor.Granularity),
-                G.Window.Size.Height - (Margin * 2 * Cursor.Granularity),
+                G.Window.Size.Width * Cursor.Granularity,
+                G.Window.Size.Height * Cursor.Granularity,
                 ActiveBackgroundColor
             );
         }
@@ -269,11 +250,11 @@ namespace Commodore.GameLogic.Display
         {
             try
             {
-                CursorX = 0;
-                CursorY = 0;
+                CursorX = Margins.Left;
+                CursorY = Margins.Top;
 
-                TotalColumns = G.Window.Size.Width / Cursor.Granularity - ((Margin + Padding) * 2);
-                TotalRows = G.Window.Size.Height / Cursor.Granularity - ((Margin + Padding) * 2);
+                TotalColumns = G.Window.Size.Width / Cursor.Granularity;
+                TotalRows = G.Window.Size.Height / Cursor.Granularity;
 
                 CharacterBuffer = new char[TotalColumns * TotalRows];
                 ForegroundColorBuffer = new Color[TotalColumns * TotalRows];
@@ -297,14 +278,12 @@ namespace Commodore.GameLogic.Display
 
         private void FailsafeReset()
         {
-            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentMarginSize, 1);
-            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.CurrentPaddingSize, 1);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.MarginArea, 0x00000000);
 
-            Margin = 1;
-            Padding = 1;
+            Margins = new VgaMargins {Left = 0, Top = 0, Right = 0, Bottom = 0};
 
-            TotalColumns = G.Window.Size.Width / Cursor.Granularity - (Margin + Padding) * 2;
-            TotalRows = G.Window.Size.Height / Cursor.Granularity - (Margin + Padding) * 2;
+            TotalColumns = G.Window.Size.Width / Cursor.Granularity;
+            TotalRows = G.Window.Size.Height / Cursor.Granularity;
 
             RecalculateDimensions();
 
@@ -317,16 +296,29 @@ namespace Commodore.GameLogic.Display
             {
                 Kernel.Instance.Memory.Poke(SystemMemoryAddresses.UpdateOffsetParametersFlag, 0);
 
-                Margin = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.CurrentMarginSize);
-                Padding = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.CurrentPaddingSize);
+                Margins.Left = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.MarginArea + 3);
+                Margins.Top = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.MarginArea + 2);
+                Margins.Right = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.MarginArea + 1);
+                Margins.Bottom = Kernel.Instance.Memory.Peek8(SystemMemoryAddresses.MarginArea + 0);
 
                 RecalculateDimensions();
             }
         }
 
+        public void SetMargins(byte left, byte top, byte right, byte bottom)
+        {
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.MarginArea + 3, left);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.MarginArea + 2, top);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.MarginArea + 1, right);
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.MarginArea + 0, bottom);
+
+            Kernel.Instance.Memory.Poke(SystemMemoryAddresses.UpdateOffsetParametersFlag, (byte)1);
+            ReloadOffsetParametersIfNeeded();
+        }
+
         private void DrawDisplayBuffer(RenderContext context)
         {
-            var dx = (Margin + Padding) * Cursor.Granularity;
+            var dx = 0;
 
             for (var y = 0; y < TotalRows; y++)
             {
@@ -340,12 +332,13 @@ namespace Commodore.GameLogic.Display
                     context.DrawString(
                         Font,
                         str,
-                        new Vector2(dx, ((Margin + Padding) * Cursor.Granularity) + y * Font.Size),
+                        new Vector2(dx, y * Font.Size),
                         (c, i, p, g) => new GlyphTransformData(p) {Color = ForegroundColorBuffer[y * TotalColumns + i]}
                     );
                 }
                 catch
                 {
+                    /* Ignored */
                 }
             }
         }

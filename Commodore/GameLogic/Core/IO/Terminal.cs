@@ -134,18 +134,18 @@ namespace Commodore.GameLogic.Core.IO
             }
             else if (character == '\n')
             {
-                _vga.CursorX = 0;
+                _vga.CursorX = _vga.Margins.Left;
                 _vga.CursorY++;
 
-                if (_vga.CursorY >= _vga.TotalRows)
+                if (_vga.CursorY >= _vga.TotalRows - _vga.Margins.Bottom)
                 {
-                    _vga.CursorY = (ushort)(_vga.TotalRows - 1);
+                    _vga.CursorY = (ushort)(_vga.TotalRows - _vga.Margins.Bottom - 1);
                     _vga.ScrollUp();
                 }
             }
             else if (character == '\r')
             {
-                _vga.CursorX = 0;
+                _vga.CursorX = _vga.Margins.Left;
             }
             else
             {
@@ -245,16 +245,16 @@ namespace Commodore.GameLogic.Core.IO
         {
             _vga.CursorX--;
 
-            if (_vga.CursorX < 0)
+            if (_vga.CursorX < _vga.Margins.Left)
             {
-                if (_vga.CursorY > 0)
+                if (_vga.CursorY > _vga.Margins.Top)
                 {
-                    _vga.CursorX = (ushort)(_vga.TotalColumns - 1);
+                    _vga.CursorX = (ushort)(_vga.TotalColumns + _vga.Margins.Left - 1);
                     _vga.CursorY--;
                 }
                 else
                 {
-                    _vga.CursorX = 0;
+                    _vga.CursorX = _vga.Margins.Left;
                 }
             }
         }
@@ -263,14 +263,14 @@ namespace Commodore.GameLogic.Core.IO
         {
             _vga.CursorX++;
 
-            if (_vga.CursorX >= _vga.TotalColumns)
+            if (_vga.CursorX >= _vga.TotalColumns - _vga.Margins.Right)
             {
-                _vga.CursorX = 0;
+                _vga.CursorX = _vga.Margins.Left;
                 _vga.CursorY++;
 
-                if (_vga.CursorY >= _vga.TotalRows)
+                if (_vga.CursorY >= _vga.TotalRows - _vga.Margins.Bottom)
                 {
-                    _vga.CursorY = (ushort)(_vga.TotalRows - 1);
+                    _vga.CursorY = (ushort)(_vga.TotalRows - _vga.Margins.Bottom - 1);
                     _vga.ScrollUp();
                 }
             }
