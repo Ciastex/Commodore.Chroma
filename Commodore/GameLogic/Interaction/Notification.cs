@@ -19,7 +19,6 @@ namespace Commodore.GameLogic.Interaction
         }
 
         private readonly Vector2 _targetBasePosition;
-        private readonly float _slideSpeed = 1000f;
         private readonly float _waitTime = 4500f;
 
         private Animation _currentAnimation;
@@ -30,15 +29,22 @@ namespace Commodore.GameLogic.Interaction
         public bool IsActive { get; set; }
         public string Text { get; set; }
         public Size TextSize { get; }
+        public Color BorderColor { get; set; }
+        public Color BackgroundColor { get; set; }
+        public Color TextColor { get; set; }
 
-        public Notification(string text)
+        public Notification(string text, Color borderColor, Color backgroundColor, Color textColor)
         {
             Text = text.ToUpper();
             TextSize = Kernel.Instance.Vga.Font.Measure(text);
 
+            BorderColor = borderColor;
+            BackgroundColor = backgroundColor;
+            TextColor = textColor;
+
             _targetBasePosition = new Vector2(
                 G.Window.Size.Width - TextSize.Width - (4 * 16) - 16,
-                G.Window.Size.Height - TextSize.Height - (5 * 16) - 8
+                G.Window.Size.Height - TextSize.Height - (4 * 16) - 16
             );
 
             _currentHorizontalPosition = G.Window.Size.Width;
@@ -52,7 +58,6 @@ namespace Commodore.GameLogic.Interaction
             if (!IsActive) return;
 
             context.ShapeBlendingEnabled = false;
-            context.LineThickness = 16;
             context.Rectangle(
                 ShapeMode.Fill,
                 new Vector2(
@@ -60,19 +65,18 @@ namespace Commodore.GameLogic.Interaction
                     _currentVerticalPosition
                 ),
                 new Size(4 * 16, 4 * 16) + TextSize,
-                Color.Black
+                BorderColor
             );
             
             context.Rectangle(
-                ShapeMode.Stroke,
+                ShapeMode.Fill,
                 new Vector2(
-                    _currentHorizontalPosition,
-                    _currentVerticalPosition
+                    _currentHorizontalPosition + 16,
+                    _currentVerticalPosition + 16
                 ),
-                new Size(4 * 16, 4 * 16) + TextSize,
-                Color.Red
+                new Size(2 * 16, 2 * 16) + TextSize,
+                BackgroundColor
             );
-            context.LineThickness = 1;
             context.ShapeBlendingEnabled = true;
             
             context.DrawString(
@@ -82,7 +86,7 @@ namespace Commodore.GameLogic.Interaction
                     _currentHorizontalPosition + 32,
                     _currentVerticalPosition + 32
                 ),
-                Color.Red
+                TextColor
             );
         }
 
@@ -92,9 +96,9 @@ namespace Commodore.GameLogic.Interaction
 
             if (_currentAnimation == Animation.SlidingIn)
             {
-                if (_currentHorizontalPosition >= _targetBasePosition.X)
+                if (_currentHorizontalPosition > _targetBasePosition.X)
                 {
-                    _currentHorizontalPosition -= _slideSpeed * delta;
+                    _currentHorizontalPosition -= 16;
                 }
                 else
                 {
@@ -114,9 +118,9 @@ namespace Commodore.GameLogic.Interaction
             }
             else if (_currentAnimation == Animation.SlidingOut)
             {
-                if (_currentHorizontalPosition <= G.Window.Size.Width)
+                if (_currentHorizontalPosition < G.Window.Size.Width)
                 {
-                    _currentHorizontalPosition += _slideSpeed * delta;
+                    _currentHorizontalPosition += 16;
                 }
                 else
                 {
