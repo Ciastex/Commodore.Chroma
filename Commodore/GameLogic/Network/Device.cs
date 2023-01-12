@@ -7,9 +7,11 @@ namespace Commodore.GameLogic.Network
 {
     public abstract class Device
     {
-        public abstract string Address { get; protected set; }
-        
+        public Address Address { get; set; }
+
+        public bool ShellEnabled { get; protected set; } = true;
         public Directory RootDirectory { get; }  = new Directory("/", null);
-        public Dictionary<ushort, Service> Services { get; } = new Dictionary<ushort, Service>();
+        
+        public Dictionary<byte, Service> Services { get; } = new Dictionary<byte, Service>();
     }
 }

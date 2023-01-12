@@ -20,6 +20,7 @@ using Commodore.GameLogic.Executive.CodeEditor;
 using Commodore.GameLogic.Executive.CodeEditor.Events;
 using Commodore.GameLogic.Interaction;
 using Commodore.GameLogic.Interaction.Shell;
+using Commodore.GameLogic.Network;
 using Commodore.GameLogic.Persistence;
 
 namespace Commodore.GameLogic.Core
@@ -293,6 +294,8 @@ namespace Commodore.GameLogic.Core
             }
 
             await TryRunSystemProgram("/etc/startup");
+
+            DoPostBootActions();
             
             try
             {
@@ -316,6 +319,14 @@ namespace Commodore.GameLogic.Core
             catch (TaskCanceledException)
             {
             }
+        }
+
+        private void DoPostBootActions()
+        {
+            Terminal.WriteLine(new Address(12345678, 0).ToString());
+            Terminal.WriteLine(new Address(0xDEADDEAD, 0x6F).ToString());
+            Terminal.WriteLine(Address.Parse("05C3:0666+21").ToString());
+            Terminal.WriteLine(Address.Parse("05C3:1234").ToString());
         }
 
         private async Task<bool> TryRunSystemProgram(string path)
