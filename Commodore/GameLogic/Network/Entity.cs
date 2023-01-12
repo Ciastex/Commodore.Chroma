@@ -10,5 +10,13 @@ namespace Commodore.GameLogic.Network
         {
             await Task.CompletedTask;
         }
+
+        public virtual void NeighborShellDetached(Device device)
+        {
+        }
+
+        public virtual void NeighborShellAttached(Device device)
+        {
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace Commodore.GameLogic.Core.IO.Storage
                 return "/";
 
             if (segments.Length == 1)
-                return Kernel.Instance.FileSystemContext.WorkingDirectory.GetAbsolutePath();
+                return Kernel.Instance.CurrentSystemContext.WorkingDirectory.GetAbsolutePath();
 
             var withoutFile = segments.Take(segments.Length - 1);
 

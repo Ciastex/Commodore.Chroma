@@ -62,15 +62,15 @@ namespace Commodore.GameLogic.Interaction
                     filePath = command;
                 }
 
-                if (Directory.Exists(filePath))
+                if (Directory.Exists(filePath, true))
                 {
                     Kernel.Instance.Terminal.WriteLine($"{filePath}: is a directory");
                     return false;
                 }
 
-                if (File.Exists(filePath))
+                if (File.Exists(filePath, true))
                 {
-                    var file = File.Get(filePath);
+                    var file = File.Get(filePath, true);
 
                     if ((file.Attributes & FileAttributes.Executable) != 0)
                     {
