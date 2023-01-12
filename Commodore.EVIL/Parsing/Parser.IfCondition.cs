@@ -12,7 +12,7 @@ namespace Commodore.EVIL.Parsing
             var line = Match(TokenType.If);
             Match(TokenType.LParenthesis);
 
-            var expression = Expression();
+            var expression = Comparison();
 
             Match(TokenType.RParenthesis);
             Match(TokenType.Do);
@@ -27,7 +27,7 @@ namespace Commodore.EVIL.Parsing
                     Match(TokenType.Elif);
                     Match(TokenType.LParenthesis);
 
-                    expression = Expression();
+                    expression = Comparison();
 
                     Match(TokenType.RParenthesis);
                     Match(TokenType.Do);

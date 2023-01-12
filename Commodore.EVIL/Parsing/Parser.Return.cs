@@ -9,7 +9,7 @@ namespace Commodore.EVIL.Parsing
         private AstNode Return()
         {
             var line = Match(TokenType.Ret);
-            return new ReturnNode(Expression()) { Line = line };
+            return new ReturnNode(Comparison()) { Line = line };
         }
     }
 }

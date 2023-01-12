@@ -14,7 +14,7 @@ namespace Commodore.EVIL.Parsing
             var variable = Variable(identifier);
 
             int line = Match(TokenType.Assign);
-            var right = Expression();
+            var right = Comparison();
 
             return new AssignmentNode(variable, right, isLocal) { Line = line };
         }

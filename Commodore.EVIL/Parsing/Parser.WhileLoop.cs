@@ -9,7 +9,7 @@ namespace Commodore.EVIL.Parsing
         private AstNode WhileLoop()
         {
             var line = Match(TokenType.While);
-            var expression = Expression();
+            var expression = Comparison();
             Match(TokenType.Do);
             var statementList = LoopStatementList();
             Match(TokenType.End);

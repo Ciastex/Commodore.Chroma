@@ -19,12 +19,12 @@ namespace Commodore.EVIL.Parsing
             AstNode step = null;
 
             Match(TokenType.Comma);
-            var targetValue = Expression();
+            var targetValue = Comparison();
 
             if (Scanner.State.CurrentToken.Type == TokenType.Colon)
             {
                 Match(TokenType.Colon);
-                step = Expression();
+                step = Comparison();
             }
 
             Match(TokenType.Do);

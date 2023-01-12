@@ -14,7 +14,7 @@ namespace Commodore.EVIL.Parsing
             if (Scanner.State.CurrentToken.Type == TokenType.Assign)
             {
                 Match(TokenType.Assign);
-                return new MemorySetNode(memoryCell, Expression()) { Line = memoryCell.Line };
+                return new MemorySetNode(memoryCell, Comparison()) { Line = memoryCell.Line };
             }
             else if (Scanner.State.CurrentToken.Type == TokenType.Increment)
             {

@@ -181,6 +181,22 @@ namespace Commodore.EVIL.Lexical
                     State.CurrentToken = new Token(TokenType.CompareGreaterThan, '>');
                 }
             }
+            else if (State.Character == '&')
+            {
+                if (Peek() == '&')
+                {
+                    Advance();
+                    State.CurrentToken = new Token(TokenType.And, "&&");
+                }
+            }
+            else if (State.Character == '|')
+            {
+                if (Peek() == '|')
+                {
+                    Advance();
+                    State.CurrentToken = new Token(TokenType.Or, "||");
+                }
+            }
             else if (State.Character == ',')
             {
                 State.CurrentToken = new Token(TokenType.Comma, ',');
@@ -318,12 +334,6 @@ namespace Commodore.EVIL.Lexical
 
             switch (str)
             {
-                case "and":
-                    return new Token(TokenType.And, "and");
-
-                case "or":
-                    return new Token(TokenType.Or, "or");
-
                 case "fn":
                     return new Token(TokenType.Fn, "fn");
 

@@ -10,7 +10,7 @@ namespace Commodore.EVIL.Parsing
         {
             var variableNode = Variable(identifier);
             var line = Match(TokenType.LBracket);
-            var keyExpression = Expression();
+            var keyExpression = Comparison();
 
             Match(TokenType.RBracket);
 
