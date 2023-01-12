@@ -1,18 +1,15 @@
-Rest in pizzas, I guess
+Now that's what I call a 4th wall break
 ------------------
-System.Collections.Generic.KeyNotFoundException: The given key '' was not present in the dictionary.
+System.Collections.Generic.KeyNotFoundException: The given key '' was not present in the dictionary.
    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
-   at Chroma.Graphics.TextRendering.TrueTypeFont.Measure(String text) in /home/vdd/Development/dotnet/Chroma/Chroma/Graphics/TextRendering/TrueTypeFont.cs:line 82
-   at Commodore.GameLogic.Executive.CodeEditor.Editor.KeyPressed(KeyCode keyCode, KeyModifiers keyModifiers) in /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Chroma/GameLogic/Executive/CodeEditor/Editor.cs:line 224
-   at Commodore.GameLogic.Core.Kernel.KeyPressed(KeyCode keyCode, KeyModifiers modifiers) in /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Chroma/GameLogic/Core/Kernel.cs:line 393
-   at Commodore.CommodoreMain.EngineKeyPressed(KeyEventArgs e) in /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Chroma/CommodoreMain.cs:line 105
-   at Commodore.Engine.EngineBasedGame.KeyPressed(KeyEventArgs e) in /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/EngineBasedGame.cs:line 70
-   at Chroma.Game.OnKeyPressed(KeyEventArgs e) in /home/vdd/Development/dotnet/Chroma/Chroma/Game.cs:line 150
-   at Chroma.Input.Keyboard.OnKeyPressed(Game game, KeyEventArgs e) in /home/vdd/Development/dotnet/Chroma/Chroma/Input/Keyboard.cs:line 53
-   at Chroma.Windowing.EventHandling.Specialized.InputEventHandlers.KeyPressed(Window owner, SDL_Event ev) in /home/vdd/Development/dotnet/Chroma/Chroma/Windowing/EventHandling/Specialized/InputEventHandlers.cs:line 147
-   at Chroma.Windowing.EventHandling.EventDispatcher.DispatchEvent(SDL_Event ev) in /home/vdd/Development/dotnet/Chroma/Chroma/Windowing/EventHandling/EventDispatcher.cs:line 57
-   at Chroma.Windowing.EventHandling.EventDispatcher.Dispatch(SDL_Event ev) in /home/vdd/Development/dotnet/Chroma/Chroma/Windowing/EventHandling/EventDispatcher.cs:line 38
-   at Chroma.Windowing.Window.Run(Action postStatusSetAction) in /home/vdd/Development/dotnet/Chroma/Chroma/Windowing/Window.cs:line 105
-   at Chroma.Game.Run() in /home/vdd/Development/dotnet/Chroma/Chroma/Game.cs:line 50
-   at Commodore.Program.Main(String[] args) in /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Chroma/Program.cs:line 10
+   at Chroma.Graphics.RenderContext.DrawString(TrueTypeFont font, String text, Vector2 position, Func`5 perCharTransform) in F:\Visual Studio 2019\Projects\Chroma\Chroma\Graphics\RenderContext.cs:line 326
+   at Commodore.GameLogic.Display.VGA.DrawDisplayBuffer(RenderContext context) in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\GameLogic\Display\VGA.cs:line 400
+   at Commodore.GameLogic.Display.VGA.Draw(RenderContext context) in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\GameLogic\Display\VGA.cs:line 185
+   at Commodore.GameLogic.Core.Kernel.Draw(RenderContext context) in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\GameLogic\Core\Kernel.cs:line 131
+   at Commodore.CommodoreMain.<>c__DisplayClass7_0.<Draw>b__0() in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\CommodoreMain.cs:line 84
+   at Chroma.Graphics.RenderContext.RenderTo(RenderTarget target, Action drawingLogic) in F:\Visual Studio 2019\Projects\Chroma\Chroma\Graphics\RenderContext.cs:line 256
+   at Commodore.CommodoreMain.Draw(RenderContext context) in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\CommodoreMain.cs:line 81
+   at Chroma.Windowing.Window.Run(Action postStatusSetAction) in F:\Visual Studio 2019\Projects\Chroma\Chroma\Windowing\Window.cs:line 112
+   at Chroma.Game.Run() in F:\Visual Studio 2019\Projects\Chroma\Chroma\Game.cs:line 50
+   at Commodore.Program.Main(String[] args) in F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.Chroma\Program.cs:line 10
 Is CLR terminating? - True

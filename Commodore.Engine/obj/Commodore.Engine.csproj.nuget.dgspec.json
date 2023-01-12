@@ -1,25 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj": {}
+    "F:\\Visual Studio 2019\\Projects\\Commodore.Chroma\\Commodore.Engine\\Commodore.Engine.csproj": {}
   },
   "projects": {
-    "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj": {
+    "F:\\Visual Studio 2019\\Projects\\Commodore.Chroma\\Commodore.Engine\\Commodore.Engine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj",
+        "projectUniqueName": "F:\\Visual Studio 2019\\Projects\\Commodore.Chroma\\Commodore.Engine\\Commodore.Engine.csproj",
         "projectName": "Commodore.Engine",
-        "projectPath": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/Commodore.Engine.csproj",
-        "packagesPath": "/home/vdd/.nuget/packages/",
-        "outputPath": "/home/vdd/Development/dotnet/Commodore-Chroma/Commodore.Engine/obj/",
+        "projectPath": "F:\\Visual Studio 2019\\Projects\\Commodore.Chroma\\Commodore.Engine\\Commodore.Engine.csproj",
+        "packagesPath": "C:\\Users\\Tom\\.nuget\\packages\\",
+        "outputPath": "F:\\Visual Studio 2019\\Projects\\Commodore.Chroma\\Commodore.Engine\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "/home/vdd/.config/NuGet/NuGet.Config"
+          "C:\\Users\\Tom\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.1"
         ],
         "sources": {
+          "C:\\Users\\Tom\\AppData\\Roaming\\Cosmos User Kit\\Kernel\\packages": {},
+          "F:\\Visual Studio 2019\\OfflineNuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -56,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.103/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

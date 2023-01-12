@@ -10,7 +10,7 @@
       "Commodore.Engine/1.0.0": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
-          "Iris": "1.0.0.0"
+          "Chroma": "1.0.0.0"
         },
         "runtime": {
           "Commodore.Engine.dll": {}
@@ -24,9 +24,17 @@
           }
         }
       },
-      "Iris/1.0.0.0": {
+      "Chroma/1.0.0.0": {
         "runtime": {
-          "Iris.dll": {
+          "Chroma.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Chroma.Natives/1.0.0.0": {
+        "runtime": {
+          "Chroma.Natives.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -47,7 +55,12 @@
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
-    "Iris/1.0.0.0": {
+    "Chroma/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Chroma.Natives/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

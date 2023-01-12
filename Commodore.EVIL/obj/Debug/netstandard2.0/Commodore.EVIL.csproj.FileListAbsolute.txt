@@ -14,3 +14,11 @@
 /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.EVIL/obj/Debug/netstandard2.0/Commodore.EVIL.AssemblyInfo.cs
 /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.EVIL/obj/Debug/netstandard2.0/Commodore.EVIL.dll
 /home/vdd/Development/dotnet/Commodore-Chroma/Commodore.EVIL/obj/Debug/netstandard2.0/Commodore.EVIL.pdb
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\bin\Debug\netstandard2.0\Commodore.EVIL.deps.json
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\bin\Debug\netstandard2.0\Commodore.EVIL.dll
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\bin\Debug\netstandard2.0\Commodore.EVIL.pdb
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\obj\Debug\netstandard2.0\Commodore.EVIL.csproj.CoreCompileInputs.cache
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\obj\Debug\netstandard2.0\Commodore.EVIL.AssemblyInfoInputs.cache
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\obj\Debug\netstandard2.0\Commodore.EVIL.AssemblyInfo.cs
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\obj\Debug\netstandard2.0\Commodore.EVIL.dll
+F:\Visual Studio 2019\Projects\Commodore.Chroma\Commodore.EVIL\obj\Debug\netstandard2.0\Commodore.EVIL.pdb

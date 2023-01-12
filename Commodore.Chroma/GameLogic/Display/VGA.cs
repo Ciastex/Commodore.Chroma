@@ -18,7 +18,10 @@ namespace Commodore.GameLogic.Display
         public readonly Color DefaultMarginColor = Color.Gray;
 
         public Cursor Cursor;
-        public Character[][] DisplayBuffer;
+
+        public char[] CharacterBuffer;
+        public Color[] ForegroundColorBuffer;
+        public Color[] BackgroundColorBuffer;
 
         public int TotalColumns;
         public int TotalRows;
@@ -27,8 +30,7 @@ namespace Commodore.GameLogic.Display
         {
             get
             {
-                var value = Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane,
-                    SystemMemoryAddresses.CursorPositionX);
+                var value = Kernel.Instance.Memory.Peek32(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CursorPositionX);
 
                 if (value > TotalColumns)
                 {
@@ -52,8 +54,7 @@ namespace Commodore.GameLogic.Display
                 else if (value < -1) // compensate for later processing
                     val = 0;
 
-                Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CursorPositionX,
-                    val);
+                Kernel.Instance.Memory.Poke(SystemConstants.SystemMemoryPlane, SystemMemoryAddresses.CursorPositionX, val);
             }
         }
 
@@ -141,9 +142,9 @@ namespace Commodore.GameLogic.Display
                 return;
             }
 
-            DisplayBuffer[y][x].Value = character;
-            DisplayBuffer[y][x].Foreground = foreground;
-            DisplayBuffer[y][x].Background = background;
+            CharacterBuffer[y * TotalColumns + x] = character;
+            ForegroundColorBuffer[y * TotalColumns + x] = foreground;
+            BackgroundColorBuffer[y * TotalColumns + x] = background;
         }
 
         public void SetColorsAt(Color foreground, Color background, int x, int y)
@@ -155,8 +156,8 @@ namespace Commodore.GameLogic.Display
                 return;
             }
 
-            DisplayBuffer[y][x].Foreground = foreground;
-            DisplayBuffer[y][x].Background = background;
+            ForegroundColorBuffer[y * TotalColumns + x] = foreground;
+            BackgroundColorBuffer[y * TotalColumns + x] = background;
         }
 
         public override void UpdateOnce(float deltaTime)
@@ -193,28 +194,41 @@ namespace Commodore.GameLogic.Display
                 if (preserveColors)
                 {
                     for (var x = 0; x < TotalColumns; x++)
-                        DisplayBuffer[y][x].Value = ' ';
+                        CharacterBuffer[y * TotalRows + x] = ' ';
                 }
                 else
                 {
                     for (var x = 0; x < TotalColumns; x++)
-                        DisplayBuffer[y][x] = new Character(' ', DefaultForegroundColor);
+                    {
+                        CharacterBuffer[y * TotalColumns + x] = ' ';
+                        ForegroundColorBuffer[y * TotalColumns + x] = DefaultForegroundColor;
+                        BackgroundColorBuffer[y * TotalColumns + x] = DefaultBackgroundColor;
+                    }
 
                     ActiveForegroundColor = DefaultForegroundColor;
+                    ActiveBackgroundColor = DefaultBackgroundColor;
                 }
             }
         }
 
-        public virtual Character[] ScrollUp()
+        public virtual void ScrollUp()
         {
-            var removedLine = DisplayBuffer[0];
-
             for (var y = 1; y < TotalRows; y++)
-                DisplayBuffer[y].CopyTo(DisplayBuffer[y - 1], 0);
+            {
+                for (var x = 0; x < TotalColumns; x++)
+                {
+                    CharacterBuffer[(y - 1) * TotalColumns + x] = CharacterBuffer[y * TotalColumns + x];
+                    ForegroundColorBuffer[(y - 1) * TotalColumns + x] = ForegroundColorBuffer[y * TotalColumns + x];
+                    BackgroundColorBuffer[(y - 1) * TotalColumns + x] = BackgroundColorBuffer[y * TotalColumns + x];
+                }
+            }
 
-            DisplayBuffer[TotalRows - 1] = new Character[TotalColumns];
-
-            return removedLine;
+            for (var x = 0; x < TotalColumns; x++)
+            {
+                CharacterBuffer[(TotalRows - 1) * TotalColumns + x] = ' ';
+                ForegroundColorBuffer[(TotalRows - 1) * TotalColumns + x] = DefaultForegroundColor;
+                BackgroundColorBuffer[(TotalRows - 1) * TotalColumns + x] = DefaultBackgroundColor;
+            }
         }
 
         protected virtual void InitializeDisplayBuffer()
@@ -252,17 +266,21 @@ namespace Commodore.GameLogic.Display
                 CursorX = 0;
                 CursorY = 0;
 
-                TotalColumns = (int)(G.Window.Properties.Width / Cursor.Granularity) -
-                               ((Margin + Padding) * 2);
-                TotalRows = (int)(G.Window.Properties.Height / Cursor.Granularity) - ((Margin + Padding) * 2);
+                TotalColumns = G.Window.Properties.Width / Cursor.Granularity - ((Margin + Padding) * 2);
+                TotalRows = G.Window.Properties.Height / Cursor.Granularity - ((Margin + Padding) * 2);
 
-                DisplayBuffer = new Character[TotalRows][];
+                CharacterBuffer = new char[TotalColumns * TotalRows];
+                ForegroundColorBuffer = new Color[TotalColumns * TotalRows];
+                BackgroundColorBuffer = new Color[TotalColumns * TotalRows];
+
                 for (var y = 0; y < TotalRows; y++)
                 {
-                    DisplayBuffer[y] = new Character[TotalColumns];
-
                     for (var x = 0; x < TotalColumns; x++)
-                        DisplayBuffer[y][x] = new Character(' ', Color.White);
+                    {
+                        CharacterBuffer[y * TotalColumns + x] = ' ';
+                        ForegroundColorBuffer[y * TotalColumns + x] = Color.White;
+                        BackgroundColorBuffer[y * TotalColumns + x] = Color.Black;
+                    }
                 }
             }
             catch (OverflowException) // for when margin/padding combination is too large
@@ -304,108 +322,48 @@ namespace Commodore.GameLogic.Display
             }
         }
 
-        private List<Character[]> BuildDisplayBufferVisual()
-        {
-            var ret = new List<Character[]>();
-
-            foreach (var row in DisplayBuffer)
-            {
-                var str = new Character[TotalColumns];
-
-                row.CopyTo(str, 0);
-                ret.Add(str);
-            }
-
-            return ret;
-        }
-
         private void DrawDisplayBuffer(RenderContext context)
         {
-            var displayBufferVisual = BuildDisplayBufferVisual();
-            var previousForeground = displayBufferVisual[0][0].Foreground;
-            var previousBackground = displayBufferVisual[0][0].Background;
+            var dx = (Margin + Padding) * Cursor.Granularity;
 
-            for (var i = 0; i < displayBufferVisual.Count; i++)
+            for (var y = 0; y < TotalRows; y++)
             {
-                var line = displayBufferVisual[i];
+                var start = y * TotalColumns;
+                var end = start + TotalColumns;
 
-                var coloredSegments = new List<ColoredSegment>();
-                var currentSegment = new ColoredSegment
-                {
-                    Value = string.Empty,
-                    Width = 0,
-                    Foreground = DefaultForegroundColor,
-                    Background = DefaultBackgroundColor
-                };
+                var str = new string(CharacterBuffer[start..end]);
 
-                for (var j = 0; j < line.Length; j++)
-                {
-                    if (line[j].Foreground == previousForeground && line[j].Background == previousBackground)
-                    {
-                        currentSegment.Value += line[j].Value;
-
-                        previousForeground = line[j].Foreground;
-                        previousBackground = line[j].Background;
-                    }
-                    else
-                    {
-                        currentSegment.Foreground = previousForeground;
-                        currentSegment.Background = previousBackground;
-
-                        currentSegment.Width = Cursor.Granularity * currentSegment.Value.Length;
-
-                        coloredSegments.Add(currentSegment);
-
-                        currentSegment = new ColoredSegment
-                        {
-                            Value = string.Empty,
-                            Width = 0,
-                            Foreground = DefaultForegroundColor,
-                            Background = DefaultBackgroundColor
-                        };
-
-                        previousForeground = line[j].Foreground;
-                        previousBackground = line[j].Background;
-
-                        j--;
-                    }
-                }
-
-                if (currentSegment.Value.Length != 0)
-                {
-                    currentSegment.Foreground = previousForeground;
-                    currentSegment.Background = previousBackground;
-
-                    currentSegment.Width = Cursor.Granularity * currentSegment.Value.Length;
-
-                    coloredSegments.Add(currentSegment);
-                }
-
-                var dx = (Margin + Padding) * Cursor.Granularity;
-                foreach (var segment in coloredSegments)
-                {
-                    // context.BlendUsing(BlendingMode.Add);
-                    context.Rectangle(
-                        ShapeMode.Fill,
-                        new Vector2(
-                            dx,
-                            (i + Margin + Padding) * Cursor.Granularity
-                        ),
-                        segment.Value.Length * Cursor.Granularity,
-                        16,
-                        segment.Background
-                    );
-                    // context.BlendUsing(BlendingMode.Default);
-
-                    context.DrawString(
-                        Font,
-                        segment.Value,
-                        new Vector2(dx, (i + Margin + Padding) * Cursor.Granularity),
-                        (c, i, p, g) => new GlyphTransformData(p) {Color = segment.Foreground});
-
-                    dx += segment.Width;
-                }
+                context.DrawString(
+                    Font,
+                    str,
+                    new Vector2(dx, ((Margin + Padding) * Cursor.Granularity) + y * Font.Size),
+                    (c, i, p, g) => new GlyphTransformData(p) { Color = ForegroundColorBuffer[y * TotalColumns + i] }
+                );
             }
+
+            //foreach (var segment in coloredSegments)
+            //{
+            //    // context.BlendUsing(BlendingMode.Add);
+            //    context.Rectangle(
+            //        ShapeMode.Fill,
+            //        new Vector2(
+            //            dx,
+            //            (i + Margin + Padding) * Cursor.Granularity
+            //        ),
+            //        segment.Value.Length * Cursor.Granularity,
+            //        16,
+            //        segment.Background
+            //    );
+            //    // context.BlendUsing(BlendingMode.Default);
+
+            //    context.DrawString(
+            //        Font,
+            //        segment.Value,
+            //        new Vector2(dx, (i + Margin + Padding) * Cursor.Granularity),
+            //        (c, i, p, g) => new GlyphTransformData(p) {Color = segment.Foreground});
+
+            //    dx += segment.Width;
+            //}
         }
     }
 }
