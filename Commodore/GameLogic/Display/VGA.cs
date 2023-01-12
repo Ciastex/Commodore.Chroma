@@ -168,16 +168,16 @@ namespace Commodore.GameLogic.Display
         {
             ReloadOffsetParametersIfNeeded();
 
-            if (!_alreadyInitialized || Kernel.Instance.Memory.PeekBool(SystemMemoryAddresses.SoftResetCompleteFlag))
+            if (!_alreadyInitialized)
             {
+                _alreadyInitialized = true;
+                
                 InitialSetUpComplete?.Invoke(this, EventArgs.Empty);
                 
                 Kernel.Instance.Memory.Poke(
                     SystemMemoryAddresses.SoftResetCompleteFlag,
                     false
                 );
-                
-                _alreadyInitialized = true;
             }
 
             Cursor.SetGranularPosition(CursorX + Margin + Padding, CursorY + Margin + Padding);

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Chroma.Input;
 using Commodore.Framework.Extensions;
+using Commodore.GameLogic.Core.BootSequence;
 using Commodore.GameLogic.Core.IO.Mappings;
 using Commodore.GameLogic.Display;
 
@@ -12,6 +13,7 @@ namespace Commodore.GameLogic.Core.IO
     {
         private bool _awaitingInputString;
         private bool _awaitingInputCharacter;
+        private bool _cancelled;
 
         private int _historyIndex;
         private int _inputBufferIndex;
@@ -32,6 +34,8 @@ namespace Commodore.GameLogic.Core.IO
 
         public void CancelInput()
         {
+            _cancelled = true;
+            
             _inputBuffer = string.Empty;
             _inputBufferIndex = 0;
             _awaitingInputString = false;
@@ -59,6 +63,12 @@ namespace Commodore.GameLogic.Core.IO
             while (_awaitingInputString)
                 await Task.Delay(1);
 
+            if (_cancelled)
+            {
+                _cancelled = true;
+                throw new TaskCanceledException(string.Empty);
+            }
+
             if (!string.IsNullOrWhiteSpace(_inputBuffer))
             {
                 InputHistory.Add(_inputBuffer);
@@ -78,6 +88,12 @@ namespace Commodore.GameLogic.Core.IO
 
             while (_awaitingInputCharacter)
                 await Task.Delay(1);
+
+            if (_cancelled)
+            {
+                _cancelled = false;
+                throw new TaskCanceledException(string.Empty);
+            }
 
             var output = _keyBuffer;
             _keyBuffer = 0;
