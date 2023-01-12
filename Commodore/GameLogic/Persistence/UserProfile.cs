@@ -5,8 +5,10 @@ using System.Timers;
 using Chroma.Input;
 using Commodore.Framework;
 using Commodore.Framework.Extensions;
+using Commodore.Framework.Generators;
 using Commodore.Framework.Persistence.AppData;
 using Commodore.GameLogic.Core.IO.Storage;
+using Commodore.GameLogic.Network;
 
 namespace Commodore.GameLogic.Persistence
 {
@@ -26,9 +28,11 @@ namespace Commodore.GameLogic.Persistence
         public bool IsInitialized { get; set; }
         public bool Saving { get; private set; }
 
-        public string UserName { get; set; } = "lazarus";
+        public MersenneTwister Random { get; set; } = new MersenneTwister();
         public Directory RootDirectory { get; set; } = new Directory();
+        public Internet Internet { get; set; } = new Internet();
 
+        public string Username { get; set; } = "lazarus";
         public KeyCode PreferredBreakKey { get; set; } = KeyCode.Pause;
         public KeyCode GfxModeResetKey { get; set; } = KeyCode.F12;
 

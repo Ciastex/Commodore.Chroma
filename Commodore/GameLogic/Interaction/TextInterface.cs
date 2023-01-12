@@ -10,34 +10,15 @@ namespace Commodore.GameLogic.Interaction
 {
     public class TextInterface
     {
-        public static void PrintWelcomeBanner(bool postSoftReset)
-        {
-            var welcomeMsg1 = "*** evOS PLATFORM v0.2 ***";
-            var welcomeMsg2 = $"{(SystemConstants.MemorySize) / 1024}KB MEMORY";
-
-            Kernel.Instance.Vga.CursorX = (Kernel.Instance.Vga.TotalColumns / 2) - (welcomeMsg1.Length / 2);
-            Kernel.Instance.Vga.CursorY++;
-            Kernel.Instance.Terminal.WriteLine(welcomeMsg1);
-
-            Kernel.Instance.Vga.CursorX = (Kernel.Instance.Vga.TotalColumns / 2) - (welcomeMsg2.Length / 2);
-            Kernel.Instance.Terminal.WriteLine(welcomeMsg2);
-
-            if (postSoftReset)
-                Kernel.Instance.Terminal.WriteLine("\nSOFT RESET COMPLETE");
-
-            Kernel.Instance.Terminal.WriteLine("\nREADY.");
-        }
-
-        // todo refactor this
         public static async Task RunProfileConfigWizard()
         {
             Kernel.Instance.Terminal.WriteLine("\nNEW USER DETECTED");
 
             var processComplete = false;
 
-            var breakKey = KeyCode.Pause;
-            var gfxModeResetKey = KeyCode.F12;
-            var username = string.Empty;
+            var breakKey = UserProfile.Instance.PreferredBreakKey;
+            var gfxModeResetKey = UserProfile.Instance.GfxModeResetKey;
+            var username = UserProfile.Instance.Username;
 
             while (!processComplete)
             {
@@ -45,24 +26,22 @@ namespace Commodore.GameLogic.Interaction
 
                 while (!usernameValid)
                 {
-                    username = await Kernel.Instance.Terminal.ReadLine($" -> ENTER USERNAME: ");
+                    var usernameInput = await Kernel.Instance.Terminal.ReadLine($" -> ENTER USERNAME [{username}]: ");
 
-                    if (username.Length > 16)
+                    if (usernameInput.Length > 16)
                     {
                         Kernel.Instance.Terminal.WriteLine("USERNAME_TOO_LONG".Glitched());
                         continue;
                     }
-                    else if (username.Length == 0)
-                    {
-                        Kernel.Instance.Terminal.WriteLine("USERNAME_EMPTY".Glitched());
-                        continue;
-                    }
+
+                    if (!string.IsNullOrEmpty(usernameInput))
+                        username = usernameInput;
 
                     usernameValid = true;
                 }
 
                 breakKey = (KeyCode)await Kernel.Instance.Terminal.Read(
-                   $" -> PRESS USER PROGRAM KILL KEY [{breakKey}]"
+                    $" -> PRESS USER PROGRAM KILL KEY [{breakKey}]"
                 );
                 Kernel.Instance.Terminal.Write("\n");
 
@@ -81,22 +60,22 @@ namespace Commodore.GameLogic.Interaction
                 {
                     Kernel.Instance.Terminal.Write("Is this correct (y/n)? ");
                     input = (KeyCode)await Kernel.Instance.Terminal.Read("");
-                    Kernel.Instance.Terminal.Write("\n");
                 }
 
                 if (input == KeyCode.Y)
                 {
                     Kernel.Instance.Terminal.WriteLine("Y");
+                    Kernel.Instance.Terminal.Write("\n");
 
                     UserProfile.Instance.CreateBaseFileSystem();
                     UserProfile.Instance.SaveToFile();
-                    
+
                     processComplete = true;
                 }
                 else Kernel.Instance.Terminal.WriteLine("N");
             }
 
-            UserProfile.Instance.UserName = username;
+            UserProfile.Instance.Username = username;
             UserProfile.Instance.PreferredBreakKey = breakKey;
             UserProfile.Instance.GfxModeResetKey = gfxModeResetKey;
 

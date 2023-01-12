@@ -21,9 +21,6 @@
     <None Update="Content\QuestGoals\HackingTime\hackerman_tutorial.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Quests\HackingTime.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Content\Shaders\CrtScreen.glsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -98,9 +95,9 @@
     <Folder Include="Content\Devices\" />
     <Folder Include="Content\Networks" />
     <Folder Include="Content\People\" />
+    <Folder Include="Content\Quests" />
     <Folder Include="Content\Scripts\" />
     <Folder Include="Content\Shellsites\" />
-    <Folder Include="GameLogic\Network\Devices" />
   </ItemGroup>
 
   <ItemGroup>
