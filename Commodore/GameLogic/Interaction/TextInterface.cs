@@ -13,7 +13,7 @@ namespace Commodore.GameLogic.Interaction
         public static void PrintWelcomeBanner(bool postSoftReset)
         {
             var welcomeMsg1 = "*** evOS PLATFORM v0.2 ***";
-            var welcomeMsg2 = $"{(Kernel.Instance.Memory.Planes.Count * SystemConstants.MemorySize) / 1024}KB MEMORY";
+            var welcomeMsg2 = $"{(SystemConstants.MemorySize) / 1024}KB MEMORY";
 
             Kernel.Instance.Vga.CursorX = (Kernel.Instance.Vga.TotalColumns / 2) - (welcomeMsg1.Length / 2);
             Kernel.Instance.Vga.CursorY++;
@@ -38,7 +38,6 @@ namespace Commodore.GameLogic.Interaction
             var breakKey = KeyCode.Pause;
             var gfxModeResetKey = KeyCode.F12;
             var username = "lazarus";
-            var netSeed = (int)Time.Stamp; 
 
             while (!processComplete)
             {
@@ -46,7 +45,7 @@ namespace Commodore.GameLogic.Interaction
 
                 while (!usernameValid)
                 {
-                    username = await Kernel.Instance.Terminal.ReadLine(" -> USERNAME: ", Kernel.Instance.RebootTokenSource.Token);
+                    username = await Kernel.Instance.Terminal.ReadLine($" -> USERNAME [{username}]: ");
 
                     if (username.Length > 16)
                     {
@@ -61,33 +60,23 @@ namespace Commodore.GameLogic.Interaction
                     usernameValid = true;
                 }
 
-                breakKey = (KeyCode)await Kernel.Instance.Terminal.Read(" -> PRESS_SCRIPT_BREAK_KEY", Kernel.Instance.RebootTokenSource.Token);
+                breakKey = (KeyCode)await Kernel.Instance.Terminal.Read($" -> PRESS_SCRIPT_BREAK_KEY [{breakKey}]");
                 Kernel.Instance.Terminal.Write("\n");
 
-                gfxModeResetKey = (KeyCode)await Kernel.Instance.Terminal.Read(" -> PRESS_GFXMODE_RESET_KEY", Kernel.Instance.RebootTokenSource.Token);
+                gfxModeResetKey = (KeyCode)await Kernel.Instance.Terminal.Read($" -> PRESS_GFXMODE_RESET_KEY [{gfxModeResetKey}]");
                 Kernel.Instance.Terminal.Write("\n");
-
-                var networkSeedInput = await Kernel.Instance.Terminal.ReadLine(" -> NETWORK_SEED: ", Kernel.Instance.RebootTokenSource.Token);
-
-                if (!string.IsNullOrEmpty(networkSeedInput))
-                {
-                    if (!int.TryParse(networkSeedInput, out netSeed))
-                    {
-                        netSeed = networkSeedInput.GetHashCode();
-                    }
-                }
 
                 Kernel.Instance.Terminal.WriteLine("User input summary:");
                 Kernel.Instance.Terminal.WriteLine($"  Username: {username}");
                 Kernel.Instance.Terminal.WriteLine($"  Break key: {breakKey.ToString()}");
                 Kernel.Instance.Terminal.WriteLine($"  Graphics reset key: {gfxModeResetKey.ToString()}");
-                Kernel.Instance.Terminal.WriteLine($"  Network seed: {netSeed}");
 
                 var input = (KeyCode)0;
                 while (input != KeyCode.Y && input != KeyCode.N)
                 {
                     Kernel.Instance.Terminal.Write("Is this correct (y/n)? ");
-                    input = (KeyCode)await Kernel.Instance.Terminal.Read("", Kernel.Instance.RebootTokenSource.Token);
+                    input = (KeyCode)await Kernel.Instance.Terminal.Read("");
+                    Kernel.Instance.Terminal.Write("\n");
                 }
 
                 if (input == KeyCode.Y)
@@ -142,7 +131,7 @@ namespace Commodore.GameLogic.Interaction
             Kernel.Instance.Terminal.WriteLine("\nPROFILE_CONFIG_COMPLETE_AWAIT_REBOOT");
             await Kernel.Instance.Terminal.WriteTyped(".....", 650);
 
-            Kernel.Instance.DoWarmBoot();
+            Kernel.Instance.WarmBoot();
         }
     }
 }

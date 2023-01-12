@@ -69,7 +69,7 @@ namespace Commodore
             if (!_kernelStarted)
             {
                 _kernelStarted = true;
-                Kernel.Instance.DoColdBoot();
+                Kernel.Instance.ColdBoot();
             }
             
             Window.Title = $"Project Commodore [{Window.FPS} FPS]";
@@ -114,31 +114,22 @@ namespace Commodore
 
         private void ApplyGraphicsSettings()
         {
-            Graphics.VerticalSyncMode = G.SettingsManager.GraphicsSettings.GetItem<bool>("EnableVerticalSync")
+            Graphics.VerticalSyncMode = G.SettingsManager.EnableVerticalSync
                 ? VerticalSyncMode.Retrace
                 : VerticalSyncMode.None;
 
             Window.Size = new Size(
-                G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenWidth"),
-                G.SettingsManager.GraphicsSettings.GetItem<int>("ScreenHeight")
+                G.SettingsManager.ScreenWidth,
+                G.SettingsManager.ScreenHeight
             );
             
             Window.CenterScreen();
 
-            if (G.SettingsManager.GraphicsSettings.GetItem<bool>("FullscreenEnabled"))
+            if (G.SettingsManager.FullscreenEnabled)
             {
-                switch (G.SettingsManager.GraphicsSettings.GetItem<int>("FullscreenMode"))
-                {
-                    case 0:
-                        Window.GoFullscreen(false);
-                        break;
-                    
-                    case 1:
-                        Window.GoFullscreen(true);
-                        break;
-
-                    default: throw new Exception("Invalid fullscreen display mode.");
-                }
+                if (!G.SettingsManager.IsBorderless)
+                    Window.GoFullscreen(true);
+                else Window.GoFullscreen();
             }
         }
     }

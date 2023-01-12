@@ -43,7 +43,7 @@ namespace Commodore.GameLogic.Core
 
         public async Task ExecuteProgram(string code, params string[] args)
         {
-            string targetCode = code ?? string.Empty;
+            var targetCode = code ?? string.Empty;
 
             using (var fs = G.ContentProvider.Open("Sources/Templates/program.template.cplx"))
             {

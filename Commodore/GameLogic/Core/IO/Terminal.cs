@@ -30,6 +30,16 @@ namespace Commodore.GameLogic.Core.IO
             InputHistory = new List<string>();
         }
 
+        public void CancelInput()
+        {
+            _inputBuffer = string.Empty;
+            _inputBufferIndex = 0;
+            _awaitingInputString = false;
+            
+            _keyBuffer = 0;
+            _awaitingInputCharacter = false;
+        }
+
         public void ResetInputHistory()
         {
             InputHistory.Clear();
@@ -41,22 +51,13 @@ namespace Commodore.GameLogic.Core.IO
             _vga.Cursor.ForceHidden = !_awaitingInputString && !_awaitingInputCharacter;
         }
 
-        public async Task<string> ReadLine(string prompt, CancellationToken token)
+        public async Task<string> ReadLine(string prompt)
         {
             Write(prompt);
             _awaitingInputString = true;
 
             while (_awaitingInputString)
-            {
-                if (token != null && token.IsCancellationRequested)
-                {
-                    _inputBuffer = string.Empty;
-                    _inputBufferIndex = 0;
-                    _awaitingInputString = false;
-                }
-                else
-                    await Task.Delay(1);
-            }
+                await Task.Delay(1);
 
             if (!string.IsNullOrWhiteSpace(_inputBuffer))
             {
@@ -70,21 +71,13 @@ namespace Commodore.GameLogic.Core.IO
             return output;
         }
 
-        public async Task<int> Read(string prompt, CancellationToken token)
+        public async Task<int> Read(string prompt)
         {
             Write(prompt);
             _awaitingInputCharacter = true;
 
             while (_awaitingInputCharacter)
-            {
-                if (token != null && token.IsCancellationRequested)
-                {
-                    _keyBuffer = 0;
-                    _awaitingInputString = false;
-                }
-                else
-                    await Task.Delay(1);
-            }
+                await Task.Delay(1);
 
             var output = _keyBuffer;
             _keyBuffer = 0;

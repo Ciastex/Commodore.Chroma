@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Commodore</AssemblyName>
     <RootNamespace>Commodore</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -74,8 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Chroma" Version="0.16.1" />
-    <PackageReference Include="ChromaSynth" Version="1.1.0" />
+    <PackageReference Include="Chroma" Version="0.17.0" />
   </ItemGroup>
 
 </Project>

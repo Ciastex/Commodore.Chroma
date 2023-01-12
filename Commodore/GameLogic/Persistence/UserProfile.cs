@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Timers;
-using Chroma.Diagnostics.Logging;
 using Chroma.Input;
 using Commodore.Framework.Persistence.AppData;
 using Commodore.GameLogic.Core.IO.Storage;
@@ -12,32 +10,20 @@ namespace Commodore.GameLogic.Persistence
     [Serializable]
     public class UserProfile
     {
-        private static Log Log { get; } = LogManager.GetForCurrentAssembly();
-        
+        [NonSerialized] private Timer _profileSaveTimer;
+
         public static UserProfile Instance { get; private set; }
 
-        private UserProfile() { }
+        private UserProfile()
+        {
+        }
 
         private bool _autoSaveActive;
-
-        [NonSerialized]
-        private Timer _profileSaveTimer;
 
         public bool IsInitialized { get; set; }
         public bool Saving { get; private set; }
 
-        public Dictionary<string, bool> MemoryBankStates = new Dictionary<string, bool>
-        {
-            { "USR_1", true },
-            { "USR_2", false },
-            { "USR_3", false },
-            { "USR_4", false },
-            { "USR_5", false },
-            { "USR_6", false },
-            { "USR_7", false },
-        };
-
-        public string UserName { get; set; } = "Enigma";
+        public string UserName { get; set; } = "lazarus";
         public Directory RootDirectory { get; set; } = new Directory();
 
         public KeyCode PreferredBreakKey { get; set; } = KeyCode.Pause;
@@ -69,47 +55,12 @@ namespace Commodore.GameLogic.Persistence
             }
         }
 
-        public bool IsMemoryBankLocked(int number)
-        {
-            var name = $"USR_{number}";
-
-            if (MemoryBankStates.ContainsKey(name))
-            {
-                return !MemoryBankStates[name];
-            }
-
-            return true;
-        }
-
-        public void UnlockUserMemoryBank(int number)
-        {
-            var name = $"USR_{number}";
-
-            if (MemoryBankStates.ContainsKey(name))
-            {
-                MemoryBankStates[name] = true;
-            }
-        }
-
-        public void LockUserMemoryBank(int number)
-        {
-            var name = $"USR_{number}";
-
-            if (MemoryBankStates.ContainsKey(name))
-            {
-                MemoryBankStates[name] = false;
-            }
-        }
-
         public void SaveToFile()
         {
             if (Saving)
             {
-                Log.Warning("Tried to save a profile to file, but it's already being saved!");
                 return;
             }
-
-            Log.Info("Saving profile...");
 
             try
             {
@@ -127,7 +78,6 @@ namespace Commodore.GameLogic.Persistence
             }
             catch (Exception e)
             {
-                Log.Exception(e);
             }
             finally
             {
@@ -139,20 +89,13 @@ namespace Commodore.GameLogic.Persistence
         {
             UserProfile profile = null;
 
-            try
+            if (RoamingStorage.FileExists("Ensign Computer/player.save"))
             {
-                if (RoamingStorage.FileExists("Ensign Computer/player.save"))
+                using (var stream = RoamingStorage.OpenRead("Ensign Computer/player.save"))
                 {
-                    using (var stream = RoamingStorage.OpenRead("Ensign Computer/player.save"))
-                    {
-                        var bf = new BinaryFormatter();
-                        profile = bf.Deserialize(stream) as UserProfile;
-                    }
+                    var bf = new BinaryFormatter();
+                    profile = bf.Deserialize(stream) as UserProfile;
                 }
-            }
-            catch (Exception e)
-            {
-                Log.Exception(e);
             }
 
             if (profile == null)
