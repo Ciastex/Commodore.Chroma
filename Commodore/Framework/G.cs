@@ -1,4 +1,5 @@
 ﻿using System;
+using Chroma.Audio;
 using Chroma.ContentManagement;
 using Chroma.Graphics;
 using Chroma.Windowing;
@@ -8,6 +9,7 @@ namespace Commodore.Framework
 {
     public static class G
     {
+        private static AudioManager _audioManager;
         private static GraphicsManager _graphicsSettings;
         private static IContentProvider _contentProvider;
         private static DebugManager _debugManager;
@@ -54,13 +56,25 @@ namespace Commodore.Framework
 
         public static SettingsManager SettingsManager
         {
-            get => _settingsManager ?? throw new InvalidOperationException("Settings manager thas not been initialized yet.");
+            get => _settingsManager ?? throw new InvalidOperationException("Settings manager has not been initialized yet.");
             set
             {
                 if (_settingsManager != null)
                     throw new InvalidOperationException("Settings manager has already been initialized.");
 
                 _settingsManager = value;
+            }
+        }
+
+        public static AudioManager AudioManager
+        {
+            get => _audioManager ?? throw new InvalidOperationException("Audio manager has not been initialized yet.");
+            set
+            {
+                if (_audioManager != null)
+                    throw new InvalidOperationException("Audio manager has already been initialized.");
+
+                _audioManager = value;
             }
         }
 
