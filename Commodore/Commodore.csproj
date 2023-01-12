@@ -105,6 +105,7 @@
     <Folder Include="Content\People\" />
     <Folder Include="Content\Scripts\" />
     <Folder Include="Content\Shellsites\" />
+    <Folder Include="GameLogic\Network\Devices" />
   </ItemGroup>
 
   <ItemGroup>

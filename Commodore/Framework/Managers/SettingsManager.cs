@@ -6,10 +6,10 @@ namespace Commodore.Framework.Managers
     {
         private string RootDirectory { get; }
 
-        public int ScreenWidth { get; private set; } = 1366;
-        public int ScreenHeight { get; private set; } = 768;
+        public int ScreenWidth { get; private set; } = 1024;
+        public int ScreenHeight { get; private set; } = 600;
         public bool EnableVerticalSync { get; private set; } = true;
-        public bool FullscreenEnabled { get; private set; } = true;
+        public bool FullscreenEnabled { get; private set; } = false;
         public bool IsBorderless { get; private set; } = true;
 
         public SettingsManager(string configRootDirectory = "Config")

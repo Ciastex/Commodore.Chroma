@@ -7,7 +7,7 @@ namespace Commodore.Framework.Extensions
 {
     public static class StringExtensions
     {
-        private readonly static char[] _glitchCharacters = "~`!@#$%^&*()_-+={[}]:;\"'\\|,<.>/?".ToCharArray();
+        private static readonly char[] _glitchCharacters = "~`!@#$%^&*()_-+={[}]:;\"'\\|,<.>/?".ToCharArray();
 
         public static string[] SplitAt(this string source, params int[] index)
         {

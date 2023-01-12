@@ -3,6 +3,7 @@ using Chroma.Audio;
 using Chroma.ContentManagement;
 using Chroma.Graphics;
 using Chroma.Windowing;
+using Commodore.Framework.Generators;
 using Commodore.Framework.Managers;
 
 namespace Commodore.Framework
@@ -14,7 +15,7 @@ namespace Commodore.Framework
         private static IContentProvider _contentProvider;
         private static DebugManager _debugManager;
         private static SettingsManager _settingsManager;
-        private static Random _random;
+        private static MersenneTwister _random;
 
         public static Window Window { get; set; }
 
@@ -78,6 +79,6 @@ namespace Commodore.Framework
             }
         }
 
-        public static Random Random { get; } = _random ?? (_random = new Random());
+        public static MersenneTwister Random { get; } = _random ?? (_random = new MersenneTwister());
     }
 }

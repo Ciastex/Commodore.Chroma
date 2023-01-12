@@ -98,8 +98,6 @@ namespace Commodore
                         Window.Size.Height
                     )
                 );
-                _gaussShader.SetUniform("vx_offset", 1.15f);
-                
                 context.DrawTexture(_frameBuffer, Vector2.Zero, Vector2.One, Vector2.Zero, 0);
                 Shader.Deactivate();
             }
