@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Commodore</AssemblyName>
+    <RootNamespace>Commodore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Content\Chatlogs\chatlog_085913_22031994.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Fonts\c64style.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\GenerationStuff\usernames.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\QuestGoals\HackingTime\hackerman_tutorial.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\QuestGoals\HackingTime\hw.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Quests\HackingTime.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Shaders\CrtScreen.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\cat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\cd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\cp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\crawl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\help">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\ls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\BasePrograms\rm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\Libraries\sysaddr.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sources\Templates\program.template.cplx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Text\Boot\RegularBoot.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Banners\" />
+    <Folder Include="Content\Devices\" />
+    <Folder Include="Content\People\" />
+    <Folder Include="Content\Scripts\" />
+    <Folder Include="Content\Shellsites\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Commodore.EVIL\Commodore.EVIL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chroma" Version="0.16.0" />
+  </ItemGroup>
+
+</Project>
