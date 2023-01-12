@@ -3,6 +3,7 @@ using Commodore.GameLogic.Core.BootSequence;
 #endif
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,7 @@ namespace Commodore.GameLogic.Core
         public static Kernel Instance => _instance ??= new Lazy<Kernel>(() => new Kernel()).Value;
 
         private Notification _currentNotification;
+        private int? _foregroundProcess;
 
 #if !DEBUG
         public BootSequencePlayer BootSequence;
@@ -70,6 +72,7 @@ namespace Commodore.GameLogic.Core
         public FileSystemContext LocalFileSystemContext { get; private set; }
         
         public Queue<Notification> Notifications { get; private set; } = new Queue<Notification>();
+        public Stack<Entity> NetworkConnectionStack { get; set; } = new Stack<Entity>();
 
         public void Reboot(bool isWarmBoot)
         {
@@ -90,6 +93,8 @@ namespace Commodore.GameLogic.Core
             else
             {
                 UserProfile.Load();
+                G.Random = UserProfile.Instance.Random;
+                
                 UserProfile.Instance.AutoSave = false;
             }
 #if !DEBUG
@@ -339,7 +344,10 @@ namespace Commodore.GameLogic.Core
                     path
                 );
 
+                _foregroundProcess = pid;
                 await ProcessManager.WaitForProgram(pid);
+                _foregroundProcess = null;
+                
                 return true;
             }
             catch
@@ -363,12 +371,28 @@ namespace Commodore.GameLogic.Core
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
                 {
-                    ProcessManager.KillAll();
-
-                    if (Memory.PeekBool(SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
+                    if (Memory.PeekBool(SystemMemoryAddresses.CtrlPressState))
                     {
+                        ProcessManager.KillAll();
+                        return;
+                    }
+                    else if (Memory.PeekBool(SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
+                    {
+                        if (NetworkConnectionStack.Any())
+                        {
+                            Notify("CANNOT REBOOT: CONNECTED TO REMOTE NET_ENTITY");
+                            return;
+                        }
+                        
                         Reboot(true);
                         return;
+                    }
+                    else
+                    {
+                        if (_foregroundProcess != null)
+                        {
+                            ProcessManager.Kill(_foregroundProcess.Value);
+                        }
                     }
                 }
 

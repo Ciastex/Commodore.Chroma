@@ -1,13 +1,31 @@
+using System;
+using Commodore.Framework.Generators;
+using Commodore.GameLogic.Network.Nodes;
+
 namespace Commodore.GameLogic.Network.Devices
 {
-    public class PersonalComputer : Device, INode
+    [Serializable]
+    public class PersonalComputer : Device
     {
-        public NodeType Type => NodeType.Device;
-        
-        public bool IsActive { get; set; }
-        public virtual string Banner => "coreOS_1.0 PCNODE";
-        
-        public byte[] GetResponse(byte[] data)
-            => new byte[1] {0x00};
+        public PersonalComputer()
+        {
+            CreateServiceNode<SimpleAuthNode>(1);
+
+            var homeDir = RootDirectory.CreateGivenPath("/home");
+
+            for (var i = 0; i < 16; i++)
+            {
+                homeDir.AddNewFile(StringGenerator.GenerateRandomAlphanumericString(6) + ".dat")
+                    .SetData(StringGenerator.GenerateRandomAlphanumericString(128));
+            }
+
+            RootDirectory.CreateGivenPath("/bin");
+            var etcDir = RootDirectory.CreateGivenPath("/etc/");
+            etcDir.AddNewFile("hostname")
+                .SetData("openinside");
+
+            etcDir.AddNewFile("passwd")
+                .SetData("root:toor");
+        }
     }
 }

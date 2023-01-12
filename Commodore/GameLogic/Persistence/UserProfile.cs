@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Timers;
 using Chroma.Input;
 using Commodore.Framework;
@@ -9,6 +8,7 @@ using Commodore.Framework.Generators;
 using Commodore.Framework.Persistence.AppData;
 using Commodore.GameLogic.Core.IO.Storage;
 using Commodore.GameLogic.Network;
+using Commodore.GameLogic.Network.Devices;
 
 namespace Commodore.GameLogic.Persistence
 {
@@ -29,7 +29,7 @@ namespace Commodore.GameLogic.Persistence
         public bool Saving { get; private set; }
 
         public MersenneTwister Random { get; set; } = new MersenneTwister();
-        
+
         public Directory RootDirectory { get; set; } = new Directory();
         public Internet Internet { get; set; } = new Internet();
 
@@ -124,9 +124,14 @@ namespace Commodore.GameLogic.Persistence
             homeDirectory.AddNewFile("fs.docs").SetData(
                 G.ContentProvider.Read("Text/Docs/fs.txt")
             );
-            
+
             PopulateBaseBinDirectory();
             PopulateBaseEtcDirectory();
+        }
+
+        public void BuildStaticInternetEntities()
+        {
+            Internet.AddDevice(new PersonalComputer());
         }
 
         private void PopulateBaseBinDirectory()

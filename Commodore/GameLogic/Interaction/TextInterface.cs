@@ -75,6 +75,7 @@ namespace Commodore.GameLogic.Interaction
                     Kernel.Instance.Terminal.Write("\n");
 
                     UserProfile.Instance.CreateBaseFileSystem();
+                    UserProfile.Instance.BuildStaticInternetEntities();
                     UserProfile.Instance.SaveToFile();
 
                     processComplete = true;

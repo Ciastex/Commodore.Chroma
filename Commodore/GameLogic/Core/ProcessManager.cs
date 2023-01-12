@@ -19,7 +19,7 @@ namespace Commodore.GameLogic.Core
         
         private Log Log { get; } = LogManager.GetForCurrentAssembly();
         private int _nextPid;
-        
+
         public Dictionary<int, Process> Processes { get; private set; }
 
         public ProcessManager() => Reset();
@@ -162,6 +162,7 @@ namespace Commodore.GameLogic.Core
             interp.Environment.RegisterPackage<MemLibrary>();
             interp.Environment.RegisterPackage<VgaLibrary>();
             interp.Environment.RegisterPackage<FsLibrary>();
+            interp.Environment.RegisterPackage<NetLibrary>();
 
             interp.Memory = Kernel.Instance.Memory;
 
