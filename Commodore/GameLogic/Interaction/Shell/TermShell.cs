@@ -3,6 +3,7 @@ using Commodore.GameLogic.Core.IO.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Commodore.GameLogic.Interaction.Shell
 {
@@ -31,14 +32,25 @@ namespace Commodore.GameLogic.Interaction.Shell
             });
         }
 
-        public bool HandleCommand(string input)
+        public async Task<bool> HandleCommand(string input)
         {
             try
             {
                 var tokens = Tokenize(input);
 
                 var command = tokens[0];
-                var args = tokens.Skip(1).ToArray();
+                var argList = tokens.Skip(1).ToList();
+                
+                var waitForProcess = true;
+                var lastArg = argList.LastOrDefault();
+
+                if (lastArg == "&")
+                {
+                    waitForProcess = false;
+                    argList.RemoveAt(argList.Count - 1);
+                }
+
+                var args = argList.ToArray();
 
                 if (BuiltIns.ContainsKey(command))
                     return BuiltIns[command](args);
@@ -62,7 +74,15 @@ namespace Commodore.GameLogic.Interaction.Shell
 
                     if ((file.Attributes & FileAttributes.Executable) != 0)
                     {
-                        Kernel.Instance.CodeExecutionLayer.ExecuteProgram(file.GetData(), args).GetAwaiter().GetResult();
+                        var pid = await Kernel.Instance.ProcessManager.ExecuteProgram(
+                            file.GetData(), 
+                            filePath,
+                            args
+                        );
+                        
+                        if (waitForProcess)
+                            await Kernel.Instance.ProcessManager.WaitForProgram(pid);
+
                         return true;
                     }
                     else
@@ -79,6 +99,7 @@ namespace Commodore.GameLogic.Interaction.Shell
             {
                 Kernel.Instance.Terminal.WriteLine($"\uFF24ERROR:\n\uFF40{e.Message}\n");
             }
+
             return false;
         }
 
@@ -156,6 +177,7 @@ namespace Commodore.GameLogic.Interaction.Shell
                                 }
                             }
                         }
+
                         break;
 
                     case ' ':

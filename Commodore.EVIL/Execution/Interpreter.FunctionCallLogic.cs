@@ -48,6 +48,10 @@ namespace Commodore.EVIL.Execution
                 {
                     retval = ExecuteStatementList(scriptFunction.StatementList);
                 }
+                catch (ScriptTerminationException)
+                {
+                    throw;
+                }
                 catch (RuntimeException)
                 {
                     throw;

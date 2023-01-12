@@ -56,7 +56,7 @@ namespace Commodore.GameLogic.Core
         public VGA Vga;
         public Terminal Terminal;
 
-        public CodeExecutionLayer CodeExecutionLayer;
+        public ProcessManager ProcessManager;
 
         public Editor CodeEditor;
         public TermShell TermShell;
@@ -207,7 +207,7 @@ namespace Commodore.GameLogic.Core
 
         private void InitializeCodeExecutionLayer()
         {
-            CodeExecutionLayer = new CodeExecutionLayer();
+            ProcessManager = new ProcessManager();
         }
 
         private void InitializeCodeEditor()
@@ -255,14 +255,19 @@ namespace Commodore.GameLogic.Core
             while (!IsRebooting)
             {
                 var customPromptSuccess = false;
-                if (File.Exists("/etc/prompt"))
+                var promptPath = "/etc/prompt";
+                
+                if (File.Exists(promptPath))
                 {
                     try
                     {
-                        await CodeExecutionLayer.ExecuteProgram(
-                            Encoding.UTF8.GetString(File.Get("/etc/prompt").Data)
+                        var pid = await ProcessManager.ExecuteProgram(
+                            Encoding.UTF8.GetString(File.Get(promptPath).Data),
+                            promptPath
                         );
-
+                        
+                        await ProcessManager.WaitForProgram(pid);
+                        
                         customPromptSuccess = true;
                     }
                     catch
@@ -271,17 +276,14 @@ namespace Commodore.GameLogic.Core
                 }
 
                 if (!customPromptSuccess)
-                {
-                    var host = "localhost";
-                    Terminal.Write($"{FileSystemContext.WorkingDirectory.GetAbsolutePath()} : {host} $ ");
-                }
+                    Terminal.Write($"{FileSystemContext.WorkingDirectory.GetAbsolutePath()} $ ");
 
                 var str = await Terminal.ReadLine(string.Empty);
 
                 if (string.IsNullOrWhiteSpace(str))
                     continue;
 
-                await Task.Run(() => TermShell.HandleCommand(str));
+                await Task.Run(async () => await TermShell.HandleCommand(str));
             }
         }
 
@@ -291,9 +293,8 @@ namespace Commodore.GameLogic.Core
             {
                 if ((byte)keyCode == Memory.Peek8(SystemMemoryAddresses.BreakKeyScancode))
                 {
-                    if (CodeExecutionLayer.IsExecuting)
-                        CodeExecutionLayer.Interpreter.BreakExecution = true;
-
+                    ProcessManager.KillAll();
+                    
                     if (Memory.PeekBool(SystemMemoryAddresses.ShiftPressState) && !IsRebooting)
                         WarmBoot();
                 }
