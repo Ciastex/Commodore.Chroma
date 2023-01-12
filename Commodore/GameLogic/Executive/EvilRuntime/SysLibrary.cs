@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Chroma.Input;
 using Commodore.EVIL.Abstraction;
 using Commodore.EVIL.Execution;
@@ -102,7 +101,12 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
             args.ExpectExactly(1)
                 .ExpectIntegerAtIndex(0);
 
-            Task.Delay((int)args[0].Number).GetAwaiter().GetResult();
+            var timeExpires = DateTime.Now + TimeSpan.FromMilliseconds(args[0].Number);
+
+            while (!interpreter.BreakExecution && DateTime.Now < timeExpires)
+            {
+            }
+            
             return DynValue.Zero;
         }
 
@@ -112,7 +116,11 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 .ExpectIntegerAtIndex(0);
 
             interpreter.SuspendExecution = true;
-            Kernel.Instance.ProcessManager.WaitForProgram((int)args[0].Number, Kernel.Instance.InteractionCancellation.Token).GetAwaiter().GetResult();
+
+            while (!interpreter.BreakExecution && Kernel.Instance.ProcessManager.IsProcessRunning((int)args[0].Number))
+            {
+            }
+            
             interpreter.SuspendExecution = false;
 
             return DynValue.Zero;
@@ -228,7 +236,13 @@ namespace Commodore.GameLogic.Executive.EvilRuntime
                 }
             }
 
-            var pid = Kernel.Instance.ProcessManager.ExecuteProgram(file.GetData(), path, Kernel.Instance.InteractionCancellation.Token, processArgs.ToArray());
+            var pid = Kernel.Instance.ProcessManager.ExecuteProgram(
+                file.GetData(), 
+                path, 
+                Kernel.Instance.ProcessManager.GetProcess(interpreter).Pid,
+                Kernel.Instance.InteractionCancellation.Token, 
+                processArgs.ToArray()
+            );
 
             if (pid < 0)
                 return new DynValue(SystemReturnCodes.Kernel.ProcessSpaceExhausted);
