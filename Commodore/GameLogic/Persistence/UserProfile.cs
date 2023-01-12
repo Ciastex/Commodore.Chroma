@@ -29,6 +29,7 @@ namespace Commodore.GameLogic.Persistence
         public bool Saving { get; private set; }
 
         public MersenneTwister Random { get; set; } = new MersenneTwister();
+        
         public Directory RootDirectory { get; set; } = new Directory();
         public Internet Internet { get; set; } = new Internet();
 

@@ -46,7 +46,7 @@ namespace Commodore.Framework.Generators
 
         public MersenneTwister()
         {
-            Seed = 5489;
+            Seed = (int)DateTime.Now.Ticks;
         }
 
         public MersenneTwister(int seed)
