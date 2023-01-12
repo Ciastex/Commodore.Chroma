@@ -91,7 +91,10 @@ namespace Commodore.GameLogic.Executive.CodeEditor
 
             if (!string.IsNullOrEmpty(fileContents))
             {
-                Buffer.Lines.AddRange(fileContents.Split('\n').ToList());
+                Buffer.Lines.AddRange(
+                    fileContents.Split('\n').Select(x => x.Trim(new[] {'\uFEFF', '\u200B', '\r'}))
+                                .ToList()
+                );
                 Buffer.Dirty = false;
             }
             else
@@ -145,9 +148,9 @@ namespace Commodore.GameLogic.Executive.CodeEditor
         {
             context.Rectangle(
                 ShapeMode.Fill,
-                new Vector2(0, 0), 
-                G.Window.Size.Width, 
-                G.Window.Size.Height, 
+                new Vector2(0, 0),
+                G.Window.Size.Width,
+                G.Window.Size.Height,
                 EditorColors.EditorBackground
             );
         }
@@ -221,7 +224,7 @@ namespace Commodore.GameLogic.Executive.CodeEditor
                 {
                     var petscii = dict[keyCode];
 
-                    if(Font.CanRenderGlyph(petscii))
+                    if (Font.CanRenderGlyph(petscii))
                         PrintableCharacter(petscii);
                 }
             }

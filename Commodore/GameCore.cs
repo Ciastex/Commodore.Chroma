@@ -21,9 +21,12 @@ namespace Commodore
     public class CommodoreMain : Game
     {
         private bool _kernelStarted;
-        private bool _shaderEnabled = true;
+        private bool _crtShaderEnabled = true;
+        private bool _gaussShaderEnabled = true;
         
-        private PixelShader _shader;
+        private PixelShader _crtShader;
+        private PixelShader _gaussShader;
+        
         private RenderTarget _frameBuffer;
 
         public CommodoreMain() : base(false)
@@ -36,7 +39,8 @@ namespace Commodore
             G.SettingsManager = new SettingsManager();
             
             G.DebugManager = new DebugManager();
-            G.DebugManager.BindDebugAction(KeyCode.F9, () => { _shaderEnabled = !_shaderEnabled; });
+            G.DebugManager.BindDebugAction(KeyCode.F9, () => { _crtShaderEnabled = !_crtShaderEnabled; });
+            G.DebugManager.BindDebugAction(KeyCode.F10, () => { _gaussShaderEnabled = !_gaussShaderEnabled; });
             
             Window.QuitRequested += WindowOnQuitRequested;            
         }
@@ -53,7 +57,8 @@ namespace Commodore
             }
             
             _frameBuffer = new RenderTarget(Window.Size);
-            _shader = Content.Load<PixelShader>("Shaders/CrtScreen.glsl");
+            _crtShader = Content.Load<PixelShader>("Shaders/CrtScreen.glsl");
+            _gaussShader = Content.Load<PixelShader>("Shaders/VerticalGauss.glsl");
         }
 
         private void WindowOnQuitRequested(object sender, CancelEventArgs e)
@@ -80,21 +85,36 @@ namespace Commodore
         {
             context.RenderTo(_frameBuffer, () =>
             {
-                context.Clear(Color.Black);
+                context.Clear(Color.Transparent);
                 Kernel.Instance.Draw(context);
             });
 
-            if (_shaderEnabled)
+            if (_gaussShaderEnabled)
             {
-                _shader.Activate();
-                _shader.SetUniform("screenSize",
+                _gaussShader.Activate();
+                _gaussShader.SetUniform("rt_dims",
                     new Vector2(
                         Window.Size.Width,
                         Window.Size.Height
                     )
                 );
-                _shader.SetUniform("scanlineDensity", 2f);
-                _shader.SetUniform("blurDistance", .375f);
+                _gaussShader.SetUniform("vx_offset", 1.15f);
+                
+                context.DrawTexture(_frameBuffer, Vector2.Zero, Vector2.One, Vector2.Zero, 0);
+                Shader.Deactivate();
+            }
+            
+            if (_crtShaderEnabled)
+            {
+                _crtShader.Activate();
+                _crtShader.SetUniform("screenSize",
+                    new Vector2(
+                        Window.Size.Width,
+                        Window.Size.Height
+                    )
+                );
+                _crtShader.SetUniform("scanlineDensity", 2f);
+                _crtShader.SetUniform("blurDistance", .375f);
             }
 
             context.DrawTexture(_frameBuffer, Vector2.Zero, Vector2.One, Vector2.Zero, 0);

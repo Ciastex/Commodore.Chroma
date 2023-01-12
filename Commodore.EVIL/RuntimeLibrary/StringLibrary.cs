@@ -120,8 +120,8 @@ namespace Commodore.EVIL.RuntimeLibrary
             args.ExpectAtLeast(1)
                 .ExpectIntegerAtIndex(0);
 
-            int number = (int)args[0].Number;
-            int toBase = 10;
+            var number = (int)args[0].Number;
+            var toBase = 10;
 
             if (args.Count == 2)
             {
@@ -155,6 +155,26 @@ namespace Commodore.EVIL.RuntimeLibrary
             return new DynValue(retTable);
         }
 
+        public DynValue UpperCase(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectExactly(1)
+                .ExpectTypeAtIndex(0, DynValueType.String);
+
+            var str = args[0].String;
+
+            return new DynValue(str.ToUpperInvariant());
+        }
+        
+        public DynValue LowerCase(Interpreter interpreter, ClrFunctionArguments args)
+        {
+            args.ExpectExactly(1)
+                .ExpectTypeAtIndex(0, DynValueType.String);
+
+            var str = args[0].String;
+
+            return new DynValue(str.ToLowerInvariant());
+        }
+        
         public override void Register(Environment env, Interpreter interpreter)
         {
             env.RegisterBuiltIn("str.len", Length);
@@ -166,6 +186,8 @@ namespace Commodore.EVIL.RuntimeLibrary
             env.RegisterBuiltIn("str.s2n", ToNumber);
             env.RegisterBuiltIn("str.n2s", NumberToString);
             env.RegisterBuiltIn("str.spl", Split);
+            env.RegisterBuiltIn("str.uc", UpperCase);
+            env.RegisterBuiltIn("str.lc", LowerCase);
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿sys.println(" \uFF2CENSIGN COMPUTER\uFF40")
+sys.println("    \uFF2CSYSTEMS CORP.\uFF40")
+sys.println("  ")
+sys.println("    ")
+sys.println(" \uFF05evOS\uFF3F(R)\uFF40 v0.3-DEV\n")
+
+sys.println("This is a \uFF04confidential\uFF40 development build of evOS.")
+sys.println("Unauthorized use will be traced and reported to authorities.")
+sys.println("\n")
+sys.println("Type \uFF3Fhelp\uFF40 to get list of available commands.")
+sys.println("To launch the editor, type \uFF3Fedit <file path>\uFF40.\n")
